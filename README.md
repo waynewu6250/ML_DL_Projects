@@ -25,3 +25,7 @@ It can be also referred to the following respositories: <br>
 1) My-Sample-Projects/ 1.Machine_Learning/ 5.pyspark/ Twitter_hashtags.ipynb <br>
 2) My-Sample-Projects/ 3.NLP/ 10.hashtag_bilstm.ipynb <br>
 
+### 4. Movie Bot
+This is the nlp project completely done by self with data preprocessing and keras seq2seq model establishment. <br>
+Run <python test.py> could interact with the bot with simple conversations which could be trained better with more computational sources. <br>
+Training data are extracted from movie_lines.tsv. Detailed descriptions are shown in the jupyter notebook: LHW4-Short-base.ipynb.
