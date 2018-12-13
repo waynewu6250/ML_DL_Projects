@@ -1,5 +1,5 @@
 # ML_DL_Projects
-Self Projects to refine and collections
+My side projects to refine and for collections
 
 ### 1. AI robots on telegram
 This is the nlp project modified by the final project of coursera course: advanced machine learning specialization-Natural Language Processing.  
@@ -31,9 +31,16 @@ It can be also referred to the following respositories: <br>
 2) My-Sample-Projects/ 3.NLP/ 10.hashtag_bilstm.ipynb
 ```
 
-### 4. Movie Bot
+### 4. Movie Bot with keras
 This is the nlp project completely done by self with data preprocessing and keras seq2seq model establishment. <br>
 
+Run `python train.py` to train the model on dataset preferably with gpu. <br>
 Run `python test.py` could interact with the bot with simple conversations which could be trained better with more computational sources. <br>
 
 Training data are extracted from movie_lines.tsv. Detailed descriptions are shown in the jupyter notebook: LHW4-Short-base.ipynb.
+
+### 5. Movie Bot with pytorch
+This is the nlp project completely done by self with data preprocessing and pytorch seq2seq model establishment. <br>
+
+Training data are extracted from movie_lines.tsv. Detailed descriptions are shown in the README.md in the subfolder.
+
