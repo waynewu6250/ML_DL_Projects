@@ -11,6 +11,7 @@ will load the data from movie_lines.tsv and print out the first set of training 
 python batch.py
 ```
 will generate the minibatches for the model.
+-  Next, for the **model trainig and testing** part:
 ```
 python train.py
 ```
