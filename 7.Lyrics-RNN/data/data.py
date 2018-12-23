@@ -10,11 +10,22 @@ def parse(filename):
     
     for line in f:
         
-        if line.find('監') != -1 or line.find('Repeat') != -1:
+        if line.find('監') != -1 or line.find('Repeat') != -1 or line.find('O.S.') != -1:
             continue
         if line == 'end\n' or line.find('-') != -1:
-            data.append(lyrics[:-1])
+            if lyrics is not '':
+                data.append(lyrics[:-1])
             lyrics = ''
+            continue
+        # Case 1: remove (周) or 周: 
+        line = re.sub(r'^\(.*?\)',' ',line)
+        line = re.sub(r'.*：','',line)
+        # Case 2: remove some redundant tokens
+        line = re.sub(r'(\()|(\))|[\'şı,＊＃☆△…＠]','',line)
+        # Case 3: remove english character
+        line = re.sub(r'[a-zA-Z]','',line)
+        line = line.strip(" ")
+        if line == '\n':
             continue
 
         lyrics += line

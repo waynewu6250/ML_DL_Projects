@@ -1,7 +1,7 @@
 class Config:
 
-    filename = 'data/files/chou.txt'
-    pickle_path = 'chou.npz'
+    filename = 'data/files/chou-eason.txt'
+    pickle_path = 'chou-eason.npz'
     model_path = 'checkpoints/99.pth'
 
     lr = 1e-3
@@ -15,7 +15,7 @@ class Config:
     vis = False
 
     start_words = '吳亭緯' #First words
-    prefix_words = '這是愛情' #Style
+    prefix_words = '愛情' #Style
     max_gen_len = 200
 
 

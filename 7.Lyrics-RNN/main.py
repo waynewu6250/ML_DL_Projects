@@ -63,7 +63,8 @@ def train(**kwargs):
 
             if (1+ii) % opt.print_every == 0:
                 print("Current Loss: %d"%loss.item())
-                visualizer.plot('loss', loss_meter.value()[0])
+                if opt.vis:
+                    visualizer.plot('loss', loss_meter.value()[0])
         if (epoch+1) % 20 == 0:
             t.save(model.state_dict(), 'checkpoints/%s.pth'%epoch)
 
