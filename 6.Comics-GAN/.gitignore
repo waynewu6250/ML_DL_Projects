@@ -1,0 +1,6 @@
+gen_imgs/*
+data-for-imagefolder/faces/*
+data/faces/*
+data/imgs/*
+data/imgs2/*
+checkpoints/*
