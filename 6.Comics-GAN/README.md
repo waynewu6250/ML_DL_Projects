@@ -41,6 +41,6 @@ Here, we implemented convolutional neural network based generator & discriminato
  ```
  
  - Result: <br>
- ![img](result.png)
+ ![img](result2.png)
  
 
