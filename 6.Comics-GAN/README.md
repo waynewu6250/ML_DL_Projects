@@ -39,4 +39,8 @@ Here, we implemented convolutional neural network based generator & discriminato
             --gen-img=result.png \
             --gen-num=64
  ```
+ 
+ - Result:
+ ![img](result.png)
+ 
 
