@@ -1,4 +1,5 @@
-# Machine learning and Deep learning related projects by Ting-Wei Wu
+# Machine learning and Deep learning related projects
+## Ting-Wei Wu
 My side project gallery for collections and refinement
 
 ### 1. AI robots on telegram
