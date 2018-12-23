@@ -34,6 +34,9 @@ def train():
         seq2seq.load_state_dict(torch.load(opt.model_path))
         print("Pretrained model has been loaded.\n")
     
+    
+    #======================================================================#
+
     optimizer= Adam(seq2seq.parameters(), lr=opt.learning_rate)
     criterion = nn.NLLLoss(ignore_index=0, size_average=True)
 
