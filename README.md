@@ -25,9 +25,6 @@ This is the pyspark project that will analyze the most frequent hashtags used by
 ### 4. Movie Bot with keras
 This is the nlp project completely done by Ting-Wei Wu with data preprocessing and keras seq2seq model establishment. <br>
 
-Run `python train.py` to train the model on dataset preferably with gpu. <br>
-Run `python test.py` could interact with the bot with simple conversations which could be trained better with more computational sources. <br>
-
 Training data are extracted from movie_lines.tsv. Detailed descriptions are shown in the jupyter notebook: LHW4-Short-base.ipynb.
 
 ---
@@ -37,26 +34,6 @@ This is the nlp project completely done by Ting-Wei Wu with data preprocessing a
 It is same with the project Movie-bot-keras except new implementation with pytorch model.
 
 Training data are extracted from movie_lines.tsv. Detailed descriptions are shown in the README.md in the subfolder.
-
--To begin with, for the **data extraction** part:
-```
-python load.py
-```
-will load the data from movie_lines.tsv and print out the first set of training data.
-```
-python batch.py
-```
-will generate the minibatches for the model.
--  Next, for the **model trainig and testing** part:
-```
-python train.py
-```
-will start training the data based on the fed minibatches and core unit used. <br>
-(Computation are limited on personal pc so that the performance could be much improved by running on gpu-based server)
-```
-python test.py
-```
-will start a trained chatbot with basic conversational functions to interact with the user.
 
 ---
 
