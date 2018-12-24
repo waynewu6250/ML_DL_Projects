@@ -12,6 +12,7 @@ it will also serve as a stackoverflow assistant where you can ask it about code 
 <div style="text-align: center">
 <img src="1.AI-robots-on-telegram/result.png"  height="330" width="495">
 </div>
+
 ---
 
 ### 2. Image captioning
