@@ -9,6 +9,8 @@ It will be put on the telegram messenger supported by amazon web service (AWS) E
 Basically it will do the simple conversations. <br> 
 it will also serve as a stackoverflow assistant where you can ask it about code questions and it will return stackoverflow related links.
 
+<img src="1.AI-robots-on-telegram/result.png"  height="330" width="495">
+
 ---
 
 ### 2. Image captioning
