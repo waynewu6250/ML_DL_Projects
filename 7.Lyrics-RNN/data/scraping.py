@@ -4,14 +4,16 @@ from bs4 import BeautifulSoup
 import os
 import re
 
-save_path = 'files/chou.txt'
+save_path = 'files/mayday.txt'
 chou = 'https://mojim.com/twh100951.htm'
 eason = 'https://mojim.com/twh100111-1.htm'
+jj = 'http://mojim.com/twh102520.htm'
+mayday = 'https://mojim.com/twh100012.htm'
 
 if os.path.exists('files') is False:
     os.mkdir('files')
 
-url = chou
+url = mayday
 
 fhand = urllib.request.urlopen(url).read()
 soup = BeautifulSoup(fhand, 'html.parser')
