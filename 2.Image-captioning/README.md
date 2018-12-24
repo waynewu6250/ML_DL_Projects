@@ -9,4 +9,4 @@ It will caption the given image and return a descriptive sentence that depicts t
 
 Sample result:
 
-![img](result.png)
+<img src="2.Image-captioning/result.png"  height="440" width="440">
