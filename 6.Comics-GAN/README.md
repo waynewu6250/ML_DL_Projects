@@ -26,7 +26,7 @@ Here, we implemented convolutional neural network based generator & discriminato
  ```
 
 - To use:
- 1. To allow vidom for visualization, please run `python2 -m visdom.server` on the terminal first.
+ 1. To allow visdom for visualization, please run `python -m visdom.server` on the terminal first.
  2. Train:
  ```
  python main.py train --gpu --vis=False
