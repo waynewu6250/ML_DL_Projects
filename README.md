@@ -18,7 +18,7 @@ This is the CV-related project modified by the final project of coursera course:
 
 It will caption the given image and return a descriptive sentence that depicts the graph.
 
-<img src="2.Image-captioning/result.png"  height="220" width="385">
+<img src="2.Image-captioning/result.png"  height="220" width="330">
 
 ---
 
