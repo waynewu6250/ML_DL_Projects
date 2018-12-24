@@ -10,7 +10,7 @@ Basically it will do the simple conversations. <br>
 it will also serve as a stackoverflow assistant where you can ask it about code questions and it will return stackoverflow related links.
 
 <center>
-![img]("1.AI-robots-on-telegram/result.png")
+![img](1.AI-robots-on-telegram/result.png)
 </center>
 
 ---
