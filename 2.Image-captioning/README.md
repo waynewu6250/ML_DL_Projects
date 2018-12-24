@@ -6,3 +6,7 @@ It can be also referred to the following respositories: <br>
 ```
 
 It will caption the given image and return a descriptive sentence that depicts the graph.  
+
+Sample result:
+
+![img](result.png)
