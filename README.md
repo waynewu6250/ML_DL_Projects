@@ -41,4 +41,9 @@ Training data are extracted from movie_lines.tsv. Detailed descriptions are show
 ### 6. Deep Convolutional Generative Adversarial Networks for Naruto character generation
 This is the deep learning project completely done by Ting-Wei Wu. Basically, it simulated the style drawing from Naruto figures to construct new naruto characters by artificial intelligence. <br>
 
+---
+
+### 7. Recurrent Neural Network for Taiwanese song's lyrics generation
+This is the deep learning project completely done by Ting-Wei Wu. Basically, it will generate some intriguing lyrics based on the major taiwanese songs' style. The networks are based on simple RNN model with major three singers. <br>
+
 
