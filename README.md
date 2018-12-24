@@ -25,7 +25,7 @@ It will caption the given image and return a descriptive sentence that depicts t
 ### 3. Twitter hashtags
 This is the pyspark project that will analyze the most frequent hashtags used by individual users.   
 
-<img src="3.Twitter-hashtags/hashtag.png"  height="220" width="385">
+<img src="3.Twitter-hashtags/hashtag.png"  height="220" width="330">
 
 ---
 
@@ -34,7 +34,7 @@ This is the nlp project completely done by Ting-Wei Wu with data preprocessing a
 
 Training data are extracted from movie_lines.tsv. Detailed descriptions are shown in the jupyter notebook: LHW4-Short-base.ipynb.
 
-<img src="4.Movie-bot/chatbots.jpg"  height="220" width="385">
+<img src="4.Movie-bot/chatbots.jpg"  height="220" width="330">
 
 ---
 
@@ -49,7 +49,7 @@ Training data are extracted from movie_lines.tsv. Detailed descriptions are show
 ### 6. Deep Convolutional Generative Adversarial Networks for Naruto character generation
 This is the deep learning project completely done by Ting-Wei Wu. Basically, it simulated the style drawing from Naruto figures to construct new naruto characters by artificial intelligence. <br>
 
-<img src="6.Comics-GAN/result.png">
+<img src="6.Comics-GAN/result.png" height="220" width="220">
 
 
 ---
