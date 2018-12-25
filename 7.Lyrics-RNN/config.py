@@ -1,12 +1,12 @@
 class Config:
 
-    filename = 'data/files/chou-eason.txt'
-    pickle_path = 'chou-eason.npz'
-    model_path = 'checkpoints/99.pth'
+    filename = 'data/files/all.txt'
+    pickle_path = '12-24.npz'
+    model_path = 'checkpoints/12-24.pth'
 
     lr = 1e-3
-    num_epoch = 100
-    batch_size = 5
+    num_epoch = 40
+    batch_size = 64
     embedding_dim = 128
     latent_dim =256
     
@@ -14,8 +14,8 @@ class Config:
     use_gpu = False
     vis = False
 
-    start_words = '吳亭緯' #First words
-    prefix_words = '愛情' #Style
+    start_words = '青花瓷' #First words
+    prefix_words = '七里香' #Style
     max_gen_len = 200
 
 

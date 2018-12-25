@@ -21,7 +21,7 @@ def parse(filename):
         line = re.sub(r'^\(.*?\)',' ',line)
         line = re.sub(r'.*：','',line)
         # Case 2: remove some redundant tokens
-        line = re.sub(r'(\()|(\))|[\'şı,＊＃☆△…＠]','',line)
+        line = re.sub(r'(\()|(\))|[\'şı,＊＃☆△…＠í대]','',line)
         # Case 3: remove english character
         line = re.sub(r'[a-zA-Z]','',line)
         line = line.strip(" ")
