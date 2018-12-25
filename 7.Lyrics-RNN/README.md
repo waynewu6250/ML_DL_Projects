@@ -32,9 +32,13 @@ And thd files are stored as follows:
  
  3. Generate lyrics:
  ```
- python main.py generate --start-words='我的歌' --prefix-words='愛情'
+ python main.py generate --start-words = '我的歌'
+                         --prefix-words = '愛情'
+                         --pickle_path = '12-24.npz'
+                         --model_path = 'checkpoints/12-24.pth'
  ```
  start words mean the start tokens you would like to be at the first of the lyrics.
  prefix words mean it will generate the style associated with the given words.
+ load the pre-trained model and pickle_path to generate words.
  
 
