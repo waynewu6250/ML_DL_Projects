@@ -14,7 +14,7 @@ class Config:
     use_gpu = False
     vis = False
 
-    start_words = '青花瓷' #First words
+    start_words = '七里香' #First words
     prefix_words = '七里香' #Style
     max_gen_len = 300
 
