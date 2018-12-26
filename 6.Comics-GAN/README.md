@@ -1,11 +1,11 @@
-### 6. Deep Convolutional Generative Adversarial Networks for Naruto character generation
+# 6. Deep Convolutional Generative Adversarial Networks for Naruto character generation
 This is the deep learning project completely done by Ting-Wei Wu. Basically, it simulated the style drawing from Naruto, One-piece and hatsune figures to construct new characters by artificial intelligence. <br>
 
 Here, we implemented convolutional neural network based generator & discriminator structures with pytorch framework to adversarially compete against each other to generate new stype figures that match with existing characters. <br>
 (Thanks to pytorch book: [chenyuntc github](https://github.com/chenyuntc/pytorch-book/tree/master/chapter7-GAN%E7%94%9F%E6%88%90%E5%8A%A8%E6%BC%AB%E5%A4%B4%E5%83%8F))
 
 ## Dataset: There are two datasets in this work: Naruto+One-piece and hatsune
-# Naruto (about 4k images)
+### Naruto (about 4k images)
 The corresponding folder will be:
 1. *checkpoints/: to store models.
 2. data/: scrape images from internet and face detection.
@@ -34,7 +34,7 @@ The corresponding folder will be:
  python detect_face.py
  ```
 
-# Hatsune (about 30k images)
+### Hatsune (about 30k images)
 The corresponding folder will be:
 1. checkpoints-hatsune/: to store models.
 2. *data-for-imagefolder/: store images for training.
