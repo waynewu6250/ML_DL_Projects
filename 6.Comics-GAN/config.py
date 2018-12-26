@@ -1,7 +1,7 @@
 class Config:
 
-    data_path = "data-for-imagefolder/"
-    save_path = "gen_imgs2/"
+    data_path = "data-for-imagefolder-hatsune/"
+    save_path = "gen_imgs-hatsune/"
     img_size = 96
     batch_size = 128
     max_epoch = 400
@@ -15,8 +15,8 @@ class Config:
 
     vis = False
     env = 'GAN'
-    netd_path = 'checkpoints/netd_350.pth'  
-    netg_path = 'checkpoints/netg_350.pth' 
+    netd_path = 'checkpoints-hatsune/netd_99.pth'  
+    netg_path = 'checkpoints-hatsune/netg_99.pth' 
 
     train_d = 1 #how many batchs to train discriminator once
     train_g = 5 #how many batchs to train generator once
@@ -25,7 +25,7 @@ class Config:
     train_save_model = 50 #how many epochs to save model once
 
     # generate parameters
-    gen_imgs = "result.png"
+    gen_imgs = "result-hatsune.png"
     gen_pool_num = 5000
     gen_select_num = 64
     gen_mean = 0
