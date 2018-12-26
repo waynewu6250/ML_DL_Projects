@@ -16,7 +16,7 @@ class Config:
 
     start_words = '青花瓷' #First words
     prefix_words = '七里香' #Style
-    max_gen_len = 200
+    max_gen_len = 300
 
 
 opt = Config()
