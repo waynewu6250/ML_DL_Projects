@@ -1,4 +1,4 @@
-### 4. Movie Bot with keras
+# 4. Movie Bot with keras
 This is the nlp project completely done by Ting-Wei Wu with data preprocessing and keras seq2seq model establishment. <br>
 
 Run `python train.py` to train the model on dataset preferably with gpu. <br>
