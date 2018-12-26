@@ -14,12 +14,12 @@ The corresponding folder will be:
 (Italics mean too large to upload then skip.)
 
 
-- To start, I download the images from internet: [Zerochan: Naruto](https://www.zerochan.net/NARUTO) and [IMDB](https://www.imdb.com/title/tt6342474/mediaindex?page={}&ref_=ttmi_mi_sm) <br>
-  It could be extracted by using the following command inside data/ folder:
-  ```
-  python scraping.py
-  ```
-  And the images are stored as follows:
+To start, I download the images from internet: [Zerochan: Naruto](https://www.zerochan.net/NARUTO) and [IMDB](https://www.imdb.com/title/tt6342474/mediaindex?page={}&ref_=ttmi_mi_sm) <br>
+It could be extracted by using the following command inside data/ folder:
+```
+python scraping.py
+```
+And the images are stored as follows:
  ```
  data/
 └── imgs/
@@ -29,11 +29,11 @@ The corresponding folder will be:
     ...
  ```
 
-- Face detection:
- Then we do the face detection to extract the faces inside the images that we have downloaded by using opencv package:
- ```
- python detect_face.py
- ```
+Face detection:
+Then we do the face detection to extract the faces inside the images that we have downloaded by using opencv package:
+```
+python detect_face.py
+```
 
 ### Hatsune (about 30k images)
 The corresponding folder will be:
