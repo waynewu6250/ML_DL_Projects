@@ -96,9 +96,9 @@ Here I use the dataset from [National Taiawn University ADL x MLDS Course](https
  
  - Result: <br>
 Naruto:
-<img src="./result2.png" height=1500 width=500>
+<img src="./result2.png" height=1200 width=500>
 
-Hatsune:
+Hatsune: <br>
 <img src="./result-hatsune.png" height=500 width=500>
  
 
