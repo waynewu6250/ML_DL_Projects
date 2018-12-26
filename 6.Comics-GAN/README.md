@@ -74,6 +74,7 @@ Here I use the dataset from [National Taiawn University ADL x MLDS Course](https
  ```
  
  3. Generate images:
+ 
  Naruto:
  ```
  python main.py generate --vis=False \
@@ -95,9 +96,9 @@ Here I use the dataset from [National Taiawn University ADL x MLDS Course](https
  
  - Result: <br>
 Naruto:
-<img src="./result2.png" height=90 width=90>
+<img src="./result2.png" height=500 width=150>
 
 Hatsune:
-<img src="./result-hatsune.png" height=90 width=90>
+<img src="./result-hatsune.png" height=150 width=150>
  
 
