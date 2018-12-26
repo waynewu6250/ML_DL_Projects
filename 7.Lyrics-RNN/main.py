@@ -115,7 +115,9 @@ def generate(**kwargs):
         if word == '<EOS>':
             break
     
-    print(''.join(results))
+    if "<EOS>" in results:
+        results.remove("<EOS>")
+    print(''.join(results).rstrip())
 
 
 if __name__ == '__main__':

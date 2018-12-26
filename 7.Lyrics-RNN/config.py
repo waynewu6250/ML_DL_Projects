@@ -1,8 +1,8 @@
 class Config:
 
     filename = 'data/files/all.txt'
-    pickle_path = '12-24.npz'
-    model_path = 'checkpoints/12-24.pth'
+    pickle_path = '12-26-all.npz'
+    model_path = 'checkpoints/12-26-all.pth'
 
     lr = 1e-3
     num_epoch = 40
