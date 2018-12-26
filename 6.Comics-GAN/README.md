@@ -7,10 +7,10 @@ Here, we implemented convolutional neural network based generator & discriminato
 ## Dataset: There are two datasets in this work: Naruto+One-piece and hatsune
 ### Naruto (about 4k images)
 The corresponding folder will be:
-1. *checkpoints/: to store models.
+1. *checkpoints/: to store models*.
 2. data/: scrape images from internet and face detection.
-3. *data-for-imagefolder/: store images for training.
-4. *gen_imgs/: store generated images.
+3. *data-for-imagefolder/: store images for training*.
+4. *gen_imgs/: store generated images*.
 (Italics mean too large to upload then skip.)
 
 - To start, I download the images from internet: [Zerochan: Naruto](https://www.zerochan.net/NARUTO) and [IMDB](https://www.imdb.com/title/tt6342474/mediaindex?page={}&ref_=ttmi_mi_sm) <br>
@@ -37,7 +37,7 @@ The corresponding folder will be:
 ### Hatsune (about 30k images)
 The corresponding folder will be:
 1. checkpoints-hatsune/: to store models.
-2. *data-for-imagefolder/: store images for training.
+2. *data-for-imagefolder/: store images for training*.
 3. gen_imgs-hatsune/: store generated images.
 (Italics mean too large to upload then skip.)
 
