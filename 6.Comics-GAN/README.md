@@ -49,7 +49,7 @@ Here I use the dataset from [National Taiawn University ADL x MLDS Course](https
 
 - To use:
  1. To allow visdom for visualization, please run `python -m visdom.server` on the terminal first.
- 2. Train:
+ 2. **Train**:
  
  Naruto:
  ```
@@ -73,7 +73,7 @@ Here I use the dataset from [National Taiawn University ADL x MLDS Course](https
                       
  ```
  
- 3. Generate images:
+ 3. **Generate images**:
  
  Naruto:
  ```
@@ -96,9 +96,9 @@ Here I use the dataset from [National Taiawn University ADL x MLDS Course](https
  
  - Result: <br>
 Naruto:
-<img src="./result2.png" height=500 width=150>
+<img src="./result2.png" height=1500 width=500>
 
 Hatsune:
-<img src="./result-hatsune.png" height=150 width=150>
+<img src="./result-hatsune.png" height=500 width=500>
  
 
