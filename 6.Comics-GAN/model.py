@@ -54,12 +54,16 @@ class Discriminator(nn.Module):
                     nn.BatchNorm2d(opt.dnf*8),
                     nn.LeakyReLU(0.2, inplace=True),
 
-                    nn.Conv2d(opt.dnf*8, 1, 4, 1, 0, bias=False),
-                    nn.Sigmoid()
+                    nn.Conv2d(opt.dnf*8, 1, 4, 1, 0, bias=False)
                     # Output Dimension: 1 (Probability)
         )
+        self.sigmoid = nn.Sigmoid()
 
     def forward(self, input):
-        return self.main(input).view(-1)
+        if opt.wgan:
+            return self.main(input).mean(0).view(1)
+        else:
+            input = self.main(input)
+            return self.sigmoid(input).view(-1)
 
 

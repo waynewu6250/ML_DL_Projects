@@ -8,6 +8,10 @@ class Config:
     lr1 = 2e-4 #encoder learning rate
     lr2 = 2e-4 #decoder learning rate
     beta1 = 0.5
+
+    #For WGAN
+    lr = 1e-4
+    wgan = False
     
     inf = 100 #noise feature map number
     gnf = 64 #generator feature map number
@@ -15,8 +19,8 @@ class Config:
 
     vis = False
     env = 'GAN'
-    netd_path = 'checkpoints/netd_250.pth'  
-    netg_path = 'checkpoints/netg_250.pth' 
+    netd_path = 'checkpoints/netd_49.pth'  
+    netg_path = 'checkpoints/netg_49.pth' 
 
     train_d = 1 #how many batchs to train discriminator once
     train_g = 5 #how many batchs to train generator once
@@ -26,8 +30,8 @@ class Config:
 
     # generate parameters
     gen_imgs = "result.png"
-    gen_pool_num = 500
-    gen_select_num = 16
+    gen_pool_num = 5000
+    gen_select_num = 64
     gen_mean = 0
     gen_std = 1
     
