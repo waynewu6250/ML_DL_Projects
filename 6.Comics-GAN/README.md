@@ -7,7 +7,7 @@ Here, we implemented convolutional neural network based generator & discriminato
 ## Dataset: There are two datasets in this work: Naruto+One-piece and hatsune
 ### Naruto (about 4k images)
 The corresponding folder will be:
-1. checkpoints/: to store models*.
+1. checkpoints/: to store models.
 2. data/: scrape images from internet and face detection.
 3. *data-for-imagefolder/: store images for training*.
 4. *gen_imgs/: store generated images*. <br>
