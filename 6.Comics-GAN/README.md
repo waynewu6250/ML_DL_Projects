@@ -39,7 +39,7 @@ python detect_face.py
 The corresponding folder will be:
 1. checkpoints-hatsune/: to store models.
 2. *data-for-imagefolder/: store images for training*.
-3. gen_imgs-hatsune/: store generated images.
+3. gen_imgs-hatsune/: store generated images. <br>
 (Italics mean too large to upload then skip.)
 
 Here I use the dataset from [National Taiawn University ADL x MLDS Course](https://www.csie.ntu.edu.tw/~yvchen/f106-adl/A4) which scrapes images from [Konachan.net](http://konachan.net/post/show/239400/aikatsu-clouds-flowers-hikami_sumire-hiten_goane_r)
