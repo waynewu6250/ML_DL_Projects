@@ -78,8 +78,8 @@ Here I use the dataset from [National Taiawn University ADL x MLDS Course](https
  Naruto:
  ```
  python main.py generate --vis=False \
-            --netd-path = checkpoints/netd_350.pth \
-            --netg-path = checkpoints/netg_350.pth \
+            --netd-path = checkpoints/netd_49.pth \
+            --netg-path = checkpoints/netg_49.pth \
             --gen-img = result.png \
             --gen-num = 64
  ```
