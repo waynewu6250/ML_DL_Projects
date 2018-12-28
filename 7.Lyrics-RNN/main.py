@@ -29,7 +29,7 @@ def train(**kwargs):
     # Model
     model = LyricsModel(len(word2ix), opt.embedding_dim, opt.latent_dim)
     if opt.model_path:
-        model.load_state_dict(t.load(opt.model_path))
+        model.load_state_dict(t.load(opt.model_path, map_location="cpu"))
     
     # Define optimizer and loss
     optimizer = Adam(model.parameters(), lr=opt.lr)
