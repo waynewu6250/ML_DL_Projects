@@ -1,7 +1,7 @@
 class Config:
 
     filename = 'data/files/all.txt'
-    pickle_path = '12-26-all.npz'
+    pickle_path = 'data/data_files/12-26-all.npz'
     model_path = 'checkpoints/12-26-all.pth'
 
     lr = 1e-3
@@ -14,8 +14,8 @@ class Config:
     use_gpu = False
     vis = False
 
-    start_words = '七里香' #First words
-    prefix_words = '七里香' #Style
+    start_words = '黑色幽默' #First words
+    prefix_words = '' #Style
     max_gen_len = 300
 
 
