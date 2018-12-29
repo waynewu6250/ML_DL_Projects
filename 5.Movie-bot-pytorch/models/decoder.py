@@ -22,11 +22,11 @@ class Decoder(nn.Module):
     def forward_step(self, inputs, hidden):
         # inputs: (time_steps=1, batch_size)
         batch_size = inputs.size(1)
-        embedded = self.embedding(inputs)
-        embedded.view(1, batch_size, self.latent_dim)  # S = T(1) x B x N
-        rnn_output, hidden = self.lstm(embedded, hidden)  # S = T(1) x B x H
-        rnn_output = rnn_output.squeeze(0)  # squeeze the time dimension
-        output = self.log_softmax(self.out(rnn_output))  # S = B x O
+        embedded = self.embedding(inputs) # (batch_size, char_dim)
+        embedded.view(1, batch_size, self.char_dim)  # (1, batch_size, char_dim)
+        rnn_output, hidden = self.lstm(embedded, hidden)  # (1, batch_size, latent_dim)
+        rnn_output = rnn_output.squeeze(0)  # squeeze the time dimension (batch_size, latent_dim)
+        output = self.log_softmax(self.out(rnn_output))  # (batch_size, vocab_size)
         return output, hidden
     
     def forward(self, context_vector, targets):
