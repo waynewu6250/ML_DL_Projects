@@ -35,7 +35,7 @@ def test():
                         decoder=decoder)
         
         encoder_data = mydata._test_batch(data, opt.mxlen)
-        seq2seq.load_state_dict(torch.load(opt.model_path))
+        seq2seq.load_state_dict(torch.load(opt.model_path, map_location="cpu"))
         
         decoded_indices = seq2seq.evaluation(encoder_data)
         decoded_sequence = ""

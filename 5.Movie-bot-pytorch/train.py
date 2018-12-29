@@ -31,7 +31,7 @@ def train():
                       decoder=decoder)
     
     if opt.model_path:
-        seq2seq.load_state_dict(torch.load(opt.model_path))
+        seq2seq.load_state_dict(torch.load(opt.model_path, map_location="cpu"))
         print("Pretrained model has been loaded.\n")
     
     
