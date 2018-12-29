@@ -49,7 +49,7 @@ Here I use the dataset from [National Taiawn University ADL x MLDS Course](https
 
 - To use:
  1. To allow visdom for visualization, please run `python -m visdom.server` on the terminal first.
- 2. **Train**:
+ 2. **Train**: I use DCGAN (in main.py) and W-GAN model (in wgan.py) for image training.
  
  Naruto:
  ```
@@ -72,6 +72,18 @@ Here I use the dataset from [National Taiawn University ADL x MLDS Course](https
                       --netg_path=None \
                       
  ```
+ 
+ Naruto (wgan):
+ ```
+ python wgan.py train --gpu \
+                      --vis=False \
+                      --data_path="data-for-imagefolder/" \
+                      --save_path="gen_imgs-wgan/" \
+                      --netd_path=None \
+                      --netg_path=None \
+                      
+ ```
+ 
  
  3. **Generate images**:
  
