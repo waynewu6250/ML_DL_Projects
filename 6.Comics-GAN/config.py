@@ -1,7 +1,7 @@
 class Config:
 
     data_path = "data-for-imagefolder/"
-    save_path = "gen_imgs-wgan/"
+    save_path = "gen_imgs/"
     img_size = 96
     batch_size = 32
     max_epoch = 400
@@ -19,8 +19,8 @@ class Config:
 
     vis = False
     env = 'GAN'
-    netd_path = None #'checkpoints/netd_49.pth'  
-    netg_path = None #'checkpoints/netg_49.pth' 
+    netd_path = 'checkpoints/netd_49.pth'  
+    netg_path = 'checkpoints/netg_49.pth' 
 
     train_d = 1 #how many batchs to train discriminator once
     train_g = 5 #how many batchs to train generator once
