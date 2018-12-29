@@ -1,5 +1,6 @@
 import os
 import torch as t
+from torch.autograd import Variable
 from torch.optim import RMSprop
 import torchvision as tv
 import tqdm
@@ -42,6 +43,19 @@ def train(**kwargs):
         netd.load_state_dict(t.load(opt.netd_path, map_location=map_location))
     if opt.netg_path:
         netg.load_state_dict(t.load(opt.netg_path, map_location=map_location))
+    
+    def weight_init(m):
+        # weight_initialization: important for wgan
+        class_name=m.__class__.__name__
+        if class_name.find('Conv')!=-1:
+            m.weight.data.normal_(0,0.02)
+        elif class_name.find('Norm')!=-1:
+            m.weight.data.normal_(1.0,0.02)
+        #     else:print(class_name)
+
+    netd.apply(weight_init)
+    netg.apply(weight_init)
+
     netd.to(device)
     netg.to(device)
     
@@ -52,46 +66,44 @@ def train(**kwargs):
     #                   START TRAINING                   #
     #====================================================#
 
-    true_labels = t.ones(opt.batch_size).to(device)
-    fake_labels = t.zeros(opt.batch_size).to(device)
-    noises = t.randn(opt.batch_size, opt.inf, 1, 1).to(device)
-    fix_noises = t.randn(opt.batch_size, opt.inf, 1, 1).to(device)
+    noises = Variable(t.randn(opt.batch_size, opt.inf, 1, 1)).to(device)
+    fix_noises = Variable(t.randn(opt.batch_size, opt.inf, 1, 1).normal_(0,1)).to(device)
+    
+    one=t.FloatTensor([1]*32)
+    mone=-1*one
 
     for epoch in range(opt.max_epoch):
         
         print("epoch %d:"%epoch)
-        netd.train(); netg.train()
         
         for ii, (imgs,_) in tqdm.tqdm(enumerate(dataloader)):
-            imgs = imgs.to(device)
+            imgs = Variable(imgs).to(device)
+            one = one.to(device)
+            mone = -1*one.to(device)
 
             # Train discriminator
             if ii % opt.train_d == 0:
                 for p in netd.parameters(): p.data.clamp_(-0.01, 0.01)
-                optimizer_d.zero_grad()
-                
-                real_loss = netd(imgs)
-                noises.data.copy_(t.randn(opt.batch_size, opt.inf, 1, 1))
-                fake_imgs = netg(noises).detach() # we don't want train generator at this stage
-                fake_loss = netd(fake_imgs)
-                lossd = real_loss-fake_loss
-                lossd.backward()
-                
+
+                netd.zero_grad()
+                ## train netd with real img
+                output=netd(imgs)
+                output.backward(one)
+                ## train netd with fake img
+                fake_imgs=netg(noises).detach()
+                output2=netd(fake_imgs)
+                output2.backward(mone)
                 optimizer_d.step()
 
             
             # Train generator
             if ii % opt.train_g == 0:
 
-                optimizer_g.zero_grad()
-
-                # noise should be classified as true_labels
-                noises.data.copy_(t.randn(opt.batch_size, opt.inf, 1, 1))
-                fake_imgs = netg(noises)
-                labels = netd(fake_imgs)
-                lossg = labels.mean(0).view(1)
-                lossg.backward()
-
+                netg.zero_grad()
+                noises.data.normal_(0,1)
+                fake_pic=netg(noises)
+                output=netd(fake_pic)
+                output.backward(one)
                 optimizer_g.step()
 
 
@@ -100,10 +112,7 @@ def train(**kwargs):
                 fix_fake_imgs = netg(fix_noises)
                 vis.images(fix_fake_imgs.detach().numpy() * 0.5 + 0.5, win='fixfake')
                 vis.images(imgs.data.numpy() * 0.5 + 0.5, win='real')
-                vis.plot('loss',lossd.data.item())
-            
-            print("\nDLoss: ",lossd.data.item())
-            print("GLoss: ",lossg.data.item())
+                vis.plot('loss',output.data[0])
             
         #Save img
         if epoch % opt.train_save == 0:
