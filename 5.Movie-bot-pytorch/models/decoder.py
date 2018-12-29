@@ -11,7 +11,7 @@ class Decoder(nn.Module):
         self.embedding = nn.Embedding(num_decoder_tokens, char_dim)
         self.lstm = nn.LSTM(char_dim, latent_dim)
         self.out = nn.Linear(latent_dim, num_decoder_tokens)
-        self.log_softmax = nn.LogSoftmax()  # work with NLLLoss = CrossEntropyLoss
+        self.log_softmax = nn.LogSoftmax(dim=1)  # work with NLLLoss = CrossEntropyLoss
 
         self.latent_dim = latent_dim
         self.char_dim = char_dim
