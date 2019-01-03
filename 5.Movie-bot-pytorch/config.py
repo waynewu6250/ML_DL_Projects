@@ -21,7 +21,8 @@ class Config:
     teacher_forcing_ratio = .5
     model_path = "checkpoints/epoch-9.pth"
 
-    gpu = True
+    attn = False
+    gpu = False
 
 
 opt = Config()

@@ -7,6 +7,8 @@ from torch.optim import Adam
 from models import Encoder
 from models import Decoder
 from models import Seq2seq
+from models import AttnDecoder
+from models import AttnSeq2seq
 from data import TrainData
 from config import opt
 
@@ -21,14 +23,25 @@ def train():
                       char_dim=opt.char_dim,
                       latent_dim=opt.latent_dim)
 
-    decoder = Decoder(num_decoder_tokens=mydata.data.num_decoder_tokens,
-                      char_dim=opt.char_dim,
-                      latent_dim=opt.latent_dim,
-                      teacher_forcing_ratio=opt.teacher_forcing_ratio,
-                      sos_id=mydata.data.output_word2id["<START>"])
+    if opt.attn:
+        decoder = AttnDecoder(num_decoder_tokens=mydata.data.num_decoder_tokens,
+                              char_dim=opt.char_dim,
+                              latent_dim=opt.latent_dim,
+                              time_steps=opt.mxlen,
+                              teacher_forcing_ratio=opt.teacher_forcing_ratio,
+                              sos_id=mydata.data.output_word2id["<START>"],
+                              dropout_rate=0.1)
+        seq2seq = AttnSeq2seq(encoder=encoder,
+                              decoder=decoder)
+    else:
+        decoder = Decoder(num_decoder_tokens=mydata.data.num_decoder_tokens,
+                        char_dim=opt.char_dim,
+                        latent_dim=opt.latent_dim,
+                        teacher_forcing_ratio=opt.teacher_forcing_ratio,
+                        sos_id=mydata.data.output_word2id["<START>"])
 
-    seq2seq = Seq2seq(encoder=encoder,
-                      decoder=decoder)
+        seq2seq = Seq2seq(encoder=encoder,
+                        decoder=decoder)
     
     if opt.model_path:
         seq2seq.load_state_dict(torch.load(opt.model_path, map_location="cpu"))
