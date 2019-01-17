@@ -14,7 +14,7 @@ The corresponding folder will be:
 (Italics mean too large to upload then skip.)
 
 
-To start, I download the images from internet: [Zerochan: Naruto](https://www.zerochan.net/NARUTO) and [IMDB](https://www.imdb.com/title/tt6342474/mediaindex?page={}&ref_=ttmi_mi_sm) <br>
+To start, I download the images from internet: [Zerochan: Naruto](https://www.zerochan.net/NARUTO) and [IMDB](https://www.imdb.com/title/tt0988824/?ref_=fn_al_tt_1) <br>
 It could be extracted by using the following command inside data/ folder:
 ```
 python scraping.py
