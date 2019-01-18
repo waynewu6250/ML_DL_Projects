@@ -63,7 +63,7 @@ This is the deep learning project completely done by Ting-Wei Wu. Basically, it 
 ---
 
 ### 8. Malaria Cell Prediction
-This is the deep learning project with CNN Resnet models from pytorch. Data are provided via Kaggle dataset: [Malaria Cell Images Dataset](https://www.kaggle.com/iarunava/cell-images-for-detecting-malaria/home)
+This is the deep learning project with CNN Resnet models from pytorch. Image data are provided via Kaggle dataset: [Malaria Cell Images Dataset](https://www.kaggle.com/iarunava/cell-images-for-detecting-malaria/home). The task is to classify cell images into two categories: parasitized or uninfected.
 
 <img src="https://www.asianscientist.com/wp-content/uploads/bfi_thumb/Malaria-Parasite-Is-Driving-Human-Evolution-In-Asia-Pacific-2srft49tu93vzoqhwlircw.jpg" height="220" width="330">
 
