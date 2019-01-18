@@ -58,3 +58,13 @@ This is the deep learning project completely done by Ting-Wei Wu. Basically, it 
 This is the deep learning project completely done by Ting-Wei Wu. Basically, it will generate some intriguing lyrics based on the major taiwanese songs' style. The networks are based on simple RNN model with major three singers. <br>
 
 <img src="http://www.bloggerbatam.com/wp-content/uploads/2017/02/Song-Lyrics.png" height="220" width="330">
+
+
+---
+
+### 8. Malaria Cell Prediction
+This is the deep learning project with CNN Resnet models from pytorch. Data are provided via Kaggle dataset: [Malaria Cell Images Dataset](https://www.kaggle.com/iarunava/cell-images-for-detecting-malaria/home)
+
+<img src="https://www.asianscientist.com/wp-content/uploads/bfi_thumb/Malaria-Parasite-Is-Driving-Human-Evolution-In-Asia-Pacific-2srft49tu93vzoqhwlircw.jpg" height="220" width="330">
+
+
