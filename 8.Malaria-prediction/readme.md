@@ -35,7 +35,7 @@ python main.py train --img_size = 224 \
 
 3. Visualization:
 
-The visualization is done in `Visualization.ipynb` <br>
+The visualization is done in `Visualization.ipynb` <br>
 First we will show the raw images with respectively parasitized and uninfected <br>
 Then we will show the results that the model predicted.
 Finally the roc curve and its area under curve performing in testing data set.
