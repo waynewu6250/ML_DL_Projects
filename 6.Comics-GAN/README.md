@@ -12,7 +12,7 @@ The corresponding folder will be:
 3. *data-for-imagefolder/: store images for training*.
 4. *gen_imgs/: store generated images*. <br>
 (Italics mean too large to upload then skip.)
-
+<Data are put into torchvision dataset: **ImageFolder** and fed into dataloader to be made use at training stage>
 
 To start, I download the images from internet: [Zerochan: Naruto](https://www.zerochan.net/NARUTO) and [IMDB](https://www.imdb.com/title/tt0988824/?ref_=fn_al_tt_1) <br>
 It could be extracted by using the following command inside data/ folder:
