@@ -8,7 +8,7 @@ Also thanks to the kernels provided to this dataset. <br>
 
 <img src="https://www.asianscientist.com/wp-content/uploads/bfi_thumb/Malaria-Parasite-Is-Driving-Human-Evolution-In-Asia-Pacific-2srft49tu93vzoqhwlircw.jpg" height="220" width="330">
 
-<Data are preprocessed to feed into dataloader **directly** and be made use at training stage>
+<Data are put into torchvision dataset: **ImageFolder** and fed into dataloader to be made use at training stage>
 
 * To use:
 1. Train: train with dataset at image folder cell_images/. (skipped)
