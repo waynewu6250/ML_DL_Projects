@@ -21,6 +21,8 @@ And thd files are stored as follows:
     ...
  ```
  
+ <Data are preprocessed to feed into dataloader **directly** and be made use at training stage>
+ 
  - To use:
  1. To allow visdom for visualization, please run `python -m visdom.server` on the terminal first.
  
