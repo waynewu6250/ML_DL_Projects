@@ -18,6 +18,7 @@ My side project gallery for collections and refinement <br>
 
 [8. Malaria Cell Prediction](#8)
 
+---
 
 <a name="1"></a>
 ### 1. AI robots on telegram
