@@ -1,3 +1,4 @@
+<div id="part_7"></div>
 
 # 7. Recurrent Neural Network for Taiwanese song's lyrics generation
 This is the deep learning project completely done by Ting-Wei Wu. <br>
