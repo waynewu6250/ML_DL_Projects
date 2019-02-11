@@ -1,3 +1,5 @@
+<div id="part_6"></div>
+
 # 6. Deep Convolutional Generative Adversarial Networks for Naruto character generation
 This is the deep learning project completely done by Ting-Wei Wu. Basically, it simulated the style drawing from Naruto, One-piece and hatsune figures to construct new characters by artificial intelligence. <br>
 
