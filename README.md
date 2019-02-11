@@ -3,6 +3,7 @@
 My side project gallery for collections and refinement <br>
 
 [1. AI robots on telegram](#1)
+[details](#part_1)
 
 [2. Image captioning](#2)
 
