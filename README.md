@@ -49,16 +49,14 @@ This is the nlp project completely done by Ting-Wei Wu with data preprocessing a
 
 Training data are extracted from movie_lines.tsv. Detailed descriptions are shown in the jupyter notebook: LHW4-Short-base.ipynb.
 
-<img src="4.Movie-bot/chatbots.jpg"  height="220" width="330">
-
----
-
 <a name="5"></a>
 ### [5. Movie Bot with pytorch](https://github.com/waynewu6250/ML_DL_Projects/blob/master/5.Movie-bot-pytorch#part_5)
 This is the nlp project completely done by Ting-Wei Wu with data preprocessing and pytorch seq2seq model establishment. <br>
 It is same with the project Movie-bot-keras except new implementation with pytorch model.
 
 Training data are extracted from movie_lines.tsv. Detailed descriptions are shown in the README.md in the subfolder.
+
+<img src="4.Movie-bot/chatbots.jpg"  height="220" width="330">
 
 ---
 
