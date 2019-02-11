@@ -3,7 +3,7 @@
 My side project gallery for collections and refinement <br>
 
 [1. AI robots on telegram](https://github.com/waynewu6250/ML_DL_Projects/tree/master/1.AI-robots-on-telegram#part_1)
-<br> [Please see descriptions below.](#1)
+<br> [(Descriptions)](#1)
 
 [2. Image captioning](#2)
 
