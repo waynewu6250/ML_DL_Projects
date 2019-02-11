@@ -1,3 +1,5 @@
+<div id="part_8"></div>
+
 # 8. Malaria Cell Image Prediction
 
 This is the deep learning project with CNN Resnet models from pytorch. Image data are provided via Kaggle dataset: [Malaria Cell Images Dataset](https://www.kaggle.com/iarunava/cell-images-for-detecting-malaria/home). <br> The task is to classify cell images into two categories: parasitized or uninfected.
