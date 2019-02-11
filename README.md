@@ -26,7 +26,7 @@ it will also serve as a stackoverflow assistant where you can ask it about code 
 ---
 
 <a name="2"></a>
-### 2. Image captioning
+### [2. Image captioning](https://github.com/waynewu6250/ML_DL_Projects/tree/master/2.Image-captioning#part_2)
 This is the CV-related project modified by the final project of coursera course: advanced machine learning specialization-Introduction to Deep Learning.   
 
 It will caption the given image and return a descriptive sentence that depicts the graph.
@@ -36,7 +36,7 @@ It will caption the given image and return a descriptive sentence that depicts t
 ---
 
 <a name="3"></a>
-### 3. Twitter hashtags
+### [3. Twitter hashtags](https://github.com/waynewu6250/ML_DL_Projects/blob/master/3.Twitter-hashtags#part_3)
 This is the pyspark project that will analyze the most frequent hashtags used by individual users.   
 
 <img src="3.Twitter-hashtags/hashtag.png"  height="220" width="330">
@@ -44,7 +44,7 @@ This is the pyspark project that will analyze the most frequent hashtags used by
 ---
 
 <a name="4"></a>
-### 4. Movie Bot with keras
+### [4. Movie Bot with keras](https://github.com/waynewu6250/ML_DL_Projects/blob/master/4.Movie-bot#part_4)
 This is the nlp project completely done by Ting-Wei Wu with data preprocessing and keras seq2seq model establishment. <br>
 
 Training data are extracted from movie_lines.tsv. Detailed descriptions are shown in the jupyter notebook: LHW4-Short-base.ipynb.
