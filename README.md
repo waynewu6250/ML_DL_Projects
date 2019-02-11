@@ -2,27 +2,19 @@
 ## Ting-Wei Wu
 My side project gallery for collections and refinement <br>
 
-[1. AI robots on telegram](https://github.com/waynewu6250/ML_DL_Projects/tree/master/1.AI-robots-on-telegram#part_1)
-<br> [(Descriptions)](#1)
-
+[1. AI robots on telegram](#1)
 [2. Image captioning](#2)
-
 [3. Twitter hashtags](#3)
-
 [4. Movie Bot with keras](#4)
-
 [5. Movie Bot with pytorch](#5)
-
 [6. Deep Convolutional Generative Adversarial Networks for Naruto character generation](#6)
-
 [7. Recurrent Neural Network for Taiwanese song's lyrics generation](#7)
-
 [8. Malaria Cell Prediction](#8)
 
 ---
 
 <a name="1"></a>
-### 1. AI robots on telegram
+### [1. AI robots on telegram](https://github.com/waynewu6250/ML_DL_Projects/tree/master/1.AI-robots-on-telegram#part_1)
 This is the nlp project modified by the final project of coursera course: advanced machine learning specialization-Natural Language Processing.  
 It will be put on the telegram messenger supported by amazon web service (AWS) EC2 server and named wayne-bot (waynewu86Bot). <br>
 
