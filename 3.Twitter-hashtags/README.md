@@ -1,3 +1,5 @@
+<div id="part_3"></div>
+
 # 3. Twitter hashtags
 This is the pyspark project that will analyze the most frequent hashtags used by individual users.   
 It can be also referred to the following respositories: <br>
