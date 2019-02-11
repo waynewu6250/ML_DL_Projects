@@ -2,14 +2,14 @@
 ## Ting-Wei Wu
 My side project gallery for collections and refinement <br>
 
-[1. AI robots on telegram](#1)
-[2. Image captioning](#2)
-[3. Twitter hashtags](#3)
-[4. Movie Bot with keras](#4)
-[5. Movie Bot with pytorch](#5)
-[6. Deep Convolutional Generative Adversarial Networks for Naruto character generation](#6)
-[7. Recurrent Neural Network for Taiwanese song's lyrics generation](#7)
-[8. Malaria Cell Prediction](#8)
+[1. AI robots on telegram](#1) <br>
+[2. Image captioning](#2) <br>
+[3. Twitter hashtags](#3) <br>
+[4. Movie Bot with keras](#4) <br>
+[5. Movie Bot with pytorch](#5) <br>
+[6. Deep Convolutional Generative Adversarial Networks for Naruto character generation](#6) <br>
+[7. Recurrent Neural Network for Taiwanese song's lyrics generation](#7) <br>
+[8. Malaria Cell Prediction](#8) <br>
 
 ---
 
