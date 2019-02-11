@@ -54,7 +54,7 @@ Training data are extracted from movie_lines.tsv. Detailed descriptions are show
 ---
 
 <a name="5"></a>
-### 5. Movie Bot with pytorch
+### [5. Movie Bot with pytorch](https://github.com/waynewu6250/ML_DL_Projects/blob/master/5.Movie-bot-pytorch#part_5)
 This is the nlp project completely done by Ting-Wei Wu with data preprocessing and pytorch seq2seq model establishment. <br>
 It is same with the project Movie-bot-keras except new implementation with pytorch model.
 
@@ -63,7 +63,7 @@ Training data are extracted from movie_lines.tsv. Detailed descriptions are show
 ---
 
 <a name="6"></a>
-### 6. Deep Convolutional Generative Adversarial Networks for Naruto character generation
+### [6. Deep Convolutional Generative Adversarial Networks for Naruto character generation](https://github.com/waynewu6250/ML_DL_Projects/tree/master/6.Comics-GAN#part_6)
 This is the deep learning project completely done by Ting-Wei Wu. Basically, it simulated the style drawing from Naruto figures to construct new naruto characters by artificial intelligence. <br>
 
 <img src="6.Comics-GAN/result.png" height="330" width="330">
@@ -72,7 +72,7 @@ This is the deep learning project completely done by Ting-Wei Wu. Basically, it 
 ---
 
 <a name="7"></a>
-### 7. Recurrent Neural Network for Taiwanese song's lyrics generation
+### [7. Recurrent Neural Network for Taiwanese song's lyrics generation](https://github.com/waynewu6250/ML_DL_Projects/tree/master/7.Lyrics-RNN#part_7)
 This is the deep learning project completely done by Ting-Wei Wu. Basically, it will generate some intriguing lyrics based on the major taiwanese songs' style. The networks are based on simple RNN model with major three singers. <br>
 
 <img src="http://www.bloggerbatam.com/wp-content/uploads/2017/02/Song-Lyrics.png" height="220" width="330">
@@ -81,7 +81,7 @@ This is the deep learning project completely done by Ting-Wei Wu. Basically, it 
 ---
 
 <a name="8"></a>
-### 8. Malaria Cell Prediction
+### [8. Malaria Cell Prediction](https://github.com/waynewu6250/ML_DL_Projects/tree/master/8.Malaria-prediction#part_8)
 This is the deep learning project with CNN Resnet models from pytorch. Image data are provided via Kaggle dataset: [Malaria Cell Images Dataset](https://www.kaggle.com/iarunava/cell-images-for-detecting-malaria/home). The task is to classify cell images into two categories: parasitized or uninfected.
 
 <img src="https://www.asianscientist.com/wp-content/uploads/bfi_thumb/Malaria-Parasite-Is-Driving-Human-Evolution-In-Asia-Pacific-2srft49tu93vzoqhwlircw.jpg" height="220" width="330">
