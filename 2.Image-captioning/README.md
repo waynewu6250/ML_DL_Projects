@@ -1,3 +1,5 @@
+<div id="part_2"></div>
+
 # 2. Image captioning
 This is the CV-related project modified by the final project of coursera course: advanced machine learning specialization-Introduction to Deep Learning.   
 It can be also referred to the following respositories: <br>

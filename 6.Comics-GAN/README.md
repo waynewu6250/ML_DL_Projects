@@ -1,3 +1,5 @@
+<div id="part_6"></div>
+
 # 6. Deep Convolutional Generative Adversarial Networks for Naruto character generation
 This is the deep learning project completely done by Ting-Wei Wu. Basically, it simulated the style drawing from Naruto, One-piece and hatsune figures to construct new characters by artificial intelligence. <br>
 
@@ -13,6 +15,7 @@ The corresponding folder will be:
 4. *gen_imgs/: store generated images*. <br>
 (Italics mean too large to upload then skip.)
 
+<Data are put into torchvision dataset: **ImageFolder** and fed into dataloader to be made use at training stage>
 
 To start, I download the images from internet: [Zerochan: Naruto](https://www.zerochan.net/NARUTO) and [IMDB](https://www.imdb.com/title/tt0988824/?ref_=fn_al_tt_1) <br>
 It could be extracted by using the following command inside data/ folder:

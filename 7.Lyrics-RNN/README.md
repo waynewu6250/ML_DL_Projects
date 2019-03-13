@@ -1,3 +1,4 @@
+<div id="part_7"></div>
 
 # 7. Recurrent Neural Network for Taiwanese song's lyrics generation
 This is the deep learning project completely done by Ting-Wei Wu. <br>
@@ -20,6 +21,8 @@ And thd files are stored as follows:
     ├── all.txt
     ...
  ```
+ 
+ <Data are preprocessed to feed into dataloader **directly** and be made use at training stage>
  
  - To use:
  1. To allow visdom for visualization, please run `python -m visdom.server` on the terminal first.
