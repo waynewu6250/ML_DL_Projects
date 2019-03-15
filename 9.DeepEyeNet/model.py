@@ -1,7 +1,10 @@
+from keras.preprocessing import sequence, image
 from keras.models import Sequential, Model, Input
 from keras.layers import LSTM, Embedding, TimeDistributed, Dense, RepeatVector, Activation, Flatten, Add, Lambda
 from keras.layers.wrappers import Bidirectional
 import keras.backend as K
+import numpy as np
+import re
 
 class CaptionModel:
     def __init__(self, embedding_size, vocab_size, max_len, word2id, id2word):
@@ -92,6 +95,29 @@ class CaptionModel:
         final_caption = ' '.join(final_caption[1:])
         return final_caption
     
+    # For tokenizaiton
+    @staticmethod
+    def text_prepare(text):
+        """
+            text: a string
+
+            return: modified string tokens 
+                    [tok1, tok2 , ...] which is a single sentence from one character
+        """
+        REPLACE_BY_SPACE_RE = re.compile('[-(){}\[\]\|@;]')
+        BAD_SYMBOLS_RE = re.compile('[#+_]')
+        mxlen = 50
+
+        tok = ["<START>"] # add START token to represent sentence start
+        text = text.lower() # lowercase text
+        text = re.sub(REPLACE_BY_SPACE_RE, ' ', text) # replace REPLACE_BY_SPACE_RE symbols by space in text
+        text = re.sub(BAD_SYMBOLS_RE, '', text) # delete symbols which are in BAD_SYMBOLS_RE from text
+        tok += (text.split(" ")+["<EOS>"]) # add EOS token to represent sentence end
+        if len(tok) > mxlen:
+            tok = tok[:mxlen]
+
+        return tok
+    
     
 class KeywordModel(CaptionModel):
     
@@ -129,7 +155,7 @@ class KeywordModel(CaptionModel):
         start_word = ["<START>"]
         while True:
             par_caps = [self.word2id[i] for i in start_word]
-            par_caps = sequence.pad_sequences([par_caps], maxlen=max_len, padding='post')
+            par_caps = sequence.pad_sequences([par_caps], maxlen=self.max_len, padding='post')
             current_key = self.keywords_ids[image]
             current_key = sequence.pad_sequences(np.asarray(current_key)[np.newaxis,:],
                                                  maxlen=self.key_max_len, padding='post').squeeze(0)
@@ -143,6 +169,51 @@ class KeywordModel(CaptionModel):
                 break
 
         return ' '.join(start_word[1:-1])
+    
+    def predict_captions_beam_search_k(self, image, images_features, model, beam_index = 3):
+        start = [self.word2id["<START>"]]
+
+        start_word = [[start, 0.0]]
+
+        while len(start_word[0][0]) < self.max_len:
+            temp = []
+            for s in start_word:
+                par_caps = sequence.pad_sequences([s[0]], maxlen=self.max_len, padding='post')
+                current_key = self.keywords_ids[image]
+                current_key = sequence.pad_sequences(np.asarray(current_key)[np.newaxis,:],
+                                                     maxlen=self.key_max_len, padding='post').squeeze(0)
+                e = images_features[image[:]]
+
+                preds = model.predict([np.array([e]), np.array(par_caps), np.array([current_key])])
+                word_preds = np.argsort(preds[0])[-beam_index:]
+
+                # Getting the top <beam_index>(n) predictions and creating a 
+                # new list so as to put them via the model again
+                for w in word_preds:
+                    next_cap, prob = s[0][:], s[1]
+                    next_cap.append(w)
+                    prob += preds[0][w]
+                    temp.append([next_cap, prob])
+
+            start_word = temp
+            # Sorting according to the probabilities
+            start_word = sorted(start_word, reverse=False, key=lambda l: l[1])
+            # Getting the top words
+            start_word = start_word[-beam_index:]
+
+        start_word = start_word[-1][0]
+        intermediate_caption = [self.id2word[i] for i in start_word]
+
+        final_caption = []
+
+        for i in intermediate_caption:
+            if i != '<EOS>':
+                final_caption.append(i)
+            else:
+                break
+
+        final_caption = ' '.join(final_caption[1:])
+        return final_caption
         
         
     
