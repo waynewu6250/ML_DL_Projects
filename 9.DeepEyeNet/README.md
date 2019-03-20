@@ -37,23 +37,22 @@ You can check out some examples below. The rest of the examples are in the jupyt
 **1. Training Image:**<br>
 <img src="train_img.png" width="300"><br>
 ```
-* Model without keywords: <br>
-Predicted Caption: 71 year old white female. srnv md. re 20/50 le 20/20. <br>
+* Model without keywords:
+Predicted Caption: 71 year old white female. srnv md. re 20/50 le 20/20.
 Ground Truth Caption: 67-year-old white male. srnv-md. re 20/40 le 20/15.
-<br>
-* Model with keywords: <br>
-Predicted Caption: 67 year old white male. srnv md. re 20/40 le 20/15. <br>
+* Model with keywords:
+Predicted Caption: 67 year old white male. srnv md. re 20/40 le 20/15.
 Ground Truth Caption: 67-year-old white male. srnv-md. re 20/40 le 20/15.
 ```
 
 **2. Testing Image:**<br>
 <img src="test_img.png" width="300"><br>
 ```
-* Model without keywords: <br>
-Predicted Caption: diabetic retinopathy fundus image. <br>
+* Model without keywords:
+Predicted Caption: diabetic retinopathy fundus image.
 Ground Truth Caption: diabetic retinopathy fundus image.
-* Model with keywords: <br>
-Predicted Caption: diabetic retinopathy fundus image. <br>
+* Model with keywords:
+Predicted Caption: diabetic retinopathy fundus image.
 Ground Truth Caption: diabetic retinopathy fundus image.
 ```
 
