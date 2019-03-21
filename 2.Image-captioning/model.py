@@ -30,7 +30,7 @@ class CaptionModel(nn.Module):
     
     def generate(self, img,
                  beam_size=3,
-                 max_caption_length=10,
+                 max_caption_length=20,
                  length_normalization_factor=0.0):
         """
         Generate images by tensorflow beam search algorithms

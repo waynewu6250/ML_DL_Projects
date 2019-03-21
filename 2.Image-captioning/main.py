@@ -38,8 +38,8 @@ def train(**kwargs):
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-            print("Current Loss: ", loss.item())
         
+        print("Current Loss: ", loss.item())
         if (epoch+1) % opt.save_model == 0:
             t.save(model.state_dict(), "checkpoints/{}.pth".format(epoch))
 
