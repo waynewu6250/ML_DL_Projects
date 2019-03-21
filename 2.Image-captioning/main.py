@@ -20,7 +20,7 @@ def train(**kwargs):
     dataloader = get_dataloader(opt)
     model = CaptionModel(opt, dataloader.dataset.word2ix, dataloader.dataset.id2ix)
     if opt.model_path:
-        model.load_state_dict(t.load(opt.model_path))
+        model.load_state_dict(t.load(opt.model_path, map_location='cpu'))
     t.backends.cudnn.enabled = False
     model = model.to(device)
     
@@ -71,7 +71,7 @@ def generate(**kwargs):
 
     # Caption Model
     model = CaptionModel(opt, word2ix, ix2word)
-    model.load_state_dict(t.load(opt.model_path))
+    model.load_state_dict(t.load(opt.model_path, map_location='cpu'))
     # model.to(device)
 
     results = model.generate(img_feats.data[0])

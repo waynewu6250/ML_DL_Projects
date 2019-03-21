@@ -2,7 +2,7 @@ class Config:
     caption_path = "data/caption.pth"
     img_feature_path = "data/image_feature.pth"
     img_path = "data/imgs/"
-    model_path = "checkpoints/9.pth"
+    model_path = "model_new.pth"
 
     batch_size = 256
     embedding_dim = 256
