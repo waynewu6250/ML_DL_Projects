@@ -1,4 +1,5 @@
-![](https://img.shields.io/badge/Licensed%20by-Wayne%20Wu-blue.svg)
+![](https://img.shields.io/badge/Licensed%20by-Wayne%20Wu-blue.svg) <br>
+![](https://img.shields.io/badge/Language-python-brightgreen.svg)
 
 
 
