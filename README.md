@@ -1,3 +1,7 @@
+![](https://img.shields.io/badge/Licensed%20by-Wayne%20Wu-blue.svg)
+
+
+
 # Machine learning and Deep learning related projects
 ## Ting-Wei Wu
 My side project gallery for collections and refinement <br>
