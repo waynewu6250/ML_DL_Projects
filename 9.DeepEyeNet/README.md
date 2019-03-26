@@ -16,18 +16,35 @@ Here we use Keras with Tensorflow backend for the code.
 5. At prediction stage, I am using Greedy search and Beam search with k=3 for predicting the captions of the images.
 
 # Results:
+## Evaluation
 I train the final model with and without the keyword reinforced to see the difference. For simplicity, I chose four main types of diseases around ~2000 images for training 3 epochs. Pretrained GLOVE word embeddings are used.
 
 The loss value of **1.8489** has been achieved without the keywords reinforced which gives barely satisfactory results.
 The loss value of **0.5446** has been achieved with the keywords reinforced and the model converges much faster than the previous model.
 
+For evaluation: we use bleu, CIDEr, Rouge scores to evaluate our results.
 The average bleu scores are calculated as follows, as with all the training ~2000 images.
 ```
-* Original model with train imgs: 0.7354783252699579
-* Original model with test imgs: 0.6450051351681783
-* Keyword model with train imgs: 0.9283996395411378
-* Keyword model with test imgs: 0.7225211741046165
+* Original model with train imgs: 0.8692
+* Original model with test imgs: 0.6879
+* Keyword model with train imgs: 0.9664
+* Keyword model with test imgs: 0.7387
 ```
+The average CIDEr scores are calculated as follows, as with all the training ~2000 images.
+```
+* Original model with train imgs: 6.3607
+* Original model with test imgs: 3.5747
+* Keyword model with train imgs: 8.3280
+* Keyword model with test imgs: 4.6886
+```
+The average Rouge scores are calculated as follows, as with all the training ~2000 images.
+```
+* Original model with train imgs: 0.8633
+* Original model with test imgs: 0.6532
+* Keyword model with train imgs: 0.9672
+* Keyword model with test imgs: 0.7127
+```
+
 
 
 You can check out some examples below. The rest of the examples are in the jupyter notebook `Image_captioning_VGG16.ipynb`. You can run the Jupyter Notebook and try out some retinal image examples for the medical description.
