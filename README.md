@@ -1,3 +1,8 @@
+![](https://img.shields.io/badge/Licensed%20by-Wayne%20Wu-blue.svg)
+![](https://img.shields.io/badge/Language-python-brightgreen.svg)
+
+
+
 # Machine learning and Deep learning related projects
 ## Ting-Wei Wu
 My side project gallery for collections and refinement <br>
@@ -28,11 +33,14 @@ it will also serve as a stackoverflow assistant where you can ask it about code 
 
 <a name="2"></a>
 ### [2. Image captioning](https://github.com/waynewu6250/ML_DL_Projects/tree/master/2.Image-captioning#part_2)
-This is a CV-related project modified by the final project of coursera course: advanced machine learning specialization-Introduction to Deep Learning.   
+This is the CV-NLP related project associated with generating captions for any input image.
+
+There are two different implementation for the applications: pytorch self-realization and modified final project for coursera online course.
 
 It will caption the given image and return a descriptive sentence that depicts the graph.
 
-<img src="2.Image-captioning/result.png"  height="220" width="330">
+<img src="2.Image-captioning/test_imgs/exp1.jpg"  height="220" width="330">
+a logo sign outside of the headquarters
 
 ---
 
