@@ -3,3 +3,7 @@
 /data/
 /checkpoints/
 /word_embedding/
+
+/__pycache__/
+/.ipynb_checkpoints/
+/.vscode/
