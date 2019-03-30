@@ -4,9 +4,26 @@
 
 This is a collaborative deep learning project called DeepEyeNet, originally licensed by [DeepEyeNet repo](https://github.com/huckiyang/DeepEyeNet) and referenced by [Image Captioning repo](https://github.com/yashk2810/Image-Captioning). The task is to generate medical descriptions of a typical retinal image input by using deep learning high level framework: keras. 
 
+* Dataset
+
 The dataset is from http://imagebank.asrs.org/ <br>
 (Please only access the Images via Retina Image Bank Website. A full credit index has been set in each folder of a specific disease. Please check https://imagebank.asrs.org/terms-of-use#contributors and https://imagebank.asrs.org/terms-of-use#visitors)
 
+* Notebooks
+
+There are three jupyter notebooks to illustrate the whole projects:
+```
+1. Image_captioning_VGG16.ipynb:
+Step-by-step process to process the data and build the model & giving some example outputs.
+
+2. Image_captioning_VGG16_evaluation.ipynb:
+Evaluate the results by common image captioning metrics.
+
+3. Image_captioning_VGG16_keyword_model.ipynb:
+Variation of different keyword embedded model to test the performances.
+```
+
+* At a glance
 
 Here we use Keras with Tensorflow backend for the code. 
 1. VGG16 is used for extracting the image features. 
@@ -14,8 +31,11 @@ Here we use Keras with Tensorflow backend for the code.
 3. Construct a custom-RNN model to feed each word and image feature at each time step and predict next word.
 4. Here I create a keyword-model to feed each specified keywords in training data for each image. The uncertain number of keywords are averaged to be a word vector and fed simultaneously with image vector into the final model.
 5. At prediction stage, I am using Greedy search and Beam search with k=3 for predicting the captions of the images.
+<br>
+<br>
 
-# Results:
+
+# Results
 ## Evaluation
 I train the final model with and without the keyword reinforced to see the difference. For simplicity, I chose four main types of diseases around ~2000 images for training 3 epochs. Pretrained GLOVE word embeddings are used.
 
@@ -24,32 +44,19 @@ The loss value of **0.5446** has been achieved with the keywords reinforced and 
 
 For evaluation: we use bleu, CIDEr, Rouge scores to evaluate our results.
 The average bleu scores are calculated as follows, as with all the training ~2000 images.
-```
-* Original model with train imgs: 0.8692
-* Original model with test imgs: 0.6879
-* Keyword model with train imgs: 0.9664
-* Keyword model with test imgs: 0.7387
-```
-The average CIDEr scores are calculated as follows, as with all the training ~2000 images.
-```
-* Original model with train imgs: 6.3607
-* Original model with test imgs: 3.5747
-* Keyword model with train imgs: 8.3280
-* Keyword model with test imgs: 4.6886
-```
-The average Rouge scores are calculated as follows, as with all the training ~2000 images.
-```
-* Original model with train imgs: 0.8633
-* Original model with test imgs: 0.6532
-* Keyword model with train imgs: 0.9672
-* Keyword model with test imgs: 0.7127
-```
 
+|  Model  | Phase | CIDEr  | BLEU-1 | BLEU-2 | BLEU-3 | BLEU-4 | ROUGE  |
+| ------- | ----- | ------ | ------ | ------ | ------ | ------ | ------ |
+| Normal  | Train | 6.3607 | 0.8692 | 0.8026 | 0.7720 | 0.6940 | 0.8633 |
+| Keyword | Train | 8.3280 | 0.9664 | 0.9491 | 0.9394 | 0.8770 | 0.9672 | 
+| Normal  | Test  | 3.5747 | 0.6879 | 0.5389 | 0.4871 | 0.4213 | 0.6532 |
+| Keyword | Test  | 4.6886 | 0.7387 | 0.6216 | 0.5837 | 0.5267 | 0.7127 |
 
+The calculation could be checked in the jupyter notebook `Image_captioning_VGG16_evaluation.ipynb`.
+
+## Example readouts
 
 You can check out some examples below. The rest of the examples are in the jupyter notebook `Image_captioning_VGG16.ipynb`. You can run the Jupyter Notebook and try out some retinal image examples for the medical description.
-
-## Example readouts:
 
 **1. Training Image:**<br>
 <img src="train_img.png" width="300"><br>
@@ -72,7 +79,8 @@ Ground Truth Caption: diabetic retinopathy fundus image.
 Predicted Caption: diabetic retinopathy fundus image.
 Ground Truth Caption: diabetic retinopathy fundus image.
 ```
-
+<br>
+<br>
 
 # Dependencies:
 * Keras 1.2.2
