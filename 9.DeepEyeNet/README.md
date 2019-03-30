@@ -31,8 +31,6 @@ Here we use Keras with Tensorflow backend for the code.
 3. Construct a custom-RNN model to feed each word and image feature at each time step and predict next word.
 4. Here I create a keyword-model to feed each specified keywords in training data for each image. The uncertain number of keywords are averaged to be a word vector and fed simultaneously with image vector into the final model.
 5. At prediction stage, I am using Greedy search and Beam search with k=3 for predicting the captions of the images.
-<br>
-<br>
 
 
 # Results
@@ -79,8 +77,6 @@ Ground Truth Caption: diabetic retinopathy fundus image.
 Predicted Caption: diabetic retinopathy fundus image.
 Ground Truth Caption: diabetic retinopathy fundus image.
 ```
-<br>
-<br>
 
 # Dependencies:
 * Keras 1.2.2
