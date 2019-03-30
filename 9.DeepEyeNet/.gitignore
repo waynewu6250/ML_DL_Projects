@@ -4,6 +4,6 @@
 /checkpoints/
 /word_embedding/
 
-/__pycache__/
+*.pyc
 /.ipynb_checkpoints/
 /.vscode/

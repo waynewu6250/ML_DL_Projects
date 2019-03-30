@@ -3,11 +3,11 @@ from torch.utils.data import Dataset, DataLoader
 import numpy as np
 import json
 import pickle
-from config import opt
+from eval_model.config import opt
 
 class CaptionData(Dataset):
 
-    def __init__(self, data_path):
+    def __init__(self, data_path, opt):
         self.raw_data = self.load_pickle(data_path)
         self.cap_toks = self.raw_data["cap_toks"]
         self.cap_ids = self.raw_data["cap_ids"]
@@ -15,7 +15,7 @@ class CaptionData(Dataset):
         self.id2word = self.raw_data["id2word"]
 
         self.cap_labels = [(idd, img.split('/')[2]) for img, idd in self.cap_ids.items()]
-        self.data, self.vocab_list = self.get_vocab()
+        self.data, self.vocab_list = self.get_vocab(opt)
         self.pad = len(self.word2id) #Last token
         self.num_classes = len(self.vocab_list)
 
@@ -35,10 +35,15 @@ class CaptionData(Dataset):
             pickle.dump(data, f)
     
     # Get label vocabulary list
-    def get_vocab(self):
-        vocab_list = {}
-        for i,label in enumerate(list(set(map(lambda x: x[1],self.cap_labels)))):
-            vocab_list[label] = i
+    def get_vocab(self, opt):
+        if opt.vocab_path:
+            vocab_list = t.load(opt.vocab_path)
+        else:
+            vocab_list = {}
+            for i,label in enumerate(list(set(map(lambda x: x[1],self.cap_labels)))):
+                vocab_list[label] = i
+            t.save(vocab_list, 'vocab_list.pth')
+
         return list(map(lambda x: (x[0], vocab_list[x[1]]), self.cap_labels)), vocab_list
 
 
@@ -62,7 +67,7 @@ def get_collate_fn(pad, num_classes, max_length=50):
     return collate_fn
 
 def get_dataloader(opt):
-    dataset = CaptionData(opt.data_path)
+    dataset = CaptionData(opt.data_path, opt)
     return DataLoader(dataset, 
                       batch_size=opt.batch_size, 
                       shuffle=False, 
