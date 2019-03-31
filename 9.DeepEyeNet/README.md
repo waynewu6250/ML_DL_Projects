@@ -4,12 +4,12 @@
 
 This is a collaborative deep learning project called DeepEyeNet, originally licensed by [DeepEyeNet repo](https://github.com/huckiyang/DeepEyeNet) and referenced by [Image Captioning repo](https://github.com/yashk2810/Image-Captioning). The task is to generate medical descriptions of a typical retinal image input by using deep learning high level framework: keras. 
 
-* Dataset
+* **Dataset**
 
 The dataset is from http://imagebank.asrs.org/ <br>
 (Please only access the Images via Retina Image Bank Website. A full credit index has been set in each folder of a specific disease. Please check https://imagebank.asrs.org/terms-of-use#contributors and https://imagebank.asrs.org/terms-of-use#visitors)
 
-* Notebooks
+* **Notebooks**
 
 There are three jupyter notebooks to illustrate the whole projects:
 
@@ -23,7 +23,7 @@ Evaluate the results by common image captioning metrics.
 Variation of different keyword embedded model to test the performances.
 
 
-* At a glance
+* **At a glance**
 
 Here we use Keras with Tensorflow backend for the code. 
 1. VGG16 is used for extracting the image features. 
