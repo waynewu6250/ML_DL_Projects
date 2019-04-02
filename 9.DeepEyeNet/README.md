@@ -22,6 +22,9 @@ Evaluate the results by common image captioning metrics.
 3. [Image_captioning_VGG16_keyword_model.ipynb](https://github.com/waynewu6250/ML_DL_Projects/blob/master/9.DeepEyeNet/Image_captioning_VGG16_keyword_model.ipynb):
 Variation of different keyword embedded model to test the performances.
 
+You can download all required files (preprocessed data, model checkpoints, evaluate results) in the following link: <br>
+https://drive.google.com/open?id=1D9JJ8y7iNdmqYnfdkjAROtJFSApg3l9A
+
 
 * **At a glance**
 
