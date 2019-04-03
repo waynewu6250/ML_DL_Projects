@@ -65,7 +65,7 @@ It is same with the project Movie-bot-keras except new implementation with pytor
 
 Training data are extracted from movie_lines.tsv. Detailed descriptions are shown in the README.md in the subfolder.
 
-<img src="4.Movie-bot/chatbots.jpg"  height="220" width="330">
+<img src="4.Movie-bot-keras/chatbots.jpg"  height="220" width="330">
 
 ---
 
