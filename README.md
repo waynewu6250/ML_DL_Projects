@@ -53,7 +53,7 @@ This is a pyspark project that will analyze the most frequent hashtags used by i
 ---
 
 <a name="4"></a>
-### [4. Movie Bot with keras](https://github.com/waynewu6250/ML_DL_Projects/blob/master/4.Movie-bot#part_4)
+### [4. Movie Bot with keras](https://github.com/waynewu6250/ML_DL_Projects/blob/master/4.Movie-bot-keras#part_4)
 This is a nlp project completely done by Ting-Wei Wu with data preprocessing and keras seq2seq model establishment. <br>
 
 Training data are extracted from movie_lines.tsv. Detailed descriptions are shown in the jupyter notebook: LHW4-Short-base.ipynb.
@@ -65,7 +65,7 @@ It is same with the project Movie-bot-keras except new implementation with pytor
 
 Training data are extracted from movie_lines.tsv. Detailed descriptions are shown in the README.md in the subfolder.
 
-<img src="4.Movie-bot/chatbots.jpg"  height="220" width="330">
+<img src="4.Movie-bot-keras/chatbots.jpg"  height="220" width="330">
 
 ---
 
