@@ -427,7 +427,7 @@ def decode_sequence(input_seq,e_model,d_model):
     
     decoded_sentence = decoded_sentence.strip('<EOS>')
     if decoded_sentence == ' ':
-        decoded_sentence = '...'
+        decoded_sentence = 'I have nothing to say'
 
     return decoded_sentence
 

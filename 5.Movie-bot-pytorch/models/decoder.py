@@ -29,12 +29,11 @@ class Decoder(nn.Module):
         output = self.log_softmax(self.out(rnn_output))  # (batch_size, vocab_size)
         return output, hidden
     
-    def forward(self, context_vector, targets):
+    def forward(self, decoder_hidden, targets):
 
         # Prepare variable for decoder on time_step_0
-        batch_size = context_vector[0].size(1)
+        batch_size = decoder_hidden[0].size(1)
         decoder_input = Variable(torch.LongTensor([[self.sos_id] * batch_size]))
-        decoder_hidden = context_vector
         
         decoder_outputs = Variable(torch.zeros(
             targets.size(0),
@@ -85,7 +84,7 @@ class Decoder(nn.Module):
                 _, index = torch.topk(decoder_outputs[b][t], 1)
                 decoded_indices.append(index.item())
         
-        return decoded_indices
+        return decoded_indices, decoder_hidden
 
 
 

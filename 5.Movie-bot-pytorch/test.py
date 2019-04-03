@@ -13,11 +13,15 @@ from data import TrainData
 from config import opt
 
 def test():
-    
+
+    decoder_hidden = None
+
     while True:
+        
         data = input('You say: ')
         if data == "exit":
             break
+        data = ' '.join(data.split(' ')[:opt.mxlen])
         
         # dataset
         mydata = TrainData(opt.data_path, opt.toks_path)
@@ -52,17 +56,17 @@ def test():
         if opt.model_path:
             seq2seq.load_state_dict(torch.load(opt.model_path, map_location="cpu"))
         
-        decoded_indices = seq2seq.evaluation(encoder_data)
+        decoded_indices, decoder_hidden = seq2seq.evaluation(encoder_data, decoder_hidden)
+
         decoded_sequence = ""
-        for ii, idx in enumerate(decoded_indices):
-            if ii == 0:
+        for idx in decoded_indices:
+            sampled_tok = mydata.data.output_id2word[idx]
+            if sampled_tok == "<START>" or sampled_tok == "<UNK>":
                 continue
+            elif sampled_tok == "<EOS>":
+                break
             else:
-                sampled_tok = mydata.data.output_id2word[idx]
-                if sampled_tok == "<EOS>":
-                    break
-                else:
-                    decoded_sequence += ' '+sampled_tok
+                decoded_sequence += ' '+sampled_tok
         
         print("WayneBot: ",decoded_sequence)
 
