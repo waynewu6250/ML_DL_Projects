@@ -163,7 +163,7 @@ class KeywordModel:
 #                     1.AttentionModel                       #
 ##############################################################
 class AttentionModel(KeywordModel):
-    def __init__(self, param):
+    def __init__(self, param, img_size):
         super(AttentionModel, self).__init__(param)
         
         # Softmax calculation
@@ -193,14 +193,14 @@ class AttentionModel(KeywordModel):
             Dense(1, activation = "relu"),
             Activation(softmax, name='attention_weights'),
         ])
-
         
+        self.img_size = img_size
     
     def forward(self):
         #  Image Input
-        x1 = Input(shape=(4096,))
+        x1 = Input(shape=(self.img_size,))
         img_input = self.image_model(x1)
-        img_input_no_repeat = Dense(self.embedding_size, input_shape=(4096,), activation='relu')(x1)
+        img_input_no_repeat = Dense(self.embedding_size, input_shape=(self.img_size,), activation='relu')(x1)
 
         # Caption Input
         x2 = Input(shape=(self.max_len,))
@@ -229,16 +229,17 @@ class AttentionModel(KeywordModel):
 #                     2.RNNEncoder                           #
 ##############################################################
 class EncoderModel(KeywordModel):
-    def __init__(self, param):
+    def __init__(self, param, img_size):
         super(EncoderModel, self).__init__(param)
+        self.img_size = img_size
     
     def forward(self):
-        x1 = Input(shape=(4096,))
+        x1 = Input(shape=(self.img_size,))
         x2 = Input(shape=(self.max_len,))
         x3 = Input(shape=(self.key_max_len,))
 
         # keyword encoder
-        img_input = Dense(self.embedding_size, input_shape=(4096,), activation='relu')(x1)
+        img_input = Dense(self.embedding_size, input_shape=(self.img_size,), activation='relu')(x1)
         img_input = Lambda(lambda x: K.expand_dims(x, axis=1))(img_input)
         caption_input = self.caption_model(x2)
 
@@ -258,11 +259,13 @@ class EncoderModel(KeywordModel):
 #                     3.MeanEncoder                          #
 ##############################################################
 class MeanModel(KeywordModel):
-    def __init__(self, param):
+    def __init__(self, param, img_size):
         super(MeanModel, self).__init__(param)
+        self.img_size = img_size
+        
         # create image model
         self.image_model = Sequential([
-                Dense(self.embedding_size, input_shape=(4096,), activation='relu'),
+                Dense(self.embedding_size, input_shape=(self.img_size,), activation='relu'),
                 RepeatVector(self.max_len)
                 ])
         
@@ -274,7 +277,7 @@ class MeanModel(KeywordModel):
         ])
     
     def forward(self):
-        x1 = Input(shape=(4096,))
+        x1 = Input(shape=(self.img_size,))
         x2 = Input(shape=(self.max_len,))
         x3 = Input(shape=(self.key_max_len,))
 

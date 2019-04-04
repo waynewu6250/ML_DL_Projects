@@ -7,10 +7,10 @@ import numpy as np
 import re
 
 class CaptionModel:
-    def __init__(self, embedding_size, vocab_size, max_len, word2id, id2word):
+    def __init__(self, embedding_size, vocab_size, max_len, word2id, id2word, img_size):
         # Create image model
         self.image_model = Sequential([
-                Dense(embedding_size, input_shape=(4096,), activation='relu'),
+                Dense(embedding_size, input_shape=(img_size,), activation='relu'),
                 RepeatVector(max_len)
                 ])
         # Create caption model
@@ -25,9 +25,10 @@ class CaptionModel:
         self.max_len = max_len
         self.word2id = word2id
         self.id2word = id2word
+        self.img_size = img_size
     
     def forward(self):
-        x1 = Input(shape=(4096,))
+        x1 = Input(shape=(self.img_size,))
         x2 = Input(shape=(self.max_len,))
         img_input = self.image_model(x1)
         caption_input = self.caption_model(x2)
@@ -58,7 +59,7 @@ class CaptionModel:
                     count += 1
                     partial_caps.append(cap_ids[img_path][:j+1])
                     current_imgs.append(current_img)
-                    next_words.append(np.eye(self.vocab_size)[cap_ids[img_path][j+1]])
+                    next_words.append(np.eye(self.ocab_size)[cap_ids[img_path][j+1]])
 
                     if count >= batch_size:
                         partial_caps = sequence.pad_sequences(partial_caps, maxlen=self.max_len, padding='post')
@@ -149,7 +150,4 @@ class CaptionModel:
             tok = tok[:mxlen]
 
         return tok
-        
-        
-    
-        
+ 

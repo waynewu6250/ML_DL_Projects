@@ -11,15 +11,15 @@ The dataset is from http://imagebank.asrs.org/ <br>
 
 * **Notebooks**
 
-There are three jupyter notebooks to illustrate the whole projects:
+There are four jupyter notebooks to illustrate the whole projects:
 
-1. [Image_captioning_VGG16.ipynb](https://github.com/waynewu6250/ML_DL_Projects/blob/master/9.DeepEyeNet/Image_captioning_VGG16.ipynb):
+1. [Image_captioning_VGG16.ipynb](https://github.com/waynewu6250/ML_DL_Projects/blob/master/9.DeepEyeNet/Image_captioning_VGG16.ipynb), [Image_captioning_InceptionV3.ipynb](https://github.com/waynewu6250/ML_DL_Projects/blob/master/9.DeepEyeNet/Image_captioning_InceptionV3.ipynb):
 Step-by-step process to process the data and build the model & giving some example outputs.
 
-2. [Image_captioning_VGG16_evaluation.ipynb](https://github.com/waynewu6250/ML_DL_Projects/blob/master/9.DeepEyeNet/Image_captioning_VGG_evaluation.ipynb):
+2. [Image_captioning_evaluation.ipynb](https://github.com/waynewu6250/ML_DL_Projects/blob/master/9.DeepEyeNet/Image_captioning_VGG_evaluation.ipynb):
 Evaluate the results by common image captioning metrics.
 
-3. [Image_captioning_VGG16_keyword_model.ipynb](https://github.com/waynewu6250/ML_DL_Projects/blob/master/9.DeepEyeNet/Image_captioning_VGG16_keyword_model.ipynb):
+3. [Image_captioning_keyword_model.ipynb](https://github.com/waynewu6250/ML_DL_Projects/blob/master/9.DeepEyeNet/Image_captioning_VGG16_keyword_model.ipynb):
 Variation of different keyword embedded model to test the performances.
 
 You can download all required files (preprocessed data, model checkpoints, evaluate results) in the following link: <br>
@@ -29,7 +29,7 @@ https://drive.google.com/open?id=1D9JJ8y7iNdmqYnfdkjAROtJFSApg3l9A
 * **At a glance**
 
 Here we use Keras with Tensorflow backend for the code. 
-1. VGG16 is used for extracting the image features. 
+1. VGG16, VGG19, InceptionV3 model are used for extracting the image features. (VGG19 is the same notebook with VGG16)
 2. We also preprocess the medical descriptions of each training data.The first, we feed it into LSTM model to get word features. 
 3. Construct a custom-RNN model to feed each word and image feature at each time step and predict next word.
 4. Here I create a keyword-model to feed each specified keywords in training data for each image. The uncertain number of keywords are averaged to be a word vector and fed simultaneously with image vector into the final model.
@@ -46,6 +46,8 @@ The loss value of **0.5446** has been achieved with the keywords reinforced and 
 For evaluation: we use bleu, CIDEr, Rouge scores to evaluate our results.
 The average bleu scores are calculated as follows, as with all the training ~2000 images.
 
+VGG16:
+
 |  Model  | Phase | CIDEr  | BLEU-1 | BLEU-2 | BLEU-3 | BLEU-4 | ROUGE  |
 | ------- | ----- | ------ | ------ | ------ | ------ | ------ | ------ |
 | Normal  | Train | 6.3607 | 0.8692 | 0.8026 | 0.7720 | 0.6940 | 0.8633 |
@@ -53,11 +55,12 @@ The average bleu scores are calculated as follows, as with all the training ~200
 | Normal  | Test  | 3.5747 | 0.6879 | 0.5389 | 0.4871 | 0.4213 | 0.6532 |
 | Keyword | Test  | 4.6886 | 0.7387 | 0.6216 | 0.5837 | 0.5267 | 0.7127 |
 
-The calculation could be checked in the jupyter notebook `Image_captioning_VGG16_evaluation.ipynb`.
+The calculation could be checked in the jupyter notebook `Image_captioning_evaluation.ipynb`.
+And the score results are also stored in `results/results.txt`
 
 ## Example readouts
 
-You can check out some examples below. The rest of the examples are in the jupyter notebook `Image_captioning_VGG16.ipynb`. You can run the Jupyter Notebook and try out some retinal image examples for the medical description.
+You can check out some examples below. The rest of the examples are in the jupyter notebook `Image_captioning_VGG16.ipynb` and `Image_captioning_Inception_V3.ipynb`. You can run the Jupyter Notebook and try out some retinal image examples for the medical description.
 
 **1. Training Image:**<br>
 <img src="train_img.png" width="300"><br>

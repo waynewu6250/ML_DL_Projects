@@ -1,0 +1,105 @@
+VGG16
+-----------------------------
+Bleu score 1:
+train bleu 1 score = 0.8449
+test bleu 1 score = 0.6255
+train bleu 1 score (key model) = 0.9602
+test bleu 1 score (key model) = 0.6853
+-----------------------------
+Bleu score 2:
+train bleu 2 score = 0.7535
+test bleu 2 score = 0.5162
+train bleu 2 score (key model) = 0.8950
+test bleu 2 score (key model) = 0.5964
+-----------------------------
+Bleu score 3:
+train bleu 3 score = 0.6352
+test bleu 3 score = 0.3828
+train bleu 3 score (key model) = 0.7879
+test bleu 3 score (key model) = 0.4654
+-----------------------------
+Bleu score 4:
+train bleu 4 score = 0.5938
+test bleu 4 score = 0.3493
+train bleu 4 score (key model) = 0.7570
+test bleu 4 score (key model) = 0.4388
+-----------------------------
+cider:
+train cider score = 6.3607
+test cider score = 3.5747
+train cider score (key model) = 9.0316
+test cider score (key model) = 4.6886
+-----------------------------
+rouge:
+train rouge score = 0.8633
+test rouge score = 0.6532
+train rouge score (key model) = 1.0000
+test rouge score (key model) = 0.7127
+
+
+VGG19
+-----------------------------
+Bleu score 1:
+train bleu 1 score = 0.8410
+test bleu 1 score = 0.6230
+-----------------------------
+Bleu score 2:
+train bleu 2 score = 0.7523
+test bleu 2 score = 0.5213
+-----------------------------
+Bleu score 3:
+train bleu 3 score = 0.6320
+test bleu 3 score = 0.3807
+-----------------------------
+Bleu score 4:
+train bleu 4 score = 0.5882
+test bleu 4 score = 0.3418
+-----------------------------
+cider:
+train cider score = 6.2702
+test cider score = 3.5622
+-----------------------------
+rouge:
+train rouge score = 0.8598
+test rouge score = 0.6547
+
+
+
+Inception_V3
+-----------------------------
+Bleu score 1:
+train bleu 1 score = 0.9825
+test bleu 1 score = 0.6709
+train bleu 1 score (key model) = 0.9913
+test bleu 1 score (key model) = 0.6924
+-----------------------------
+Bleu score 2:
+train bleu 2 score = 0.9226
+test bleu 2 score = 0.5910
+train bleu 2 score (key model) = 0.9342
+test bleu 2 score (key model) = 0.6096
+-----------------------------
+Bleu score 3:
+train bleu 3 score = 0.8182
+test bleu 3 score = 0.4594
+train bleu 3 score (key model) = 0.8345
+test bleu 3 score (key model) = 0.4790
+-----------------------------
+Bleu score 4:
+train bleu 4 score = 0.7889
+test bleu 4 score = 0.4342
+train bleu 4 score (key model) = 0.8074
+test bleu 4 score (key model) = 0.4539
+-----------------------------
+cider:
+train cider score = 8.6489
+test cider score = 4.5284
+train cider score (key model) = 8.8784
+test cider score (key model) = 4.8400
+-----------------------------
+rouge:
+train rouge score = 0.9850
+test rouge score = 0.6944
+train rouge score (key model) = 0.9927
+test rouge score (key model) = 0.7138
+
