@@ -16,10 +16,10 @@ There are four jupyter notebooks to illustrate the whole projects:
 1. [Image_captioning_VGG16.ipynb](https://github.com/waynewu6250/ML_DL_Projects/blob/master/9.DeepEyeNet/Image_captioning_VGG16.ipynb), [Image_captioning_InceptionV3.ipynb](https://github.com/waynewu6250/ML_DL_Projects/blob/master/9.DeepEyeNet/Image_captioning_InceptionV3.ipynb):
 Step-by-step process to process the data and build the model & giving some example outputs.
 
-2. [Image_captioning_evaluation.ipynb](https://github.com/waynewu6250/ML_DL_Projects/blob/master/9.DeepEyeNet/Image_captioning_VGG_evaluation.ipynb):
+2. [Image_captioning_evaluation.ipynb](https://github.com/waynewu6250/ML_DL_Projects/blob/master/9.DeepEyeNet/Image_captioning_evaluation.ipynb):
 Evaluate the results by common image captioning metrics.
 
-3. [Image_captioning_keyword_model.ipynb](https://github.com/waynewu6250/ML_DL_Projects/blob/master/9.DeepEyeNet/Image_captioning_VGG16_keyword_model.ipynb):
+3. [Image_captioning_keyword_model.ipynb](https://github.com/waynewu6250/ML_DL_Projects/blob/master/9.DeepEyeNet/Image_captioning_keyword_model.ipynb):
 Variation of different keyword embedded model to test the performances.
 
 You can download all required files (preprocessed data, model checkpoints, evaluate results) in the following link: <br>
