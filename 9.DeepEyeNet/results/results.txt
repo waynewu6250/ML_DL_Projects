@@ -33,7 +33,7 @@ test cider score (key model) = 4.6886
 rouge:
 train rouge score = 0.8633
 test rouge score = 0.6532
-train rouge score (key model) = 1.0000
+train rouge score (key model) = 0.9672
 test rouge score (key model) = 0.7127
 
 
