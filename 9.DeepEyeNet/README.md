@@ -2,7 +2,34 @@
 
 # 9. DeepEyeNet
 
-This is a collaborative deep learning project called DeepEyeNet, originally licensed by [DeepEyeNet repo](https://github.com/huckiyang/DeepEyeNet) and referenced by [Image Captioning repo](https://github.com/yashk2810/Image-Captioning). The task is to generate medical descriptions of a typical retinal image input by using deep learning high level framework: keras. 
+This is a collaborative deep learning project called DeepEyeNet, originally licensed by [DeepEyeNet repo](https://github.com/huckiyang/DeepEyeNet) and referenced by [Image Captioning repo](https://github.com/yashk2810/Image-Captioning). The task is to generate medical descriptions of a typical retinal image input by using deep learning high level framework: keras.
+
+* **Folder Structure**
+
+```
+data/ (download from following link)
+└── data_path/ (all images path)
+└── img_features/ (all extracted features)
+
+eyenet_0819/ (download from following link)
+└── data_path/ (all images path)
+└── img_features/ (all extracted features)
+
+model/
+├── model.py
+├── model_k.py
+
+results/
+├── results.txt
+├── results_vgg16.pkl
+├── results_vgg19.pkl
+├── results_i3.pkl
+
+Image_captioning_step_by_step.ipynb
+Image_captioning_evaluation.ipynb
+Image_captioning_keyword_model.ipynb
+utils.py
+```
 
 * **Dataset**
 
@@ -11,9 +38,9 @@ The dataset is from http://imagebank.asrs.org/ <br>
 
 * **Notebooks**
 
-There are four jupyter notebooks to illustrate the whole projects:
+There are three jupyter notebooks to illustrate the whole projects:
 
-1. [Image_captioning_VGG16.ipynb](https://github.com/waynewu6250/ML_DL_Projects/blob/master/9.DeepEyeNet/Image_captioning_VGG16.ipynb), [Image_captioning_InceptionV3.ipynb](https://github.com/waynewu6250/ML_DL_Projects/blob/master/9.DeepEyeNet/Image_captioning_Inception_V3.ipynb):
+1. [Image_captioning_step_by_step.ipynb](https://github.com/waynewu6250/ML_DL_Projects/blob/master/9.DeepEyeNet/Image_captioning_step_by_step.ipynb):
 Step-by-step process to process the data and build the model & giving some example outputs.
 
 2. [Image_captioning_evaluation.ipynb](https://github.com/waynewu6250/ML_DL_Projects/blob/master/9.DeepEyeNet/Image_captioning_evaluation.ipynb):
@@ -29,7 +56,7 @@ https://drive.google.com/open?id=1D9JJ8y7iNdmqYnfdkjAROtJFSApg3l9A
 * **At a glance**
 
 Here we use Keras with Tensorflow backend for the code. 
-1. VGG16, VGG19, InceptionV3 model are used for extracting the image features. (VGG19 is the same notebook with VGG16)
+1. Classic VGG16, VGG19, InceptionV3, Resnet50 model are used for extracting the image features. 
 2. We also preprocess the medical descriptions of each training data.The first, we feed it into LSTM model to get word features. 
 3. Construct a custom-RNN model to feed each word and image feature at each time step and predict next word.
 4. Here I create a keyword-model to feed each specified keywords in training data for each image. The uncertain number of keywords are averaged to be a word vector and fed simultaneously with image vector into the final model.
@@ -40,6 +67,7 @@ Here we use Keras with Tensorflow backend for the code.
 ## Evaluation
 I train the final model with and without the keyword reinforced to see the difference. For simplicity, I chose four main types of diseases around ~2000 images for training 3 epochs. Pretrained GLOVE word embeddings are used.
 
+For model with VGG16 pre-extracted image features: <br>
 The loss value of **1.8489** has been achieved without the keywords reinforced which gives barely satisfactory results.
 The loss value of **0.5446** has been achieved with the keywords reinforced and the model converges much faster than the previous model.
 
@@ -59,26 +87,36 @@ VGG19:
 
 |  Model  | Phase | CIDEr  | BLEU-1 | BLEU-2 | BLEU-3 | BLEU-4 | ROUGE  |
 | ------- | ----- | ------ | ------ | ------ | ------ | ------ | ------ |
-| Normal  | Train | 6.3607 | 0.8410 | 0.7523 | 0.6320 | 0.5882 | 0.8633 |
-| Keyword | Train | 8.3280 | 0.9664 | 0.9491 | 0.9394 | 0.8770 | 0.9672 | 
-| Normal  | Test  | 3.5747 | 0.6879 | 0.5389 | 0.4871 | 0.4213 | 0.6532 |
-| Keyword | Test  | 4.6886 | 0.7387 | 0.6216 | 0.5837 | 0.5267 | 0.7127 |
+| Normal  | Train | 6.2702 | 0.8410 | 0.7523 | 0.6320 | 0.5882 | 0.8598 |
+| Keyword | Train | ------ | ------ | ------ | ------ | ------ | ------ | 
+| Normal  | Test  | 3.5622 | 0.6230 | 0.5213 | 0.3807 | 0.3418 | 0.6547 |
+| Keyword | Test  | ------ | ------ | ------ | ------ | ------ | ------ |
 
 Inceptoin V3:
 
 |  Model  | Phase | CIDEr  | BLEU-1 | BLEU-2 | BLEU-3 | BLEU-4 | ROUGE  |
 | ------- | ----- | ------ | ------ | ------ | ------ | ------ | ------ |
-| Normal  | Train | 6.3607 | 0.8692 | 0.8026 | 0.7720 | 0.6940 | 0.8633 |
-| Keyword | Train | 8.3280 | 0.9664 | 0.9491 | 0.9394 | 0.8770 | 0.9672 | 
-| Normal  | Test  | 3.5747 | 0.6879 | 0.5389 | 0.4871 | 0.4213 | 0.6532 |
-| Keyword | Test  | 4.6886 | 0.7387 | 0.6216 | 0.5837 | 0.5267 | 0.7127 |
+| Normal  | Train | 8.6489 | 0.9825 | 0.9226 | 0.8182 | 0.7889 | 0.9850 |
+| Keyword | Train | 8.8784 | 0.9913 | 0.9342 | 0.8345 | 0.8074 | 0.9927 | 
+| Normal  | Test  | 4.5284 | 0.6709 | 0.5910 | 0.4594 | 0.4342 | 0.6944 |
+| Keyword | Test  | 4.8400 | 0.6924 | 0.6096 | 0.4790 | 0.4539 | 0.7138 |
+
+ResNet 50:
+
+|  Model  | Phase | CIDEr  | BLEU-1 | BLEU-2 | BLEU-3 | BLEU-4 | ROUGE  |
+| ------- | ----- | ------ | ------ | ------ | ------ | ------ | ------ |
+| Normal  | Train | ------ | ------ | ------ | ------ | ------ | ------ |
+| Keyword | Train | ------ | ------ | ------ | ------ | ------ | ------ | 
+| Normal  | Test  | ------ | ------ | ------ | ------ | ------ | ------ |
+| Keyword | Test  | ------ | ------ | ------ | ------ | ------ | ------ |
+
 
 The calculation could be checked in the jupyter notebook `Image_captioning_evaluation.ipynb`.
 And the score results are also stored in `results/results.txt`
 
 ## Example readouts
 
-You can check out some examples below. The rest of the examples are in the jupyter notebook `Image_captioning_VGG16.ipynb` and `Image_captioning_Inception_V3.ipynb`. You can run the Jupyter Notebook and try out some retinal image examples for the medical description.
+You can check out some examples below. The rest of the examples are in the jupyter notebook `Image_captioning_step_by_step.ipynb`. You can run the Jupyter Notebook and try out some retinal image examples for the medical description.
 
 **1. Training Image:**<br>
 <img src="train_img.png" width="300"><br>
