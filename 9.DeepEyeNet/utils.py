@@ -54,7 +54,7 @@ def text_prepare(text):
 # Extract image features (inception_v3, vgg16, vgg19)
 class Extract:
     def __init__(self, model, dim):
-        if model not in ['inception_v3', 'vgg16', 'vgg19']:
+        if model not in ['inception_v3', 'vgg16', 'vgg19', 'resnet50']:
             raise ValueError('Please specify correct model!!')
         if model == 'inception_v3':
             self.model = self.preload(inception_v3.InceptionV3(weights='imagenet'))
@@ -65,6 +65,9 @@ class Extract:
         elif model == 'vgg19':
             self.model = self.preload(vgg19.VGG19(weights='imagenet'))
             self.preprocess_input = vgg19.preprocess_input
+        elif model == 'resnet50':
+            self.model = self.preload(resnet50.ResNet50(weights='imagenet'))
+            self.preprocess_input = resnet50.preprocess_input
         self.dim = dim
 
     # Preprocess the images
@@ -87,34 +90,6 @@ class Extract:
             imgs_features[img] = features.squeeze()
         return imgs_features
 
-# Extract image features (resnet50)
-def extract_features_resnet50(imgs):
-    device = t.device('cuda') if t.cuda.is_available() else t.device('cpu')
-
-    imgs_features = {}
-    
-    #Model
-    transforms = tv.transforms.Compose([
-                    tv.transforms.Resize(224),
-                    tv.transforms.CenterCrop(224),
-                    tv.transforms.ToTensor(),
-                    tv.transforms.Normalize([0.485, 0.456, 0.406],
-                                            [0.229, 0.224, 0.225])
-                ])
-    model = tv.models.resnet50(pretrained=True)
-    del model.fc
-    model.fc = lambda x: x
-    model.to(device)
-    
-    for img in tqdm(imgs):
-        im = Image.open(img+'.jpg').convert('RGB')
-        im = transforms(im)
-        im = im.to(device).unsqueeze(0)
-        output = model(im)
-        output = output.squeeze()
-        imgs_features[img] = output.data.cpu().numpy()
-        
-    return imgs_features
 
 
 

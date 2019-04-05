@@ -103,3 +103,30 @@ test rouge score = 0.6944
 train rouge score (key model) = 0.9927
 test rouge score (key model) = 0.7138
 
+resnet50
+-----------------------------
+Bleu score 1:
+train bleu 1 score = 0.9222
+test bleu 1 score = 0.6888
+-----------------------------
+Bleu score 2:
+train bleu 2 score = 0.8469
+test bleu 2 score = 0.5776
+-----------------------------
+Bleu score 3:
+train bleu 3 score = 0.7326
+test bleu 3 score = 0.4307
+-----------------------------
+Bleu score 4:
+train bleu 4 score = 0.6943
+test bleu 4 score = 0.3943
+-----------------------------
+cider:
+train cider score = 7.5587
+test cider score = 4.1382
+-----------------------------
+rouge:
+train rouge score = 0.9325
+test rouge score = 0.7037
+
+

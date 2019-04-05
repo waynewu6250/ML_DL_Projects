@@ -24,6 +24,7 @@ results/
 ├── results_vgg16.pkl
 ├── results_vgg19.pkl
 ├── results_i3.pkl
+├── results_resnet50.pkl
 
 Image_captioning_step_by_step.ipynb
 Image_captioning_evaluation.ipynb
@@ -105,9 +106,9 @@ ResNet 50:
 
 |  Model  | Phase | CIDEr  | BLEU-1 | BLEU-2 | BLEU-3 | BLEU-4 | ROUGE  |
 | ------- | ----- | ------ | ------ | ------ | ------ | ------ | ------ |
-| Normal  | Train | ------ | ------ | ------ | ------ | ------ | ------ |
+| Normal  | Train | 7.5587 | 0.9222 | 0.8469 | 0.7326 | 0.6943 | 0.9325 |
 | Keyword | Train | ------ | ------ | ------ | ------ | ------ | ------ | 
-| Normal  | Test  | ------ | ------ | ------ | ------ | ------ | ------ |
+| Normal  | Test  | 4.1382 | 0.6888 | 0.5776 | 0.4307 | 0.3943 | 0.7037 |
 | Keyword | Test  | ------ | ------ | ------ | ------ | ------ | ------ |
 
 
