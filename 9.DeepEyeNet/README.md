@@ -75,44 +75,51 @@ The loss value of **0.5446** has been achieved with the keywords reinforced and 
 For evaluation: we use bleu, CIDEr, Rouge scores to evaluate our results.
 The average bleu scores are calculated as follows, as with all the training ~2000 images.
 
-VGG16:
+* Training State:
 
-|  Model  | Phase | CIDEr  | BLEU-1 | BLEU-2 | BLEU-3 | BLEU-4 | ROUGE  |
-| ------- | ----- | ------ | ------ | ------ | ------ | ------ | ------ |
-| Normal  | Train | 6.3607 | 0.8449 | 0.7535 | 0.6352 | 0.5938 | 0.8633 |
-| Keyword | Train | 9.0316 | 0.9602 | 0.8950 | 0.7879 | 0.7570 | 0.9672 | 
-| Normal  | Test  | 3.5747 | 0.6255 | 0.5162 | 0.3828 | 0.3493 | 0.6532 |
-| Keyword | Test  | 4.6886 | 0.6853 | 0.5964 | 0.4654 | 0.4388 | 0.7127 |
+1) Normal Model
 
-VGG19:
+|    Model     | Phase | CIDEr  | BLEU-1 | BLEU-2 | BLEU-3 | BLEU-4 | ROUGE  |
+| ------------ | ----- | ------ | ------ | ------ | ------ | ------ | ------ |
+| VGG16        | Train | 6.3607 | 0.8449 | 0.7535 | 0.6352 | 0.5938 | 0.8633 |
+| VGG19        | Train | 6.2702 | 0.8410 | 0.7523 | 0.6320 | 0.5882 | 0.8598 |
+| InceptionV3  | Train | **8.6489** | **0.9825** | **0.9226** | **0.8182** | **0.7889** | **0.9850** |
+| ResNet50     | Train | 7.5587 | 0.9222 | 0.8469 | 0.7326 | 0.6943 | 0.9325 |
 
-|  Model  | Phase | CIDEr  | BLEU-1 | BLEU-2 | BLEU-3 | BLEU-4 | ROUGE  |
-| ------- | ----- | ------ | ------ | ------ | ------ | ------ | ------ |
-| Normal  | Train | 6.2702 | 0.8410 | 0.7523 | 0.6320 | 0.5882 | 0.8598 |
-| Keyword | Train | ------ | ------ | ------ | ------ | ------ | ------ | 
-| Normal  | Test  | 3.5622 | 0.6230 | 0.5213 | 0.3807 | 0.3418 | 0.6547 |
-| Keyword | Test  | ------ | ------ | ------ | ------ | ------ | ------ |
+2) Keyword Model
 
-Inceptoin V3:
+|    Model     | Phase | CIDEr  | BLEU-1 | BLEU-2 | BLEU-3 | BLEU-4 | ROUGE  |
+| ------------ | ----- | ------ | ------ | ------ | ------ | ------ | ------ |
+| VGG16        | Train | 9.0316 | 0.9602 | 0.8950 | 0.7879 | 0.7570 | 0.9672 | 
+| VGG19        | Train | ------ | ------ | ------ | ------ | ------ | ------ |
+| InceptionV3  | Train | 8.8784 | 0.9913 | 0.9342 | 0.8345 | 0.8074 | 0.9927 |
+| ResNet50     | Train | ------ | ------ | ------ | ------ | ------ | ------ |
 
-|  Model  | Phase | CIDEr  | BLEU-1 | BLEU-2 | BLEU-3 | BLEU-4 | ROUGE  |
-| ------- | ----- | ------ | ------ | ------ | ------ | ------ | ------ |
-| Normal  | Train | 8.6489 | 0.9825 | 0.9226 | 0.8182 | 0.7889 | 0.9850 |
-| Keyword | Train | 8.8784 | 0.9913 | 0.9342 | 0.8345 | 0.8074 | 0.9927 | 
-| Normal  | Test  | 4.5284 | 0.6709 | 0.5910 | 0.4594 | 0.4342 | 0.6944 |
-| Keyword | Test  | 4.8400 | 0.6924 | 0.6096 | 0.4790 | 0.4539 | 0.7138 |
+* Testing State:
 
-ResNet 50:
+1) Normal Model
 
-|  Model  | Phase | CIDEr  | BLEU-1 | BLEU-2 | BLEU-3 | BLEU-4 | ROUGE  |
-| ------- | ----- | ------ | ------ | ------ | ------ | ------ | ------ |
-| Normal  | Train | 7.5587 | 0.9222 | 0.8469 | 0.7326 | 0.6943 | 0.9325 |
-| Keyword | Train | ------ | ------ | ------ | ------ | ------ | ------ | 
-| Normal  | Test  | 4.1382 | 0.6888 | 0.5776 | 0.4307 | 0.3943 | 0.7037 |
-| Keyword | Test  | ------ | ------ | ------ | ------ | ------ | ------ |
+|    Model     | Phase | CIDEr  | BLEU-1 | BLEU-2 | BLEU-3 | BLEU-4 | ROUGE  |
+| ------------ | ----- | ------ | ------ | ------ | ------ | ------ | ------ |
+| VGG16        | Test  | 3.5747 | 0.6255 | 0.5162 | 0.3828 | 0.3493 | 0.6532 | 
+| VGG19        | Test  | 3.5622 | 0.6230 | 0.5213 | 0.3807 | 0.3418 | 0.6547 |
+| InceptionV3  | Test  | **4.5284** | 0.6709 | **0.5910** | **0.4594** | **0.4342** | 0.6944 |
+| ResNet50     | Test  | 4.1382 | **0.6888** | 0.5776 | 0.4307 | 0.3943 | **0.7037** |
+
+2) Keyword Model
+
+|    Model     | Phase | CIDEr  | BLEU-1 | BLEU-2 | BLEU-3 | BLEU-4 | ROUGE  |
+| ------------ | ----- | ------ | ------ | ------ | ------ | ------ | ------ |
+| VGG16        | Test  | 4.6886 | 0.6853 | 0.5964 | 0.4654 | 0.4388 | 0.7127 | 
+| VGG19        | Test  | ------ | ------ | ------ | ------ | ------ | ------ |
+| InceptionV3  | Test  | 4.8400 | 0.6924 | 0.6096 | 0.4790 | 0.4539 | 0.7138 |
+| ResNet50     | Test  | ------ | ------ | ------ | ------ | ------ | ------ |
 
 
-The calculation could be checked in the jupyter notebook `Image_captioning_evaluation.ipynb`.
+
+
+
+The calculation could be repeatedly checked in the jupyter notebook `Image_captioning_evaluation.ipynb`.
 And the score results are also stored in `results/results.txt`
 
 ## Example readouts
