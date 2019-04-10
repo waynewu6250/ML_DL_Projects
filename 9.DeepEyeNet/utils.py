@@ -1,20 +1,17 @@
 import json
 import pickle
 import re
+from nltk.translate.bleu_score import sentence_bleu
 import numpy as np
 from tqdm import tqdm
+from PIL import Image
 
 from keras.applications import inception_v3, vgg16, vgg19, resnet50
 from keras.preprocessing import image
 from keras.models import Model
 
-import torch as t
-import torchvision as tv
-from PIL import Image
-from torch.utils.data import Dataset, DataLoader
 
-
-# Load json files
+# 1. Load json files
 def load_json(file):
     with open(file,'r') as f:
         return json.load(f)
@@ -28,7 +25,7 @@ def save_pickle(data, file):
     with open(file,'wb') as f:
         pickle.dump(data, f)
 
-# For keyword model text preparation
+# 2. For keyword model text preparation
 def text_prepare(text):
     """
         text: a string
@@ -51,7 +48,7 @@ def text_prepare(text):
     return " ".join(tok)
 
 
-# Extract image features (inception_v3, vgg16, vgg19)
+# 3. Extract image features (inception_v3, vgg16, vgg19)
 class Extract:
     def __init__(self, model, dim):
         if model not in ['inception_v3', 'vgg16', 'vgg19', 'resnet50']:
@@ -89,6 +86,124 @@ class Extract:
             features = self.model.predict(self.preprocess_img(img+'.jpg'))
             imgs_features[img] = features.squeeze()
         return imgs_features
+
+    
+    
+# 4. Evaluate Captions for bleu score
+def predict_caption_bleu(img_id, imgs, imgs_feats, model, obj, results, key_flag, bs_flag):
+    if key_flag:
+        if bs_flag:
+            predicted = text_prepare(obj.predict_captions_beam_search_k(imgs[img_id], imgs_feats, model))
+        else:
+            predicted = text_prepare(obj.predict_captions_k(imgs[img_id], imgs_feats, model))
+    else:
+        if bs_flag:
+            predicted = text_prepare(obj.predict_captions_beam_search(imgs[img_id], imgs_feats, model))
+        else:
+            predicted = text_prepare(obj.predict_captions(imgs[img_id], imgs_feats, model))
+            
+    ground_truth = text_prepare(results['descriptions'][imgs[img_id]])
+
+    # Show results
+    print('Predicted Caption: {}'.format(predicted))
+    print('Ground Truth Caption: {}'.format(ground_truth))
+
+    # Bleu Score Calculation
+    predicted_tok = predicted.split(" ")
+    ground_truth_tok = [ground_truth.split(" ")]
+    print('Bleu Score 1: {}'.format(sentence_bleu(ground_truth_tok, predicted_tok, weights=(1, 0, 0, 0))))
+    print('Bleu Score 2: {}'.format(sentence_bleu(ground_truth_tok, predicted_tok, weights=(0, 1, 0, 0))))
+    print('Bleu Score 3: {}'.format(sentence_bleu(ground_truth_tok, predicted_tok, weights=(0, 0, 1, 0))))
+    print('Bleu Score 4: {}'.format(sentence_bleu(ground_truth_tok, predicted_tok, weights=(0, 0, 0, 1))))
+
+    im = Image.open(imgs[img_id]+'.jpg')
+    return im
+    
+    
+
+# 5. Evaluate Captions for CIDEr, Rouge, Bleu score
+def predict_captions(imgs, imgs_feats, model, obj, results, key_flag, bs_flag):
+    # for bleu score
+    avgscore1, avgscore2, avgscore3, avgscore4 = 0,0,0,0
+    # for cider, rouge
+    gts, res = {}, {}
+    
+    for i,img in tqdm(enumerate(imgs)):
+        if key_flag:
+            if bs_flag:
+                predicted = text_prepare(obj.predict_captions_beam_search_k(img, imgs_feats, model))
+            else:
+                predicted = text_prepare(obj.predict_captions_k(img, imgs_feats, model))
+        else:
+            if bs_flag:
+                predicted = text_prepare(obj.predict_captions_beam_search(img, imgs_feats, model))
+            else:
+                predicted = text_prepare(obj.predict_captions(img, imgs_feats, model))
+            
+        ground_truth = text_prepare(results['descriptions'][img])
+        
+        # for bleu score
+        predicted_tok = predicted.split(" ")
+        ground_truth_tok = [ground_truth.split(" ")]
+        avgscore1 += sentence_bleu(ground_truth_tok, predicted_tok, weights=(1, 0, 0, 0))
+        avgscore2 += sentence_bleu(ground_truth_tok, predicted_tok, weights=(0, 1, 0, 0))
+        avgscore3 += sentence_bleu(ground_truth_tok, predicted_tok, weights=(0, 0, 1, 0))
+        avgscore4 += sentence_bleu(ground_truth_tok, predicted_tok, weights=(0, 0, 0, 1))
+            
+        # for cider, rouge
+        if img not in gts:
+            gts[img] = [ground_truth]
+        else:
+            gts[img] = [gts[img], ground_truth]
+        if img not in res:
+            res[img] = [predicted]
+        else:
+            res[img] = [res[img], predicted]
+    
+    avgscore = np.asarray([avgscore1,avgscore2,avgscore3,avgscore4])
+    avgscore = avgscore/len(imgs)
+        
+    return gts, res, avgscore
+
+
+# 6. Evaluate Captions for CIDEr, Rouge
+def calc_scores(scorer, name, pred_results):
+    
+    train_gts = pred_results['train_gts']
+    train_res = pred_results['train_res']
+    test_gts = pred_results['test_gts']
+    test_res = pred_results['test_res']
+    train_gts_k = pred_results['train_gts_k']
+    train_res_k = pred_results['train_gts_k']
+    test_gts_k = pred_results['test_gts_k']
+    test_res_k = pred_results['test_res_k']
+    
+    print('-----------------------------')
+    print(name+':')
+    (score, scores) = scorer.compute_score(train_gts, train_res)
+    print('train %s score = %.4f' % (name,score))
+    (score, scores) = scorer.compute_score(test_gts, test_res)
+    print('test %s score = %.4f' % (name,score))
+    (score, scores) = scorer.compute_score(train_gts_k, train_res_k)
+    print('train %s score (key model) = %.4f' % (name,score))
+    (score, scores) = scorer.compute_score(test_gts_k, test_res_k)
+    print('test %s score (key model) = %.4f' % (name,score))
+
+
+# 7. Evaluate Captions for CIDEr, Rouge in keyword model
+def calc_scores_k(scorer, name, names, pred_results):
+    
+    print('\n-----------------------------')
+    print('Evaluation: ', name)
+    
+    for i in range(len(names)):
+        test_gts = pred_results['test_gts_list'][i]
+        test_res = pred_results['test_res_list'][i]
+                           
+        print('-----------------------------')
+        print(names[i]+':')
+        (score, scores) = scorer.compute_score(test_gts, test_res)
+        print('test %s score = %.4f' % (names[i],score))
 
 
 
