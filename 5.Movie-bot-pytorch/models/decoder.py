@@ -26,20 +26,22 @@ class Decoder(nn.Module):
         embedded.view(1, batch_size, self.char_dim)  # (1, batch_size, char_dim)
         rnn_output, hidden = self.lstm(embedded, hidden)  # (1, batch_size, latent_dim)
         rnn_output = rnn_output.squeeze(0)  # squeeze the time dimension (batch_size, latent_dim)
-        output = self.log_softmax(self.out(rnn_output))  # (batch_size, vocab_size)
+        output = self.out(rnn_output)  # (batch_size, vocab_size)
         return output, hidden
     
     def forward(self, decoder_hidden, targets):
+        
+        device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
         # Prepare variable for decoder on time_step_0
         batch_size = decoder_hidden[0].size(1)
-        decoder_input = Variable(torch.LongTensor([[self.sos_id] * batch_size]))
+        decoder_input = Variable(torch.LongTensor([[self.sos_id] * batch_size])).to(device)
         
         decoder_outputs = Variable(torch.zeros(
             targets.size(0),
             batch_size,
             self.num_decoder_tokens
-        ))  # (time_steps, batch_size, vocab_size)
+        )).to(device)  # (time_steps, batch_size, vocab_size)
         use_teacher_forcing = True if random.random() > self.teacher_forcing_ratio else False
 
         # Unfold the decoder RNN on the time dimension
@@ -51,7 +53,7 @@ class Decoder(nn.Module):
                 decoder_input = targets[t].unsqueeze(0)
             else:
                 # Its own last output
-                _, index = torch.topk(decoder_outputs_on_t, 1)
+                _, index = torch.topk(self.log_softmax(decoder_outputs_on_t), 1)
                 decoder_input = index.transpose(0, 1)
         
         return decoder_outputs, decoder_hidden

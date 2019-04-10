@@ -181,9 +181,11 @@ class AttentionModel(KeywordModel):
             else:
                 raise ValueError('Cannot apply softmax to a tensor that is 1D')
         
+        self.img_size = img_size
+
         # Create image model
         self.image_model = Sequential([
-                Dense(self.embedding_size, input_shape=(4096,), activation='relu'),
+                Dense(self.embedding_size, input_shape=(self.img_size,), activation='relu'),
                 RepeatVector(self.key_max_len)
             ])
         
@@ -194,7 +196,7 @@ class AttentionModel(KeywordModel):
             Activation(softmax, name='attention_weights'),
         ])
         
-        self.img_size = img_size
+        
     
     def forward(self):
         #  Image Input

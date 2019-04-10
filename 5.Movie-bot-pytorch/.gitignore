@@ -1,3 +1,4 @@
 checkpoints/*
 *.pyc
 .vscode/
+data/data.bin

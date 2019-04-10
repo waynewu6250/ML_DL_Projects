@@ -4,20 +4,13 @@ import numpy as np
 import re
 import pickle
 import h5py
-from data.load import Data, Vocabulary
+from data import Data
 
 class TrainData:
     
-    def __init__(self, data_path, toks_path):
+    def __init__(self, data_path, conversation_path, results_path, prev_sent=2, load=True):
         
-        self.vocab = Vocabulary(data_path)
-        all_lineids, all_ids, _ = self.vocab.load_data()
-        
-        # Load the processed data to save time
-        file1=open(toks_path,"rb")
-        all_toks_new=pickle.load(file1)
-        
-        self.data = Data(all_lineids, all_ids, all_toks_new)
+        self.data = Data(data_path, conversation_path, results_path, prev_sent, load)
     
     def _mini_batches(self, batch_size):
         
@@ -38,14 +31,14 @@ class TrainData:
     # For evaluation state
     def tokenize_seq(self, input_data, mxlen):
         
-        token_data = self.vocab.text_prepare(input_data)
+        token_data = self.data.text_prepare(input_data)
         encoder_data = np.zeros((1, mxlen), dtype='float32')
 
         for t, word in enumerate(token_data):
-            if word in self.data.input_word2id:
-                encoder_data[0, t] = self.data.input_word2id[word]
+            if word in self.data.word2id:
+                encoder_data[0, t] = self.data.word2id[word]
             else:
-                encoder_data[0, t] = 2
+                encoder_data[0, t] = 3
         return encoder_data
     
     def _test_batch(self, input_data, mxlen):

@@ -1,2 +1,2 @@
+from .load import Data
 from .batch import TrainData
-from .batch import Vocabulary, Data

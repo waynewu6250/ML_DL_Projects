@@ -24,30 +24,30 @@ def test():
         data = ' '.join(data.split(' ')[:opt.mxlen])
         
         # dataset
-        mydata = TrainData(opt.data_path, opt.toks_path)
+        mydata = TrainData(opt.data_path, opt.conversation_path, opt.results_path, opt.prev_sent, True)
 
         # models
-        encoder = Encoder(num_encoder_tokens=mydata.data.num_encoder_tokens,
+        encoder = Encoder(num_encoder_tokens=mydata.data.num_tokens,
                         char_dim=opt.char_dim,
                         latent_dim=opt.latent_dim)
 
         if opt.attn:
 
-            decoder = AttnDecoder(num_decoder_tokens=mydata.data.num_decoder_tokens,
+            decoder = AttnDecoder(num_decoder_tokens=mydata.data.num_tokens,
                                   char_dim=opt.char_dim,
                                   latent_dim=opt.latent_dim,
                                   time_steps=opt.mxlen,
                                   teacher_forcing_ratio=opt.teacher_forcing_ratio,
-                                  sos_id=mydata.data.output_word2id["<START>"],
+                                  sos_id=mydata.data.word2id["<START>"],
                                   dropout_rate=0.1)
             seq2seq = AttnSeq2seq(encoder=encoder,
                                   decoder=decoder)
         else:
-            decoder = Decoder(num_decoder_tokens=mydata.data.num_decoder_tokens,
+            decoder = Decoder(num_decoder_tokens=mydata.data.num_tokens,
                               char_dim=opt.char_dim,
                               latent_dim=opt.latent_dim,
                               teacher_forcing_ratio=opt.teacher_forcing_ratio,
-                              sos_id=mydata.data.output_word2id["<START>"])
+                              sos_id=mydata.data.word2id["<START>"])
 
             seq2seq = Seq2seq(encoder=encoder,
                               decoder=decoder)
@@ -60,7 +60,7 @@ def test():
 
         decoded_sequence = ""
         for idx in decoded_indices:
-            sampled_tok = mydata.data.output_id2word[idx]
+            sampled_tok = mydata.data.id2word[idx]
             if sampled_tok == "<START>" or sampled_tok == "<UNK>":
                 continue
             elif sampled_tok == "<EOS>":
