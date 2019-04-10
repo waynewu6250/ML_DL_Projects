@@ -2,3 +2,4 @@ checkpoints/*
 *.pyc
 .vscode/
 data/data.bin
+.ipynb_checkpoints/
