@@ -18,7 +18,7 @@ class Config:
     latent_dim = 50
     mxlen= 20
     teacher_forcing_ratio = .5
-    model_path = None #"checkpoints/epoch-0.pth"
+    model_path = "checkpoints/epoch-69.pth"
 
     attn = False
 

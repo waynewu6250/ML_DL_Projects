@@ -34,7 +34,7 @@ class TrainData:
         token_data = self.data.text_prepare(input_data)
         encoder_data = np.zeros((1, mxlen), dtype='float32')
 
-        for t, word in enumerate(token_data):
+        for t, word in enumerate(token_data[:mxlen]):
             if word in self.data.word2id:
                 encoder_data[0, t] = self.data.word2id[word]
             else:

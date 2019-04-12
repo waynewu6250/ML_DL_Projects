@@ -23,7 +23,6 @@ class Decoder(nn.Module):
         # inputs: (time_steps=1, batch_size)
         batch_size = inputs.size(1)
         embedded = self.embedding(inputs) # (batch_size, char_dim)
-        embedded.view(1, batch_size, self.char_dim)  # (1, batch_size, char_dim)
         rnn_output, hidden = self.lstm(embedded, hidden)  # (1, batch_size, latent_dim)
         rnn_output = rnn_output.squeeze(0)  # squeeze the time dimension (batch_size, latent_dim)
         output = self.out(rnn_output)  # (batch_size, vocab_size)
@@ -31,30 +30,30 @@ class Decoder(nn.Module):
     
     def forward(self, decoder_hidden, targets):
         
-        device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
+        # device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
-        # Prepare variable for decoder on time_step_0
-        batch_size = decoder_hidden[0].size(1)
-        decoder_input = Variable(torch.LongTensor([[self.sos_id] * batch_size])).to(device)
+        # # Prepare variable for decoder on time_step_0
+        # batch_size = decoder_hidden[0].size(1)
+        # decoder_input = Variable(torch.LongTensor([[self.sos_id] * batch_size])).to(device)
         
-        decoder_outputs = Variable(torch.zeros(
-            targets.size(0),
-            batch_size,
-            self.num_decoder_tokens
-        )).to(device)  # (time_steps, batch_size, vocab_size)
-        use_teacher_forcing = True if random.random() > self.teacher_forcing_ratio else False
+        # decoder_outputs = Variable(torch.zeros(targets.size(0), batch_size, self.num_decoder_tokens)).to(device)  # (time_steps, batch_size, vocab_size)
+        # use_teacher_forcing = True if random.random() > self.teacher_forcing_ratio else False
 
-        # Unfold the decoder RNN on the time dimension
-        for t in range(targets.size(0)):
-            decoder_outputs_on_t, decoder_hidden = self.forward_step(decoder_input, decoder_hidden)
-            decoder_outputs[t] = decoder_outputs_on_t
-            if use_teacher_forcing:
-                # Correct answer
-                decoder_input = targets[t].unsqueeze(0)
-            else:
-                # Its own last output
-                _, index = torch.topk(self.log_softmax(decoder_outputs_on_t), 1)
-                decoder_input = index.transpose(0, 1)
+        # # Unfold the decoder RNN on the time dimension
+        # for t in range(targets.size(0)):
+        #     decoder_outputs_on_t, decoder_hidden = self.forward_step(decoder_input, decoder_hidden)
+        #     decoder_outputs[t] = decoder_outputs_on_t
+        #     if use_teacher_forcing:
+        #         # Correct answer
+        #         decoder_input = targets[t].unsqueeze(0)
+        #     else:
+        #         # Its own last output
+        #         _, index = torch.topk(self.log_softmax(decoder_outputs_on_t), 1)
+        #         decoder_input = index.transpose(0, 1)
+
+        embedded = self.embedding(targets) # (time_steps, batch_size, char_dim)
+        decoder_outputs, decoder_hidden = self.lstm(embedded, decoder_hidden)
+        decoder_outputs = self.out(decoder_outputs)
         
         return decoder_outputs, decoder_hidden
     
@@ -67,24 +66,17 @@ class Decoder(nn.Module):
             batch_size,
             self.num_decoder_tokens
         ))  # (time_steps, batch_size, vocab_size)
+        decoded_indices = []
 
         # Unfold the decoder RNN on the time dimension
         for t in range(20):
             decoder_outputs_on_t, decoder_hidden = self.forward_step(decoder_input, decoder_hidden)
-            decoder_outputs[t] = decoder_outputs_on_t
+            decoder_outputs[t] = self.log_softmax(decoder_outputs_on_t)
+            
             # Its own last output
-            _, index = torch.topk(decoder_outputs_on_t, 1)
+            _, index = torch.topk(decoder_outputs[t], 1)
             decoder_input = index.transpose(0, 1)
-        
-        #  Get the output sequence from decoder
-        decoded_indices = []
-        batch_size = decoder_outputs.size(1)
-        decoder_outputs = decoder_outputs.transpose(0, 1)  # S = B x T x V
-
-        for b in range(batch_size):
-            for t in range(20):
-                _, index = torch.topk(decoder_outputs[b][t], 1)
-                decoded_indices.append(index.item())
+            decoded_indices.append(index.item())
         
         return decoded_indices, decoder_hidden
 

@@ -48,7 +48,7 @@ def train():
                           decoder=decoder)
     
     if opt.model_path:
-        seq2seq.load_state_dict(torch.load(opt.model_path))
+        seq2seq.load_state_dict(torch.load(opt.model_path, map_location='cpu'))
         print("Pretrained model has been loaded.\n")
     
     seq2seq = seq2seq.to(device)
@@ -70,15 +70,26 @@ def train():
             
             optimizer.zero_grad()
             decoder_outputs, decoder_hidden = seq2seq(ib, tb)
+            decoder_outputs = nn.LogSoftmax(dim=1)(decoder_outputs)
+            _, index = torch.topk(decoder_outputs[:,0,:], 1, dim=1)
+
             
             # Reshape the outputs
             b = decoder_outputs.size(1)
             t = decoder_outputs.size(0)
-            targets = tb.contiguous().view(-1)  # S = (B*T)
-            decoder_outputs = decoder_outputs.view(b * t, -1)  # S = (B*T) x V
-            loss = criterion(decoder_outputs, targets)
+            targets = Variable(torch.zeros(t,b)).to(device) # (time_steps,batch_size)
+            targets[:-1,:] = tb[1:,:]
+            print("predicted:",index.squeeze(1).numpy())
+            print("targets:",(targets[:,0]).long().numpy())
+            print(" ".join([mydata.data.id2word[i] for i in index.squeeze(1).numpy() if i != 0]))
+            print(" ".join([mydata.data.id2word[i] for i in (targets[:,0]).long().numpy() if i != 0]))
 
-            if ii % 10 == 0:
+            print("loss:",nn.NLLLoss()(decoder_outputs[:,0,:], tb[:,0].long()))
+            targets = targets.contiguous().view(-1)  # (time_steps*batch_size)
+            decoder_outputs = decoder_outputs.view(b * t, -1)  # S = (time_steps*batch_size) x V
+            loss = criterion(decoder_outputs, targets.long())
+
+            if ii % 1 == 0:
                 print("Current Loss:",loss.data.item())
             
             loss.backward()

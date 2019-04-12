@@ -15,8 +15,8 @@ class KeywordModel:
     def __init__(self, param):
         
         # Create caption model
+        self.embedding = Embedding(param["vocab_size"], param["embedding_size"])
         self.caption_model = Sequential([
-                Embedding(param["vocab_size"], param["embedding_size"], input_length=param["max_len"]),
                 LSTM(256, return_sequences=True),
                 TimeDistributed(Dense(300))
             ])
@@ -206,13 +206,12 @@ class AttentionModel(KeywordModel):
 
         # Caption Input
         x2 = Input(shape=(self.max_len,))
-        caption_input = self.caption_model(x2)
+        embedded = self.embedding(x2)
+        caption_input = self.caption_model(embedded)
 
         # Keyword Input
         x3 = Input(shape=(self.key_max_len,))
-        keyword_input = Embedding(self.vocab_size, 
-                                self.embedding_size, 
-                                input_length=self.key_max_len)(x3)
+        keyword_input = self.embedding(x3)
 
         # Attention Mechanism
         mix_input = Concatenate(axis=-1)([img_input, keyword_input])
@@ -240,12 +239,16 @@ class EncoderModel(KeywordModel):
         x2 = Input(shape=(self.max_len,))
         x3 = Input(shape=(self.key_max_len,))
 
-        # keyword encoder
+        #  Image Input
         img_input = Dense(self.embedding_size, input_shape=(self.img_size,), activation='relu')(x1)
         img_input = Lambda(lambda x: K.expand_dims(x, axis=1))(img_input)
-        caption_input = self.caption_model(x2)
-
-        keyword_input = Embedding(self.vocab_size, self.embedding_size, input_length=self.key_max_len)(x3)
+        
+        # Caption Input
+        embedded = self.embedding(x2)
+        caption_input = self.caption_model(embedded)
+        
+        # keyword encoder
+        keyword_input = self.embedding(x3)
         mix_input = Concatenate(axis=1)([img_input, keyword_input])
         context = LSTM(300, return_sequences=False)(mix_input)
         context = RepeatVector(self.max_len)(context)
@@ -273,7 +276,6 @@ class MeanModel(KeywordModel):
         
         # create keyword model
         self.keyword_model = Sequential([
-            Embedding(self.vocab_size, self.embedding_size, input_length=self.key_max_len),
             Lambda(lambda x: K.mean(x, axis=1, keepdims=False)),
             RepeatVector(self.max_len)
         ])
@@ -282,10 +284,18 @@ class MeanModel(KeywordModel):
         x1 = Input(shape=(self.img_size,))
         x2 = Input(shape=(self.max_len,))
         x3 = Input(shape=(self.key_max_len,))
-
+        
+        # Image Input
         img_input = self.image_model(x1)
-        caption_input = self.caption_model(x2)
-        keyword_input = self.keyword_model(x3)
+        
+        # Caption Input
+        x2 = Input(shape=(self.max_len,))
+        embedded = self.embedding(x2)
+        caption_input = self.caption_model(embedded)
+        
+        # Keyword Input
+        embedded_k = self.embedding(x3)
+        keyword_input = self.keyword_model(embedded_k)
 
         x = Add()([img_input, keyword_input])
         x = Add()([x, caption_input])
