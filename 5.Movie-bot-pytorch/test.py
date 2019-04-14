@@ -15,21 +15,24 @@ from config import opt
 def test():
 
     decoder_hidden = None
+    prev_sentence = ""
 
     while True:
         
         data = input('You say: ')
         if data == "exit":
             break
-        data = ' '.join(data.split(' ')[:opt.mxlen])
+        if opt.prev_sent == 2:
+            data = prev_sentence + data
+        data = ' '.join(data.split(' '))
         
         # dataset
         mydata = TrainData(opt.data_path, opt.conversation_path, opt.results_path, opt.prev_sent, True)
 
         # models
         encoder = Encoder(num_encoder_tokens=mydata.data.num_tokens,
-                        char_dim=opt.char_dim,
-                        latent_dim=opt.latent_dim)
+                          char_dim=opt.char_dim,
+                          latent_dim=opt.latent_dim)
 
         if opt.attn:
 
@@ -69,6 +72,7 @@ def test():
                 decoded_sequence += ' '+sampled_tok
         
         print("WayneBot: ",decoded_sequence)
+        prev_sentence = decoded_sequence
 
 if __name__ == "__main__":
     test()
