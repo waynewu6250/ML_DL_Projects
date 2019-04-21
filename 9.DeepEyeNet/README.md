@@ -25,6 +25,8 @@ results/
 ├── results_vgg19.pkl
 ├── results_i3.pkl
 ├── results_resnet50.pkl
+├── results_keywords_train.pkl
+├── results_keywords_test.pkl
 
 Image_captioning_step_by_step.ipynb
 Image_captioning_evaluation.ipynb
@@ -59,13 +61,13 @@ https://drive.google.com/open?id=1D9JJ8y7iNdmqYnfdkjAROtJFSApg3l9A
 Here we use Keras with Tensorflow backend for the code. 
 1. Classic VGG16, VGG19, InceptionV3, Resnet50 model are used for extracting the image features. 
 2. We also preprocess the medical descriptions of each training data.The first, we feed it into LSTM model to get word features. 
-3. Construct a custom-RNN model to feed each word and image feature at each time step and predict next word.
+3. Construct a custom Bi-LSTM model to feed each word and image feature at each time step and predict next word.
 4. Here I create a keyword-model to feed each specified keywords in training data for each image. The uncertain number of keywords are averaged to be a word vector and fed simultaneously with image vector into the final model.
 5. At prediction stage, I am using Greedy search and Beam search with k=3 for predicting the captions of the images.
 
 
 # Results
-## Evaluation
+## Base Model Evaluation
 I train the final model with and without the keyword reinforced to see the difference. For simplicity, I chose four main types of diseases around ~2000 images for training 3 epochs. Pretrained GLOVE word embeddings are used.
 
 For model with VGG16 pre-extracted image features: <br>
@@ -116,11 +118,38 @@ The average bleu scores are calculated as follows, as with all the training ~200
 | ResNet50     | Test  | ------ | ------ | ------ | ------ | ------ | ------ |
 
 
-
-
-
 The calculation could be repeatedly checked in the jupyter notebook `Image_captioning_evaluation.ipynb`.
 And the score results are also stored in `results/results.txt`
+
+## Different Keyword Model Evaluation
+Here we extend our applications to **different keyword embedding** into our model to enhance the quality of captioning with keywords added. <br>
+In addition to the first method where we call mean model by averaging all keyword vectors, we add three other methods: Attention-based, Encoder-based and Transformer-based by mingling image and keyword vectors. Then we put the hybrid vector into our main Bi-LSTM model. (Here we use)
+
+Here are some results (You can find more in the jupyter notebook `Image_captioning_keyword_model.ipynb` and predicted results in `results_keywords_train.pkl` and `results_keywords_test.pkl`)
+
+* Training State:
+
+|    Model    | Phase  | CIDEr  | BLEU-1 | BLEU-2 | BLEU-3 | BLEU-4 | ROUGE  |
+| ----------- | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
+| Base Model  | Train  | 6.3607 | 0.8449 | 0.7535 | 0.6352 | 0.5938 | 0.8633 |
+| ----------- | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
+| Attention   | Train  | **9.0169** | 0.9984 | **0.9440** | **0.8448** | **0.8196** | 0.9987 |
+| Encoder     | Train  | 9.0090 | 0.9983 | 0.9432 | 0.8440 | 0.8189 | 0.9987 |
+| Mean        | Train  | 8.7111 | 0.9827 | 0.9227 | 0.8194 | 0.7906 | 0.9855 |
+| Transformer | Train  | 9.0160 | **0.9987** | 0.9435 | 0.8443 | 0.8191 | **0.9990** |
+
+* Testing State:
+
+|    Model    | Phase  | CIDEr  | BLEU-1 | BLEU-2 | BLEU-3 | BLEU-4 | ROUGE  |
+| ----------- | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
+| Base Model  | Train  | 3.5747 | 0.6255 | 0.5162 | 0.3828 | 0.3493 | 0.6532 | 
+| ----------- | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
+| Attention   | Train  | **4.9554** | 0.7146 | 0.6247 | **0.4859** | **0.4604** | 0.7361 |
+| Encoder     | Train  | 4.9505 | 0.7153 | **0.6294** | 0.4837 | 0.4583 | 0.7335 |
+| Mean        | Train  | 4.9049 | **0.7196** | 0.6216 | 0.4823 | 0.4518 | **0.7466** |
+| Transformer | Train  | 4.8792 | 0.7084 | 0.6139 | 0.4726 | 0.4453 | 0.7348 |
+
+
 
 ## Example readouts
 

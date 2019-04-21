@@ -1,8 +1,9 @@
 from keras.preprocessing import sequence, image
 from keras.models import Sequential, Model, Input
 from keras.layers import LSTM, Embedding, Dense, Activation, Add
-from keras.layers import RepeatVector, Flatten, Reshape, Concatenate, Lambda, TimeDistributed, Dot
+from keras.layers import RepeatVector, Flatten, Reshape, Concatenate, Lambda, TimeDistributed, Dot, Permute, Layer
 from keras.layers.wrappers import Bidirectional
+from keras.initializers import Ones, Zeros
 import keras.backend as K
 import numpy as np
 import re
@@ -18,7 +19,7 @@ class KeywordModel:
         self.embedding = Embedding(param["vocab_size"], param["embedding_size"])
         self.caption_model = Sequential([
                 LSTM(256, return_sequences=True),
-                TimeDistributed(Dense(300))
+                TimeDistributed(Dense(param["embedding_size"]))
             ])
         
         self.key_max_len = param["key_max_len"]
@@ -185,7 +186,7 @@ class AttentionModel(KeywordModel):
 
         # Create image model
         self.image_model = Sequential([
-                Dense(self.embedding_size, input_shape=(self.img_size,), activation='relu'),
+                Dense(self.embedding_size, input_shape=(self.img_size,)),
                 RepeatVector(self.key_max_len)
             ])
         
@@ -217,10 +218,14 @@ class AttentionModel(KeywordModel):
         mix_input = Concatenate(axis=-1)([img_input, keyword_input])
         scores = self.dense_model(mix_input)
         context = Dot(axes = 1)([scores, keyword_input])
-
-        context = Add()([context, img_input_no_repeat])
-        x = Add()([context, caption_input])
-        x = Bidirectional(LSTM(256, return_sequences=False))(x)
+        
+        # Mix Input
+        img_input_no_repeat = RepeatVector(1)(img_input_no_repeat)
+        context = Concatenate(axis=-1)([context, img_input_no_repeat])
+        context = Reshape((self.max_len,-1))(context)
+        context = Concatenate(axis=-1)([context, caption_input])
+        
+        x = Bidirectional(LSTM(256, return_sequences=False))(context)
         out = Dense(self.vocab_size, activation='softmax')(x)
 
         return Model(inputs=[x1, x2, x3], outputs=out)
@@ -251,10 +256,14 @@ class EncoderModel(KeywordModel):
         keyword_input = self.embedding(x3)
         mix_input = Concatenate(axis=1)([img_input, keyword_input])
         context = LSTM(300, return_sequences=False)(mix_input)
-        context = RepeatVector(self.max_len)(context)
-
-        x = Add()([context, caption_input])
-        x = Bidirectional(LSTM(256, return_sequences=False))(x)
+        
+        # Mix Input
+        context = RepeatVector(1)(context)
+        context = Concatenate(axis=-1)([context, img_input])
+        context = Reshape((self.max_len,-1))(context)
+        context = Concatenate(axis=-1)([context, caption_input])
+        
+        x = Bidirectional(LSTM(256, return_sequences=False))(context)
         out = Dense(self.vocab_size, activation='softmax')(x)
 
         return Model(inputs=[x1, x2, x3], outputs=out)
@@ -296,10 +305,92 @@ class MeanModel(KeywordModel):
         # Keyword Input
         embedded_k = self.embedding(x3)
         keyword_input = self.keyword_model(embedded_k)
-
-        x = Add()([img_input, keyword_input])
-        x = Add()([x, caption_input])
+        
+        # Mix Input
+        x = Concatenate(axis=-1)([img_input, keyword_input])
+        x = Concatenate(axis=-1)([x, caption_input])
+        
         x = Bidirectional(LSTM(256, return_sequences=False))(x)
+        out = Dense(self.vocab_size, activation='softmax')(x)
+
+        return Model(inputs=[x1, x2, x3], outputs=out)
+
+    
+    
+##############################################################
+#                     4.Transformer                          #
+##############################################################
+
+class LayerNormalization(Layer):
+    def __init__(self, eps=1e-6, **kwargs):
+        self.eps = eps
+        super(LayerNormalization, self).__init__(**kwargs)
+    def build(self, input_shape):
+        self.gamma = self.add_weight(name='gamma', shape=input_shape[-1:],
+                                     initializer=Ones(), trainable=True)
+        self.beta = self.add_weight(name='beta', shape=input_shape[-1:],
+                                    initializer=Zeros(), trainable=True)
+        super(LayerNormalization, self).build(input_shape)
+    def call(self, x):
+        mean = K.mean(x, axis=-1, keepdims=True)
+        std = K.std(x, axis=-1, keepdims=True)
+        return self.gamma * (x - mean) / (std + self.eps) + self.beta
+    def compute_output_shape(self, input_shape):
+        return input_shape
+
+class TransformerModel(KeywordModel):
+    def __init__(self, param, img_size, attention_size):
+        super(TransformerModel, self).__init__(param)
+        
+        self.img_size = img_size
+        self.attention_size = attention_size
+        self.feed_forward = Sequential([
+            Dense(self.embedding_size, activation='relu'),
+            Dense(self.embedding_size)
+        ])
+        
+    def mask_attention(self, q, k, v):
+       
+        product = Lambda(lambda x: K.batch_dot(x[0], x[1], axes=[2, 1]) / np.sqrt(self.attention_size))([q,k]) 
+        product = Activation('softmax')(product)
+        context = Lambda(lambda x: K.batch_dot(x[0], x[1], axes=[2, 1]))([product,v])
+        shortcut = Add()([context,q])
+        output = LayerNormalization()(shortcut)
+        output = self.feed_forward(output)
+        
+        return output
+        
+        
+    def forward(self):
+        
+        #  Image Input
+        x1 = Input(shape=(self.img_size,))
+        img_input_no_repeat = Dense(self.embedding_size, input_shape=(self.img_size,))(x1)
+        _Q = Dense(self.attention_size, input_shape=(self.img_size,))(x1)
+        _Q = RepeatVector(1)(_Q)
+        
+        # Caption Input
+        x2 = Input(shape=(self.max_len,))
+        caption_input = self.embedding(x2)
+        caption_input = self.caption_model(caption_input)
+
+        # Keyword Input
+        x3 = Input(shape=(self.key_max_len,))
+        keyword_input = self.embedding(x3)
+        _K = Dense(self.attention_size)(keyword_input)
+        _K = Permute((2,1))(_K)
+        _V = Dense(self.attention_size)(keyword_input)
+        
+        # Attention Mechanism
+        context_mean = self.mask_attention(_Q, _K, _V)
+        
+        # Mix
+        img_input_no_repeat = RepeatVector(1)(img_input_no_repeat)
+        context_mean = Concatenate(axis=-1)([context_mean, img_input_no_repeat])
+        context_mean = Reshape((self.max_len,-1))(context_mean)
+        context = Concatenate(axis=-1)([context_mean, caption_input])
+
+        x = Bidirectional(LSTM(256, return_sequences=False))(context)
         out = Dense(self.vocab_size, activation='softmax')(x)
 
         return Model(inputs=[x1, x2, x3], outputs=out)

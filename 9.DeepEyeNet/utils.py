@@ -191,14 +191,14 @@ def calc_scores(scorer, name, pred_results):
 
 
 # 7. Evaluate Captions for CIDEr, Rouge in keyword model
-def calc_scores_k(scorer, name, names, pred_results):
+def calc_scores_k(scorer, name, names, pred_results, gts, res):
     
     print('\n-----------------------------')
     print('Evaluation: ', name)
     
     for i in range(len(names)):
-        test_gts = pred_results['test_gts_list'][i]
-        test_res = pred_results['test_res_list'][i]
+        test_gts = pred_results[gts][i]
+        test_res = pred_results[res][i]
                            
         print('-----------------------------')
         print(names[i]+':')
