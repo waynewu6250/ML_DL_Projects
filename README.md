@@ -20,14 +20,14 @@ My side project gallery for collections and refinement <br>
 ---
 
 <a name="1"></a>
-### [1. StackBot on telegram](https://github.com/waynewu6250/ML_DL_Projects/tree/master/1.AI-robots-on-telegram#part_1)
+### [1. StackBot on telegram](https://github.com/waynewu6250/ML_DL_Projects/tree/master/1.StackBot-on-telegram/#part_1)
 This is a nlp project modified by the final project of coursera course: advanced machine learning specialization-Natural Language Processing.  
 It will be put on the telegram messenger supported by amazon web service (AWS) EC2 server and named wayne-bot (waynewu86Bot). <br>
 
 Basically it will do the simple conversations. <br> 
 it will also serve as a stackoverflow assistant where you can ask it about code questions and it will return stackoverflow related links.
 
-<img src="1.AI-robots-on-telegram/result.png" height="330" width="495">
+<img src="1.StackBot-on-telegram/result.png" height="330" width="495">
 
 ---
 
