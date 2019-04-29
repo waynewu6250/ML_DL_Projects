@@ -9,16 +9,16 @@ class Config:
     prev_sent = 2
 
     # for training
-    epochs = 10
-    batch_size = 64
-    learning_rate = 1e-3
+    epochs = 120
+    batch_size = 256
+    learning_rate = 1e-4
 
     # for model
-    char_dim = 50
-    latent_dim = 50
+    char_dim = 300
+    latent_dim = 500
     mxlen= 20
     teacher_forcing_ratio = .5
-    model_path = "checkpoints/epoch-69.pth"
+    model_path = "checkpoints/3.pth"
 
     attn = False
 

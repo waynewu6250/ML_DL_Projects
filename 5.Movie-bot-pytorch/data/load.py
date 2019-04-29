@@ -16,6 +16,7 @@ class Data:
         self.mxlen = 20
         self.REPLACE_BY_SPACE_RE = re.compile(r'[/(){}\[\]\|@,;]')
         self.BAD_SYMBOLS_RE = re.compile(r'[^0-9a-z #+_]')
+        self.word_count_threshold = 5
 
         # dictionary
         """
@@ -48,7 +49,7 @@ class Data:
             self.encoder_input_data, self.decoder_input_data = self.seq2idx()
             self.save_results(results_path)
         
-        self.num_tokens = len(self.word2id)+1
+        self.num_tokens = len(self.word2id)
         
     
     
@@ -78,6 +79,7 @@ class Data:
     def count_words(self, line_dict):
         
         # Special Tokens
+        self.word2id["<PAD>"] = 0
         self.word2id["<START>"] = 1
         self.word2id["<EOS>"] = 2
         self.word2id["<UNK>"] = 3
@@ -90,19 +92,13 @@ class Data:
                     self.count[word] = 1
                 else:
                     self.count[word] += 1
-                # Make dictionary
-                if not word in self.word2id:
-                    self.word2id[word] = index
-                    index += 1
         
-        # Count the words that appears only once. and construc a word_table
-        # Remove scarce words in word2id dictionary and reindex all words
-        scarce_words_counts = [x[0] for x in sorted(self.count.items(), key = lambda x: x[1], reverse=True) if x[1] == 1]
-        for word in scarce_words_counts:
-            del self.word2id[word]
+        vocab = [w for w,count in self.count.items() if count >= self.word_count_threshold]
+        for idx, w in enumerate(vocab):
+            self.word2id[w] = idx+index
         
         # Arrange word2id and id2word
-        self.word2id = {key: i+1 for i, key in enumerate(self.word2id.keys())}
+        self.word2id = {key: i for i, key in enumerate(self.word2id.keys())}
         self.id2word = {i:symbol for symbol, i in self.word2id.items()}
     
     #==================================================#
@@ -129,16 +125,9 @@ class Data:
         file = open(self.data_path)
         line_dict = {}
         
-        i = 0
-        
         for line in file:
             cols = line.rstrip().split("\t")
             line_dict[cols[0].replace('"','')] = self.text_prepare(cols[-1])
-            
-            i += 1
-            # 400 movies
-            if i == 308298:
-                break
         
         self.count_words(line_dict)
         
@@ -160,7 +149,7 @@ class Data:
         
         """
         def func(tok):
-            if self.count[tok] == 1:
+            if self.count[tok] <= self.word_count_threshold:
                 return "<UNK>"
             else: return tok
         
@@ -229,5 +218,6 @@ class Data:
 if __name__ == '__main__':
     
     data = Data("movie_lines.tsv", "movie_conversations.txt", "data.bin", 2, False)
-    print(data.encoder_input_data[0])
-    print(data.decoder_input_data[0])
+    print(data.encoder_input_data[11])
+    print(data.decoder_input_data[11])
+    print(data.all_convs[11])
