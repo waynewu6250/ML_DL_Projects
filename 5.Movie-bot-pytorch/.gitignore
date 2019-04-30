@@ -1,5 +1,11 @@
-checkpoints/*
+# System
 *.pyc
 .vscode/
-data/data.bin
 .ipynb_checkpoints/
+
+# Checkpoints
+checkpoints/*
+
+# Data
+*.conv
+*.bin

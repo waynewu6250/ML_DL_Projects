@@ -15,9 +15,11 @@ def train():
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
     torch.backends.cudnn.enabled = False
     
-    
     # dataset
-    mydata =  TrainData(opt.data_path, opt.conversation_path, opt.results_path, opt.prev_sent, True)
+    if opt.chinese:
+        mydata = TrainData(opt.chinese_data_path, opt.conversation_path, opt.chinese_results_path, opt.prev_sent, True)
+    else:
+        mydata = TrainData(opt.data_path, opt.conversation_path, opt.results_path, opt.prev_sent, True)
 
     # models
     seq2seq =  NewSeq2seq(num_tokens=mydata.data.num_tokens,
@@ -71,19 +73,12 @@ def train():
             
             optimizer.zero_grad()
             decoder_outputs, decoder_hidden1, decoder_hidden2 = seq2seq(ib, tb)
-            decoder_probs = nn.LogSoftmax(dim=1)(decoder_outputs)
-            _, index = torch.topk(decoder_probs[:,0,:], 1, dim=1)
-
             
             # Reshape the outputs
             b = decoder_outputs.size(1)
             t = decoder_outputs.size(0)
             targets = Variable(torch.zeros(t,b)).to(device) # (time_steps,batch_size)
             targets[:-1,:] = tb[1:,:]
-            print("predicted:",index.squeeze(1).numpy())
-            print("targets:",(targets[:,0]).long().numpy())
-            print(" ".join([mydata.data.id2word[i] for i in index.squeeze(1).numpy() if i != 0]))
-            print(" ".join([mydata.data.id2word[i] for i in (targets[:,0]).long().numpy() if i != 0]))
 
             targets = targets.contiguous().view(-1)  # (time_steps*batch_size)
             decoder_outputs = decoder_outputs.view(b * t, -1)  # S = (time_steps*batch_size) x V
@@ -94,8 +89,10 @@ def train():
             
             loss.backward()
             optimizer.step()
-        
-        save_path = "checkpoints/epoch-%s.pth"%epoch
+        if opt.chinese:
+            save_path = "checkpoints/chinese-epoch-%s.pth"%epoch
+        else:
+            save_path = "checkpoints/epoch-%s.pth"%epoch
 
         torch.save(seq2seq.state_dict(), save_path)
 

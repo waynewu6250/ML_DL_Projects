@@ -6,3 +6,5 @@
 *.pyc
 /.ipynb_checkpoints/
 /.vscode/
+
+*.pptx

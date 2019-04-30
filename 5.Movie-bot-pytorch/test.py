@@ -9,6 +9,12 @@ from models import NewSeq2seq
 from data import TrainData
 from config import opt
 
+from opencc import OpenCC
+
+def convert(text, mode):
+    cc = OpenCC(mode)
+    return cc.convert(text)
+
 def test():
 
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
@@ -22,11 +28,15 @@ def test():
         if data == "exit":
             break
         if opt.prev_sent == 2:
-            data = prev_sentence + data
-        data = ' '.join(data.split(' '))
+            data = (prev_sentence + data) if not opt.chinese else data
         
-        # dataset
-        mydata = TrainData(opt.data_path, opt.conversation_path, opt.results_path, opt.prev_sent, True)
+        # Dataset
+        if opt.chinese:
+            data = list(convert(data, 't2s'))
+            mydata = TrainData(opt.chinese_data_path, opt.conversation_path, opt.chinese_results_path, opt.prev_sent, True)
+        else:
+            data = ' '.join(data.split(' '))
+            mydata = TrainData(opt.data_path, opt.conversation_path, opt.results_path, opt.prev_sent, True)
 
         # models
         seq2seq =  NewSeq2seq(num_tokens=mydata.data.num_tokens,
@@ -63,7 +73,7 @@ def test():
         seq2seq = seq2seq.to(device)
 
         # Predict
-        encoder_data = mydata._test_batch(data, 2*opt.mxlen).to(device)
+        encoder_data = mydata._test_batch(data, 2*opt.mxlen if not opt.chinese else opt.mxlen).to(device)
         decoded_indices, decoder_hidden1, decoder_hidden2 = seq2seq.evaluation(encoder_data)
         
         toks_to_replace = {"i":"I","im":"I'm","id":"I'd","ill":"I'll","iv":"I'v","hes":"he's","shes":"she's",
@@ -78,11 +88,15 @@ def test():
             elif sampled_tok == "<EOS>":
                 break
             else:
-                if sampled_tok in toks_to_replace:
-                    sampled_tok = toks_to_replace[sampled_tok]
-                decoded_sequence += sampled_tok+' '
+                if not opt.chinese:
+                    if sampled_tok in toks_to_replace:
+                        sampled_tok = toks_to_replace[sampled_tok]
+                    decoded_sequence += sampled_tok+' '
+                else:
+                    decoded_sequence += sampled_tok
         
-        print("WayneBot:",decoded_sequence)
+        print("WayneBot:",decoded_sequence if not opt.chinese \
+            else convert(decoded_sequence,'s2t').replace("雞仔","我").replace("主人","你"))
         prev_sentence = decoded_sequence
 
 if __name__ == "__main__":

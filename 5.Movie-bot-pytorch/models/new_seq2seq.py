@@ -33,7 +33,7 @@ class NewSeq2seq(nn.Module):
         embedded = self.embedding(input_var)
         embedded = self.dense(embedded)
         outputs1, hidden1 = self.lstm1(embedded, hidden1)
-        padding = torch.zeros(2*opt.mxlen, self.batch_size, self.latent_dim).to(self.device)
+        padding = torch.zeros(2*opt.mxlen if not opt.chinese else opt.mxlen, self.batch_size, self.latent_dim).to(self.device)
         outputs2, hidden2 = self.lstm2(torch.cat([padding,outputs1],-1),hidden2)
         return outputs2, hidden1, hidden2
     
