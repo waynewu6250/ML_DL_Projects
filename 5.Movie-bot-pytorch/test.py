@@ -15,7 +15,11 @@ def convert(text, mode):
     cc = OpenCC(mode)
     return cc.convert(text)
 
-def test():
+def test(**kwargs):
+
+    # attributes
+    for k,v in kwargs.items():
+        setattr(opt,k,v)
 
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
     torch.backends.cudnn.enabled = False
@@ -103,4 +107,5 @@ def test():
         prev_sentence = decoded_sequence
 
 if __name__ == "__main__":
-    test()
+    import fire
+    fire.Fire()
