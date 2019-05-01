@@ -33,10 +33,10 @@ def test():
         # Dataset
         if opt.chinese:
             data = list(convert(data, 't2s'))
-            mydata = TrainData(opt.chinese_data_path, opt.conversation_path, opt.chinese_results_path, opt.prev_sent, True)
+            mydata = TrainData(opt.chinese_data_path, opt.conversation_path, opt.chinese_results_path, opt.chinese, opt.prev_sent, True)
         else:
             data = ' '.join(data.split(' '))
-            mydata = TrainData(opt.data_path, opt.conversation_path, opt.results_path, opt.prev_sent, True)
+            mydata = TrainData(opt.data_path, opt.conversation_path, opt.results_path, opt.chinese, opt.prev_sent, True)
 
         # models
         seq2seq =  NewSeq2seq(num_tokens=mydata.data.num_tokens,
@@ -69,7 +69,10 @@ def test():
         #                       decoder=decoder)
         
         if opt.model_path:
-            seq2seq.load_state_dict(torch.load(opt.model_path, map_location="cpu"))
+            if opt.chinese:
+                seq2seq.load_state_dict(torch.load(opt.chinese_model_path, map_location="cpu"))
+            else:
+                seq2seq.load_state_dict(torch.load(opt.model_path, map_location="cpu"))
         seq2seq = seq2seq.to(device)
 
         # Predict
@@ -96,7 +99,7 @@ def test():
                     decoded_sequence += sampled_tok
         
         print("WayneBot:",decoded_sequence if not opt.chinese \
-            else convert(decoded_sequence,'s2t').replace("雞仔","我").replace("主人","你"))
+            else convert(decoded_sequence,'s2t').replace("雞仔","我").replace("主人","跟你說").replace("主子哦","").replace("主子","跟你說"))
         prev_sentence = decoded_sequence
 
 if __name__ == "__main__":

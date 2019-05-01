@@ -13,6 +13,7 @@ class TrainData:
             self.data = ChineseData(data_path, results_path, load)
         else:
             self.data = Data(data_path, conversation_path, results_path, prev_sent, load)
+        self.chinese = chinese
     
     def _mini_batches(self, batch_size):
         
@@ -32,9 +33,13 @@ class TrainData:
     
     # For evaluation state
     def tokenize_seq(self, input_data, mxlen):
-        
-        token_data = ["<START>"]+input_data[:mxlen-2]+["<EOS>"]
-        encoder_data = np.zeros((1, mxlen), dtype='float32')
+
+        if self.chinese:
+            token_data = ["<START>"]+input_data[:mxlen-2]+["<EOS>"]
+            encoder_data = np.zeros((1, mxlen), dtype='float32')
+        else:
+            token_data = self.data.text_prepare(input_data)[:mxlen]
+            encoder_data = np.zeros((1, mxlen), dtype='float32')
 
         for t, word in enumerate(token_data):
             if word in self.data.word2id:
