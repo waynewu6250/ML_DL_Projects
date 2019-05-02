@@ -9,7 +9,7 @@ class Config:
     prev_sent = 2
 
     # for chinese dataset
-    chinese_data_path = "data/xiaohuangji50w_fenciA.conv"
+    chinese_data_path = "data/new_data.conv"
     chinese_results_path = "data/chinese_data.bin"
 
     # for training

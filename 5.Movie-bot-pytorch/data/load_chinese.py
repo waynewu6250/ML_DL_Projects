@@ -164,7 +164,7 @@ class ChineseData:
 
 if __name__ == '__main__':
     
-    data = ChineseData("xiaohuangji50w_fenciA.conv", "chinese_data.bin", False)
+    data = ChineseData("new_data.conv", "chinese_data_new.bin", False)
     
     print(data.encoder_input_data[11])
     print(data.decoder_input_data[11])
