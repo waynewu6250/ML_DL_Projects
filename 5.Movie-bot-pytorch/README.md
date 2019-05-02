@@ -17,13 +17,13 @@ There are two modes for the robot: Moviebot and Chickbot (雞寶)
 ## To USE
 1. **Moviebot**
 ```
-python test.py --chinese = False
+bash run.sh test english
 ```
 will start a trained chatbot called moviebot with basic conversational functions to interact with the user, please feed it with english.
 
 2. **Chickbot**
 ```
-python test.py --chinese = True
+bash run.sh test chinese
 ```
 will start a trained chatbot called chickbot with basic conversational functions to interact with the user, please feed it with traditional chinese.
 
@@ -56,13 +56,13 @@ python batch.py
 ## Training
 1. **Moviebot**
 ```
-python main.py train --chinese=False
+bash run.sh train english
 ```
 will start training the english data based on the fed minibatches and core unit used. <br>
 
 2. **Chickbot**
 ```
-python main.py train --chinese=True
+bash run.sh train chinese
 ```
 will start training the chinese data based on the fed minibatches and core unit used. <br>
 

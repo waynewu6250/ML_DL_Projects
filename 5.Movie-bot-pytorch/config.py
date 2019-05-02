@@ -22,8 +22,8 @@ class Config:
     latent_dim = 500
     mxlen= 20
     teacher_forcing_ratio = .5
-    model_path = "checkpoints/3.pth"
-    chinese_model_path = "checkpoints/chinese-epoch-69.pth"
+    model_path = "checkpoints/memory.pth"
+    chinese_model_path = "checkpoints/memory_chinese.pth"
 
     attn = False
     chinese = True
