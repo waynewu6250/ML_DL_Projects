@@ -1,8 +1,3 @@
-from .decoder import Decoder
-from .encoder import Encoder
-from .seq2seq import Seq2seq
-
-from .attn_decoder import AttnDecoder
-from .attn_seq2seq import AttnSeq2seq
-
 from .new_seq2seq import NewSeq2seq
+from .new_seq2seq import NewSeq2seqAttention
+from .new_seq2seq_RL import NewSeq2seqRL

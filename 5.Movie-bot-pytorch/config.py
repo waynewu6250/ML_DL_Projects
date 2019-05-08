@@ -21,11 +21,14 @@ class Config:
     char_dim = 300
     latent_dim = 500
     mxlen= 20
-    teacher_forcing_ratio = .5
     model_path = "checkpoints/memory.pth"
     chinese_model_path = "checkpoints/memory_chinese.pth"
+    model_attention_path = None #"checkpoints/epoch-89.pth"
+    model_rl_path = None
 
     attn = False
-    chinese = True
+    chinese = False
+
+    device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
 opt = Config()

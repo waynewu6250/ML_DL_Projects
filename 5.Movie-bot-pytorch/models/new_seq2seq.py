@@ -2,6 +2,8 @@ import torch
 import torch.nn as nn
 from torch.autograd import Variable
 from config import opt
+import torch.nn.functional as F
+import random
 
 class NewSeq2seq(nn.Module):
     def __init__(self, num_tokens, opt, sos_id):
@@ -74,7 +76,7 @@ class NewSeq2seq(nn.Module):
         decoder_input_embedded = self.dense(decoder_input_embedded)
         
         # Initialize output container
-        decoder_outputs = Variable(torch.zeros(self.time_steps,1,self.num_tokens))  # (time_steps, batch_size, vocab_size)
+        decoder_outputs = Variable(torch.zeros(self.time_steps,1,self.num_tokens)).to(self.device)  # (time_steps, batch_size, vocab_size)
         decoded_indices = []
 
         # Unfold the decoder RNN on the time dimension
@@ -99,3 +101,86 @@ class NewSeq2seq(nn.Module):
             decoded_indices.append(index.item())
         
         return decoded_indices, hidden1, hidden2
+
+
+class NewSeq2seqAttention(NewSeq2seq):
+    def __init__(self, num_tokens, opt, sos_id, dropout_rate=0.1):
+
+        super(NewSeq2seqAttention, self).__init__(num_tokens, opt, sos_id)
+
+        # Attention Layer
+        self.steps = self.time_steps if opt.chinese else 2*self.time_steps
+        self.attn_layer1 = nn.Linear(self.latent_dim*2, 32)
+        self.attn_layer2 = nn.Linear(32, 1)
+        self.combine = nn.Linear(self.latent_dim+self.char_dim, self.latent_dim)
+        self.dropout = nn.Dropout(dropout_rate)
+
+    # attention calc
+    def attention_layer(self, decoder_input, decoder_hidden, encoder_outputs):
+        
+        # Manage decoder_input
+        embedded = self.embedding(decoder_input).view(1,1,-1)
+        embedded = self.dropout(embedded).view(1,-1,self.char_dim) #(1, batch_size, char_dim)
+        
+        #===========Attention=============#
+        # 1. Repeat decoder_hidden time_step times
+        hidden_state = decoder_hidden[0].repeat(self.steps, 1, 1) #(time_steps, batch_size, latent_dim)
+        
+        # 2. Concatenate decoder_hidden and encoder_outputs
+        attn_weights = self.attn_layer1(torch.cat((encoder_outputs, hidden_state), 2))
+        attn_weights = F.softmax(self.attn_layer2(attn_weights), dim=1)
+
+        # 3. Reshape attn_weights and encoder_outputs
+        weights = attn_weights.view(self.batch_size, -1, self.steps)
+        outputs = encoder_outputs.view(self.batch_size, self.steps, -1)
+
+        # 3. dot product with encoder ouptuts to get context vector
+        context_vector = torch.bmm(weights, outputs)
+        context_vector = context_vector.view(1,self.batch_size,-1)
+
+        # 4. combine decoder input to get final output to feed into lstm
+        output = F.relu(self.combine(torch.cat((embedded[0], context_vector[0]),1)).unsqueeze(0))
+        #===========Attention=============#
+
+        return output
+    
+    def forward(self, inputs, targets):
+
+        # Encoder Phase
+        encoder_outputs, encoder_hidden1, encoder_hidden2 = self.encoder_forward(inputs)
+        hidden1 = encoder_hidden1
+        hidden2 = encoder_hidden2
+        
+        # Define initial input
+        decoder_input = Variable(torch.LongTensor([[self.sos_id]*self.batch_size])).to(self.device)
+
+        # Initialize output container
+        decoder_outputs = Variable(torch.zeros(self.time_steps,self.batch_size,self.num_tokens)).to(self.device)  # (time_steps, batch_size, vocab_size)
+        
+        # Unfold the decoder RNN on the time dimension
+        for t in range(self.time_steps):
+            outputs1, hidden1 = self.lstm1(torch.zeros(1, self.batch_size, self.latent_dim).to(self.device), hidden1)
+            attention_embedded = self.attention_layer(decoder_input, hidden2, encoder_outputs)
+            outputs2, hidden2 = self.lstm2(torch.cat([attention_embedded,outputs1],-1),hidden2) # (1, batch_size, latent_dim)
+            
+            outputs2 = outputs2.squeeze(0)  # squeeze the time dimension (batch_size, latent_dim)
+            outputs2 = self.log_softmax(self.out(outputs2))  # (batch_size, vocab_size)
+            decoder_outputs[t] = outputs2
+
+            # Cut at the end
+            if t == self.time_steps-1:
+                break
+            
+            decoder_input = targets[t+1].unsqueeze(0)
+        
+        return decoder_outputs, hidden1, hidden2
+
+
+
+
+
+
+
+
+
+        

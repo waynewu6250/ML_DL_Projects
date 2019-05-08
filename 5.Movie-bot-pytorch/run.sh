@@ -15,13 +15,13 @@ wait
 
 if [ $1 == "train" ]; then
     if [ $2 == "chinese" ]; then
-        python main.py train --chinese=True
+        python main.py train --chinese=True --attn=False
     elif [ $2 == "english" ]; then
         python main.py train --chinese=False
     fi
 elif [ $1 == "test" ]; then
     if [ $2 == "chinese" ]; then
-        python main.py test --chinese=True
+        python main.py test --chinese=True --attn=False
     elif [ $2 == "english" ]; then
         python main.py test --chinese=False
     fi

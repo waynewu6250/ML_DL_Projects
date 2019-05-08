@@ -4,8 +4,7 @@ import torch.nn as nn
 from torch.autograd import Variable
 from torch.optim import Adam, RMSprop
 
-from models import Encoder, Decoder, Seq2seq, AttnDecoder, AttnSeq2seq
-from models import NewSeq2seq
+from models import NewSeq2seq, NewSeq2seqAttention
 from data import TrainData
 from config import opt
 
@@ -14,6 +13,10 @@ from opencc import OpenCC
 def convert(text, mode):
     cc = OpenCC(mode)
     return cc.convert(text)
+
+#=============================================================#
+#                     NORMAL TRAIN PHASE                      #
+#=============================================================#
 
 def train(**kwargs):
 
@@ -31,45 +34,31 @@ def train(**kwargs):
         mydata = TrainData(opt.data_path, opt.conversation_path, opt.results_path, opt.prev_sent, True)
 
     # models
-    seq2seq =  NewSeq2seq(num_tokens=mydata.data.num_tokens,
-                          opt=opt,
-                          sos_id=mydata.data.word2id["<START>"])
-    # encoder = Encoder(num_encoder_tokens=mydata.data.num_tokens,
-    #                   char_dim=opt.char_dim,
-    #                   latent_dim=opt.latent_dim)
-
-    # if opt.attn:
-    #     decoder = AttnDecoder(num_decoder_tokens=mydata.data.num_tokens,
-    #                           char_dim=opt.char_dim,
-    #                           latent_dim=opt.latent_dim,
-    #                           time_steps=opt.mxlen,
-    #                           teacher_forcing_ratio=opt.teacher_forcing_ratio,
-    #                           sos_id=mydata.data.word2id["<START>"],
-    #                           dropout_rate=0.1)
+    if opt.attn:
+        seq2seq =  NewSeq2seqAttention(num_tokens=mydata.data.num_tokens,
+                                       opt=opt,
+                                       sos_id=mydata.data.word2id["<START>"])
+        if opt.model_attention_path:
+            seq2seq.load_state_dict(torch.load(opt.model_attention_path, map_location="cpu"))
+            print("Pretrained model has been loaded.\n")
+    else:
+        seq2seq =  NewSeq2seq(num_tokens=mydata.data.num_tokens,
+                              opt=opt,
+                              sos_id=mydata.data.word2id["<START>"])
         
-    #     seq2seq = AttnSeq2seq(encoder=encoder,
-    #                           decoder=decoder)
-    # else:
-    #     decoder = Decoder(num_decoder_tokens=mydata.data.num_tokens,
-    #                       char_dim=opt.char_dim,
-    #                       latent_dim=opt.latent_dim,
-    #                       teacher_forcing_ratio=opt.teacher_forcing_ratio,
-    #                       sos_id=mydata.data.word2id["<START>"])
-                   
-    #     seq2seq = Seq2seq(encoder=encoder,
-    #                       decoder=decoder)
-    
-    if opt.model_path:
         if opt.chinese:
-            seq2seq.load_state_dict(torch.load(opt.chinese_model_path, map_location="cpu"))
+            if opt.chinese_model_path:
+                seq2seq.load_state_dict(torch.load(opt.chinese_model_path, map_location="cpu"))
+                print("Pretrained model has been loaded.\n")
         else:
-            seq2seq.load_state_dict(torch.load(opt.model_path, map_location="cpu"))
-        print("Pretrained model has been loaded.\n")
+            if opt.model_path:
+                seq2seq.load_state_dict(torch.load(opt.model_path, map_location="cpu"))
+                print("Pretrained model has been loaded.\n")
     
     seq2seq = seq2seq.to(device)
     
     
-    #======================================================================#
+    #=============================================================#
 
     optimizer= RMSprop(seq2seq.parameters(), lr=opt.learning_rate)
     criterion = nn.CrossEntropyLoss().to(device)
@@ -111,7 +100,7 @@ def train(**kwargs):
 
 
 #=============================================================#
-#=============================================================#
+#                         TEST PHASE                          #
 #=============================================================#
 
 
@@ -143,40 +132,24 @@ def test(**kwargs):
             mydata = TrainData(opt.data_path, opt.conversation_path, opt.results_path, opt.chinese, opt.prev_sent, True)
 
         # models
-        seq2seq =  NewSeq2seq(num_tokens=mydata.data.num_tokens,
+        if opt.attn:
+            seq2seq =  NewSeq2seqAttention(num_tokens=mydata.data.num_tokens,
+                                        opt=opt,
+                                        sos_id=mydata.data.word2id["<START>"])
+            if opt.model_attention_path:
+                seq2seq.load_state_dict(torch.load(opt.model_attention_path, map_location="cpu"))
+        else:
+            seq2seq =  NewSeq2seq(num_tokens=mydata.data.num_tokens,
                               opt=opt,
                               sos_id=mydata.data.word2id["<START>"])
         
-        # encoder = Encoder(num_encoder_tokens=mydata.data.num_tokens,
-        #                   char_dim=opt.char_dim,
-        #                   latent_dim=opt.latent_dim)
-
-        # if opt.attn:
-
-        #     decoder = AttnDecoder(num_decoder_tokens=mydata.data.num_tokens,
-        #                           char_dim=opt.char_dim,
-        #                           latent_dim=opt.latent_dim,
-        #                           time_steps=opt.mxlen,
-        #                           teacher_forcing_ratio=opt.teacher_forcing_ratio,
-        #                           sos_id=mydata.data.word2id["<START>"],
-        #                           dropout_rate=0.1)
-        #     seq2seq = AttnSeq2seq(encoder=encoder,
-        #                           decoder=decoder)
-        # else:
-        #     decoder = Decoder(num_decoder_tokens=mydata.data.num_tokens,
-        #                       char_dim=opt.char_dim,
-        #                       latent_dim=opt.latent_dim,
-        #                       teacher_forcing_ratio=opt.teacher_forcing_ratio,
-        #                       sos_id=mydata.data.word2id["<START>"])
-
-        #     seq2seq = Seq2seq(encoder=encoder,
-        #                       decoder=decoder)
-        
-        if opt.model_path:
             if opt.chinese:
-                seq2seq.load_state_dict(torch.load(opt.chinese_model_path, map_location="cpu"))
+                if opt.chinese_model_path:
+                    seq2seq.load_state_dict(torch.load(opt.chinese_model_path, map_location="cpu"))
             else:
-                seq2seq.load_state_dict(torch.load(opt.model_path, map_location="cpu"))
+                if opt.model_path:
+                    seq2seq.load_state_dict(torch.load(opt.model_path, map_location="cpu"))
+        
         seq2seq = seq2seq.to(device)
 
         # Predict
@@ -203,7 +176,7 @@ def test(**kwargs):
                     decoded_sequence += sampled_tok
         
         print("WayneBot:",decoded_sequence if not opt.chinese \
-            else convert(decoded_sequence,'s2t').replace("雞仔","我").replace("主人","跟你說").replace("主子哦","").replace("主子","跟你說"))
+            else convert(decoded_sequence,'s2t').replace("雞仔","我").replace("主人","哈囉").replace("主子哦","").replace("主子","哈囉"))
         prev_sentence = decoded_sequence
 
 if __name__ == "__main__":
