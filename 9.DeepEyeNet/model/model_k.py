@@ -15,13 +15,6 @@ import re
 class KeywordModel:
     def __init__(self, param):
         
-        # Create caption model
-        self.embedding = Embedding(param["vocab_size"], param["embedding_size"])
-        self.caption_model = Sequential([
-                LSTM(256, return_sequences=True),
-                TimeDistributed(Dense(param["embedding_size"]))
-            ])
-        
         self.key_max_len = param["key_max_len"]
         self.keywords_ids = param["keywords_ids"]
         self.embedding_size = param["embedding_size"]
@@ -29,7 +22,14 @@ class KeywordModel:
         self.max_len = param["max_len"]
         self.word2id = param["word2id"]
         self.id2word = param["id2word"]
-    
+        
+        # Create caption model
+        self.embedding = Embedding(param["vocab_size"], param["embedding_size"])
+        self.caption_model = Sequential([
+                LSTM(256, return_sequences=True, input_shape=(self.max_len, self.embedding_size,)),
+                TimeDistributed(Dense(param["embedding_size"]))
+            ])
+        
     #virtual function
     def forward(self):
        raise NotImplementedError( "forwardMethod is virutal! Must be overwrited." )
@@ -161,78 +161,7 @@ class KeywordModel:
 
 
 ##############################################################
-#                     1.AttentionModel                       #
-##############################################################
-class AttentionModel(KeywordModel):
-    def __init__(self, param, img_size):
-        super(AttentionModel, self).__init__(param)
-        
-        # Softmax calculation
-        def softmax(x, axis=1):
-            """
-            Softmax activation function.
-            """
-            ndim = K.ndim(x)
-            if ndim == 2:
-                return K.softmax(x)
-            elif ndim > 2:
-                e = K.exp(x - K.max(x, axis=axis, keepdims=True))
-                s = K.sum(e, axis=axis, keepdims=True)
-                return e / s
-            else:
-                raise ValueError('Cannot apply softmax to a tensor that is 1D')
-        
-        self.img_size = img_size
-
-        # Create image model
-        self.image_model = Sequential([
-                Dense(self.embedding_size, input_shape=(self.img_size,)),
-                RepeatVector(self.key_max_len)
-            ])
-        
-        # Create dense model
-        self.dense_model = Sequential([
-            Dense(32, activation = "tanh"),
-            Dense(1, activation = "relu"),
-            Activation(softmax, name='attention_weights'),
-        ])
-        
-        
-    
-    def forward(self):
-        #  Image Input
-        x1 = Input(shape=(self.img_size,))
-        img_input = self.image_model(x1)
-        img_input_no_repeat = Dense(self.embedding_size, input_shape=(self.img_size,), activation='relu')(x1)
-
-        # Caption Input
-        x2 = Input(shape=(self.max_len,))
-        embedded = self.embedding(x2)
-        caption_input = self.caption_model(embedded)
-
-        # Keyword Input
-        x3 = Input(shape=(self.key_max_len,))
-        keyword_input = self.embedding(x3)
-
-        # Attention Mechanism
-        mix_input = Concatenate(axis=-1)([img_input, keyword_input])
-        scores = self.dense_model(mix_input)
-        context = Dot(axes = 1)([scores, keyword_input])
-        
-        # Mix Input
-        img_input_no_repeat = RepeatVector(1)(img_input_no_repeat)
-        context = Concatenate(axis=-1)([context, img_input_no_repeat])
-        context = Reshape((self.max_len,-1))(context)
-        context = Concatenate(axis=-1)([context, caption_input])
-        
-        x = Bidirectional(LSTM(256, return_sequences=False))(context)
-        out = Dense(self.vocab_size, activation='softmax')(x)
-
-        return Model(inputs=[x1, x2, x3], outputs=out)
-
-
-##############################################################
-#                     2.RNNEncoder                           #
+#                     1.RNNEncoder                           #
 ##############################################################
 class EncoderModel(KeywordModel):
     def __init__(self, param, img_size):
@@ -270,7 +199,7 @@ class EncoderModel(KeywordModel):
 
 
 ##############################################################
-#                     3.MeanEncoder                          #
+#                     2.MeanEncoder                          #
 ##############################################################
 class MeanModel(KeywordModel):
     def __init__(self, param, img_size):
@@ -282,12 +211,6 @@ class MeanModel(KeywordModel):
                 Dense(self.embedding_size, input_shape=(self.img_size,), activation='relu'),
                 RepeatVector(self.max_len)
                 ])
-        
-        # create keyword model
-        self.keyword_model = Sequential([
-            Lambda(lambda x: K.mean(x, axis=1, keepdims=False)),
-            RepeatVector(self.max_len)
-        ])
     
     def forward(self):
         x1 = Input(shape=(self.img_size,))
@@ -304,7 +227,8 @@ class MeanModel(KeywordModel):
         
         # Keyword Input
         embedded_k = self.embedding(x3)
-        keyword_input = self.keyword_model(embedded_k)
+        keyword_input = Lambda(lambda x: K.mean(x, axis=1, keepdims=False))(embedded_k)
+        keyword_input = RepeatVector(self.max_len)(keyword_input)
         
         # Mix Input
         x = Concatenate(axis=-1)([img_input, keyword_input])
@@ -318,7 +242,7 @@ class MeanModel(KeywordModel):
     
     
 ##############################################################
-#                     4.Transformer                          #
+#                     3.Transformer                          #
 ##############################################################
 
 class LayerNormalization(Layer):
@@ -345,7 +269,7 @@ class TransformerModel(KeywordModel):
         self.img_size = img_size
         self.attention_size = attention_size
         self.feed_forward = Sequential([
-            Dense(self.embedding_size, activation='relu'),
+            Dense(self.embedding_size, activation='relu', input_shape=(self.attention_size,)),
             Dense(self.embedding_size)
         ])
         

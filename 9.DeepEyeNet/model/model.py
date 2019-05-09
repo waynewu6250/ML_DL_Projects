@@ -15,9 +15,9 @@ class CaptionModel:
                 ])
         # Create caption model
         self.caption_model = Sequential([
-                Embedding(vocab_size, embedding_size, input_length=max_len),
+                Embedding(vocab_size, embedding_size, input_length=max_len, input_shape=(max_len,)),
                 LSTM(256, return_sequences=True),
-                TimeDistributed(Dense(300))
+                TimeDistributed(Dense(embedding_size))
             ])
         
         self.embedding_size = embedding_size
@@ -59,7 +59,7 @@ class CaptionModel:
                     count += 1
                     partial_caps.append(cap_ids[img_path][:j+1])
                     current_imgs.append(current_img)
-                    next_words.append(np.eye(self.ocab_size)[cap_ids[img_path][j+1]])
+                    next_words.append(np.eye(self.vocab_size)[cap_ids[img_path][j+1]])
 
                     if count >= batch_size:
                         partial_caps = sequence.pad_sequences(partial_caps, maxlen=self.max_len, padding='post')
