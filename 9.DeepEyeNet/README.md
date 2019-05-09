@@ -66,6 +66,16 @@ Here we use Keras with Tensorflow backend for the code.
 5. At prediction stage, I am using Greedy search and Beam search with k=3 for predicting the captions of the images.
 
 
+# Train
+You can use `train.py` to train the model directly by typing the following command in terminal (without using jupyter notebook) <br>
+>
+    python train.py -n <model name> -f <feature type>
+
+Here model name you can type in `normal`, `encoder`, `mean`, or `transformer` to use different models <br>
+For feature name you can type in `vgg16`, `vgg19`, `inceptionV3`, or `resnet50` to use different pretrained image features.
+
+
+
 # Results
 ## Base Model Evaluation
 I train the final model with and without the keyword reinforced to see the difference. For simplicity, I chose four main types of diseases around ~2000 images for training 3 epochs. Pretrained GLOVE word embeddings are used.
