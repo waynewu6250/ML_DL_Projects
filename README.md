@@ -5,9 +5,8 @@
 
 # Machine learning and Deep learning related projects
 ## Ting-Wei Wu
-My side project gallery for collections and refinement <br>
-You can use [downgit](https://minhaskamal.github.io/DownGit/#/home) to clone any individual project for your interest. <br>
-And follow the instructions in each README.md to use.
+My side project gallery for collections and refinement. <br><br>
+（You can use [downgit](https://minhaskamal.github.io/DownGit/#/home) to clone any individual project for your interest. And follow the instructions in each README.md to use.）
 
 [1. StackBot on telegram](#1) <br>
 [2. Movie Bot with pytorch](#2) <br>
@@ -95,7 +94,7 @@ This is a deep learning project with CNN Resnet models from pytorch. Image data 
 ---
 
 <a name="8"></a>
-### [8. Twitter hashtags](https://github.com/waynewu6250/ML_DL_Projects/blob/master/3.Twitter-hashtags#part_8)
+### [8. Twitter hashtags](https://github.com/waynewu6250/ML_DL_Projects/blob/master/8.Twitter-hashtags#part_8)
 This is a pyspark project that will analyze the most frequent hashtags used by individual users.   
 
 <img src="8.Twitter-hashtags/hashtag.png"  height="220" width="330">
