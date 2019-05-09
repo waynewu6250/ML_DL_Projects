@@ -1,0 +1,12 @@
+# System
+*.pyc
+.vscode/
+.ipynb_checkpoints/
+*.ipynb
+
+# Checkpoints
+checkpoints/*
+
+# Data
+*.conv
+*.bin

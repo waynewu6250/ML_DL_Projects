@@ -1,0 +1,16 @@
+# Raw Data
+data/__pycache__/
+data/.ipynb_checkpoints/
+data/imgs/*.jpg
+data/raw_data/*.tsv
+data/caption.pth
+data/image_feature.pth
+
+#checkpoints
+checkpoints/*.pth
+
+#some caches
+__pycache__/
+.ipynb_checkpoints/
+.vscode/
+
