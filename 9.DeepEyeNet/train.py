@@ -57,25 +57,25 @@ class TrainModel:
         if self.model_name == "normal":
             self.model_obj = CaptionModel(300, self.vocab_size, self.max_len, self.word2id, self.id2word, self.feat_sizes[self.select_model])
             self.final_model = self.model_obj.forward()
-            self.model_path = './checkpoints/model_{}.h5'.format(self.select_model)
+            self.model_path = './checkpoints/model_{}_new_e3.h5'.format(self.select_model)
         
         # 1. RNN-Encoder for keyword embedding
         if self.model_name == "encoder":
             self.model_obj = EncoderModel(self.set_params(), self.feat_sizes[self.select_model])
             self.final_model = self.model_obj.forward()
-            self.model_path = './checkpoints/model_{}_keywords_encoder.h5'.format(self.select_model)
+            self.model_path = './checkpoints/model_{}_new_keywords_encoder.h5'.format(self.select_model)
 
         # 2. RNN-Encoder for keyword embedding
         elif self.model_name == "mean":
             self.model_obj = MeanModel(self.set_params(), self.feat_sizes[self.select_model])
             self.final_model = self.model_obj.forward()
-            self.model_path = './checkpoints/model_{}_keywords_mean.h5'.format(self.select_model)
+            self.model_path = './checkpoints/model_{}_new_keywords_mean.h5'.format(self.select_model)
 
         # 3. Self-attention-Encoder for keyword embedding
         elif self.model_name == "transformer":
             self.model_obj = TransformerModel(self.set_params(), self.feat_sizes[self.select_model], 64)
             self.final_model = self.model_obj.forward()
-            self.model_path = './checkpoints/model_{}_keywords_transformer.h5'.format(self.select_model)
+            self.model_path = './checkpoints/model_{}_new_keywords_transformer.h5'.format(self.select_model)
    
     def set_params(self):
         
