@@ -16,6 +16,7 @@ eyenet_0819/ (download from following link)
 └── img_features/ (all extracted features)
 
 model/
+├── __init__.py
 ├── model.py
 ├── model_k.py
 
@@ -31,6 +32,7 @@ results/
 Image_captioning_step_by_step.ipynb
 Image_captioning_evaluation.ipynb
 Image_captioning_keyword_model.ipynb
+train.py
 utils.py
 ```
 
