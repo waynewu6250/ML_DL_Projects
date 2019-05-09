@@ -1,6 +1,6 @@
-<div id="part_2"></div>
+<div id="part_4"></div>
 
-# 2. Image captioning
+# 4. Image captioning
 This is the CV-NLP related project associated with generating captions for any input image.
 
 There are two different implementation for the applications: <br>

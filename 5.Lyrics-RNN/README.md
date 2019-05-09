@@ -1,6 +1,6 @@
-<div id="part_7"></div>
+<div id="part_5"></div>
 
-# 7. Recurrent Neural Network for Taiwanese song's lyrics generation
+# 5. Recurrent Neural Network for Taiwanese song's lyrics generation
 This is the deep learning project completely done by Ting-Wei Wu. <br>
 Basically, it will generate some intriguing lyrics based on the major taiwanese songs' style. <br>
 The networks are based on simple RNN model with major four singers. <br>

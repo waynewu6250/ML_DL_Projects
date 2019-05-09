@@ -1,6 +1,6 @@
-<div id="part_4"></div>
+<div id="part_3"></div>
 
-# 4. Movie Bot with keras
+# 3. Movie Bot with keras
 This is the nlp project completely done by Ting-Wei Wu with data preprocessing and keras seq2seq model establishment. <br>
 The dataset is downloaded from [Cornell Movie Dialogs Corpus](https://www.cs.cornell.edu/~cristian/Cornell_Movie-Dialogs_Corpus.html).
 

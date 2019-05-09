@@ -1,6 +1,6 @@
-<div id="part_5"></div>
+<div id="part_2"></div>
 
-# 5.Movie-bot-with-pytorch
+# 2.Movie-bot-with-pytorch
 This is the nlp project completely done by Ting-Wei Wu with data preprocessing and pytorch seq2seq model establishment.
 It is established based on the project Movie-bot-keras except new implementation and model specification with pytorch. <br>
 
