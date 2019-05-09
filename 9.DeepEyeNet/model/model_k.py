@@ -159,9 +159,79 @@ class KeywordModel:
 
         return tok
 
+##############################################################
+#                     1.AttentionModel                       #
+##############################################################
+class AttentionModel(KeywordModel):
+    def __init__(self, param, img_size):
+        super(AttentionModel, self).__init__(param)
+        
+        # Softmax calculation
+        def softmax(x, axis=1):
+            """
+            Softmax activation function.
+            """
+            ndim = K.ndim(x)
+            if ndim == 2:
+                return K.softmax(x)
+            elif ndim > 2:
+                e = K.exp(x - K.max(x, axis=axis, keepdims=True))
+                s = K.sum(e, axis=axis, keepdims=True)
+                return e / s
+            else:
+                raise ValueError('Cannot apply softmax to a tensor that is 1D')
+        
+        self.img_size = img_size
+
+        # Create image model
+        self.image_model = Sequential([
+                Dense(self.embedding_size, input_shape=(self.img_size,)),
+                RepeatVector(self.key_max_len)
+            ])
+        
+        # Create dense model
+        self.dense_model = Sequential([
+            Dense(32, activation = "tanh"),
+            Dense(1, activation = "relu"),
+            Activation(softmax, name='attention_weights'),
+        ])
+        
+        
+    
+    def forward(self):
+        #  Image Input
+        x1 = Input(shape=(self.img_size,))
+        img_input = self.image_model(x1)
+        img_input_no_repeat = Dense(self.embedding_size, input_shape=(self.img_size,), activation='relu')(x1)
+
+        # Caption Input
+        x2 = Input(shape=(self.max_len,))
+        embedded = self.embedding(x2)
+        caption_input = self.caption_model(embedded)
+
+        # Keyword Input
+        x3 = Input(shape=(self.key_max_len,))
+        keyword_input = self.embedding(x3)
+
+        # Attention Mechanism
+        mix_input = Concatenate(axis=-1)([img_input, keyword_input])
+        scores = self.dense_model(mix_input)
+        context = Dot(axes = 1)([scores, keyword_input])
+        
+        # Mix Input
+        img_input_no_repeat = RepeatVector(1)(img_input_no_repeat)
+        context = Concatenate(axis=-1)([context, img_input_no_repeat])
+        context = Reshape((self.max_len,-1))(context)
+        context = Concatenate(axis=-1)([context, caption_input])
+        
+        x = Bidirectional(LSTM(256, return_sequences=False))(context)
+        out = Dense(self.vocab_size, activation='softmax')(x)
+
+        return Model(inputs=[x1, x2, x3], outputs=out)
+
 
 ##############################################################
-#                     1.RNNEncoder                           #
+#                     2.RNNEncoder                           #
 ##############################################################
 class EncoderModel(KeywordModel):
     def __init__(self, param, img_size):
@@ -199,7 +269,7 @@ class EncoderModel(KeywordModel):
 
 
 ##############################################################
-#                     2.MeanEncoder                          #
+#                     3.MeanEncoder                          #
 ##############################################################
 class MeanModel(KeywordModel):
     def __init__(self, param, img_size):
@@ -242,7 +312,7 @@ class MeanModel(KeywordModel):
     
     
 ##############################################################
-#                     3.Transformer                          #
+#                     4.Transformer                          #
 ##############################################################
 
 class LayerNormalization(Layer):
