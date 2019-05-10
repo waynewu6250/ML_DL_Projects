@@ -143,7 +143,9 @@ def train_RL(**kwargs):
             loss.backward()
             optimizer.step()
 
-            save_path = ""
+            save_path = "checkpoints/rl-epoch-%s.pth"%epoch
+            if (epoch+1) % 10 == 0:
+                t.save(seq2seq_rl.state_dict(), save_path)
 
 
 
