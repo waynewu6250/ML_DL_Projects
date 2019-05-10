@@ -16,7 +16,6 @@ My side project gallery for collections and refinement. <br><br>
 [6. Deep Convolutional Generative Adversarial Networks for Naruto character generation](#6) <br>
 [7. Malaria Cell Prediction](#7) <br>
 [8. Twitter hashtags](#8) <br>
-[9. DeepEyeNet](#9) <br>
 
 ---
 
@@ -98,17 +97,5 @@ This is a deep learning project with CNN Resnet models from pytorch. Image data 
 This is a pyspark project that will analyze the most frequent hashtags used by individual users.   
 
 <img src="8.Twitter-hashtags/hashtag.png"  height="220" width="330">
-
----
-
-<a name="9"></a>
-### [9.DeepEyeNet](https://github.com/waynewu6250/ML_DL_Projects/tree/master/9.DeepEyeNet#part_9)
-This is a collaborative deep learning project called DeepEyeNet, originally licensed by [DeepEyeNet repo](https://github.com/huckiyang/DeepEyeNet) and referenced by [Image Captioning repo](https://github.com/yashk2810/Image-Captioning). The task is to generate medical descriptions of a typical retinal image input by using deep learning high level framework: keras. The dataset is from <br>
-http://imagebank.asrs.org/
-
-<img src="9.DeepEyeNet/drusen-90.jpg" height="220" width="330">
-<br>
-Medical descriptions: 
-66-year-old white female. drusen.
 
 
