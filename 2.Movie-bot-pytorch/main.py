@@ -176,7 +176,7 @@ def test(**kwargs):
                     decoded_sequence += sampled_tok
         
         print("WayneBot:",decoded_sequence if not opt.chinese \
-            else convert(decoded_sequence,'s2t').replace("雞仔","我").replace("主人","哈囉").replace("主子哦","").replace("主子","哈囉"))
+            else convert(decoded_sequence,'s2t').replace("雞仔","我").replace("主人","陛下").replace("主子","陛下"))
         prev_sentence = decoded_sequence
 
 if __name__ == "__main__":

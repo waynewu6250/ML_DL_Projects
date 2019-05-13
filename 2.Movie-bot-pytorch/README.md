@@ -1,6 +1,10 @@
 <div id="part_2"></div>
 
 # 2.Movie-bot-with-pytorch
+<p align="center">
+    <img src="chickbot.png" height=300px center>
+</p>
+
 This is the nlp project completely done by Ting-Wei Wu with data preprocessing and pytorch seq2seq model establishment.
 It is established based on the project Movie-bot-keras except new implementation and model specification with pytorch. <br>
 

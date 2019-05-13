@@ -26,39 +26,25 @@ def make_batch(data, input_data, mxlen):
     batch_data = Variable(torch.LongTensor(batch_data)).transpose(0, 1).to(opt.device)
     return batch_data
 
-def count_rewards(dull_loss, forward_entropy, backward_entropy, forward_target, backward_target, reward_type='pg'):
-        if reward_type == 'normal':
-            return torch.ones([opt.batch_size, opt.mxlen]).to(opt.device)
+def count_rewards(dull_loss, forward_entropy, backward_entropy, reward_type='pg'):
+    if reward_type == 'normal':
+        return torch.ones(opt.mxlen).to(opt.device)
+    
+    if reward_type == 'pg':
+        total_loss = torch.zeros(opt.mxlen).to(opt.device)
         
-        if reward_type == 'pg':
-            total_loss = torch.zeros([opt.batch_size, opt.mxlen]).to(opt.device)
-        
-            for i in range(opt.batch_size):
-                
-                # 1. dull set loss
-                total_loss[i, :] += dull_loss[i]
-
-                #2. forward loss
-                forward_len = len(forward_target[i].split())
-                backward_len = len(backward_target[i].split())
-                if forward_len > 0:
-                    total_loss[i, :] += (forward_entropy / forward_len)
-                if backward_len > 0:
-                    total_loss[i, :] += (backward_entropy / backward_len)
-                
-            total_loss = 1/(1+np.exp(-total_loss)) * 1.1
+        total_loss[:] += (dull_loss+forward_entropy+backward_entropy)/3
+        print(total_loss)
             
-            return total_loss
+        total_loss = torch.sigmoid(total_loss) * 1.1
+        
+        return total_loss
 
 #=============================================================#
 #                        RL TRAIN PHASE                       #
 #=============================================================#
 
-def train_RL(**kwargs):
-
-    # attributes
-    for k,v in kwargs.items():
-        setattr(opt,k,v)
+def train_RL():
     
     torch.backends.cudnn.enabled = False
 
@@ -69,12 +55,18 @@ def train_RL(**kwargs):
                 "I know what you mean.", 
                 "You know what I'm saying.", 
                 "You don't know anything."]
-    ones_reward = torch.ones([opt.batch_size, opt.mxlen]).to(self.device)
+    ones_reward = torch.ones(opt.mxlen).to(opt.device)
     
     # dataset
-    mydata = TrainData(opt.data_path, opt.conversation_path, opt.results_path, opt.prev_sent, True)
-    # Dullset data
-    dull_target_data = make_batch(mydata, dull_set, opt.mxlen)
+    mydata = TrainData(opt.data_path, opt.conversation_path, opt.results_path, chinese=False, prev_sent=opt.prev_sent)
+    
+    # Ease of answering data
+    dull_target_set = make_batch(mydata.data, dull_set, opt.mxlen)
+    dull_target_set = dull_target_set.permute(1,0)
+    dull_target_data = Variable(torch.LongTensor(opt.batch_size, opt.mxlen)).to(opt.device)
+    for i in range(opt.batch_size):
+        dull_target_data[i] = dull_target_set[np.random.randint(len(dull_set))]
+    dull_target_data = dull_target_data.permute(1,0)
 
     # models
     # 1. RL model
@@ -113,39 +105,37 @@ def train_RL(**kwargs):
             optimizer.zero_grad()
             
             # First evaluate an output
-            action_words, _, _ = seq2seq_rl.evaluate(ib)
+            action_words, _, _ = seq2seq_rl.evaluation(ib)
 
+            # Ease of answering data
             dull_data = seq2seq_rl(action_words, dull_target_data, ones_reward)
+            
+            # Semantic Coherence: Forward
             forward_data = seq2seq_rl(ib, action_words, ones_reward)
+
+            # Semantic Coherence: Backward
             backward_data = seq2seq_normal(action_words, ib[:opt.mxlen])
             backward_targets = ib[:opt.mxlen].contiguous().view(-1)  # (time_steps*batch_size)
             backward_outputs = backward_data[0].view(opt.batch_size * opt.mxlen, -1)  # S = (time_steps*batch_size) x V
             backward_loss = criterion(backward_outputs, backward_targets.long())
 
-            rewards = count_rewards(dull_data[3], forward_data[3], backward_loss, action_words, ib[:opt.mxlen])
+            rewards = count_rewards(dull_data[3], forward_data[3], backward_loss)
 
             # Add rewards to train the data
             decoder_outputs, decoder_hidden1, decoder_hidden2, pg_loss = seq2seq_rl(ib, tb, rewards)
             
-            # Reshape the outputs
-            b = decoder_outputs.size(1)
-            t = decoder_outputs.size(0)
-            targets = Variable(torch.zeros(t,b)).to(device) # (time_steps,batch_size)
-            targets[:-1,:] = tb[1:,:]
-
-            targets = targets.contiguous().view(-1)  # (time_steps*batch_size)
-            decoder_outputs = decoder_outputs.view(b * t, -1)  # S = (time_steps*batch_size) x V
-            loss = criterion(decoder_outputs, targets.long())
-            
             if ii % 1 == 0:
-                print("Current Loss:",loss.data.item())
+                print("Current Loss:",pg_loss.data.item())
             
-            loss.backward()
+            pg_loss.backward()
             optimizer.step()
 
             save_path = "checkpoints/rl-epoch-%s.pth"%epoch
             if (epoch+1) % 10 == 0:
                 t.save(seq2seq_rl.state_dict(), save_path)
+
+if __name__ == "__main__":
+    train_RL()
 
 
 

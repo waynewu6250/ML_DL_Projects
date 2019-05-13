@@ -27,6 +27,7 @@ class Config:
     model_rl_path = None
 
     attn = False
+    rl = True
     chinese = False
 
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
