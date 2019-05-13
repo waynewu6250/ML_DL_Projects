@@ -39,7 +39,7 @@ Please find more in the [project folder](https://github.com/waynewu6250/ML_DL_Pr
 
 Training data are extracted from Cornell Dialogs Movie Corpus and XiaoHuangJi. Detailed descriptions are shown in the README.md in the subfolder.
 
-<img src="3.Movie-bot-keras/chatbots.jpg"  height="220" width="330">
+<img src="2.Movie-bot-pytorch/chickbot.png"  height="220" width="220">
 
 ---
 
@@ -48,6 +48,8 @@ Training data are extracted from Cornell Dialogs Movie Corpus and XiaoHuangJi. D
 This is a nlp project completely done by Ting-Wei Wu with data preprocessing and keras seq2seq model establishment. <br>
 
 Training data are extracted from movie_lines.tsv. Detailed descriptions are shown in the jupyter notebook: LHW4-Short-base.ipynb.
+
+<img src="3.Movie-bot-keras/chatbots.jpg"  height="220" width="330">
 
 ---
 
