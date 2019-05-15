@@ -2,3 +2,4 @@ gym-super-mario/
 __pycache__/
 .ipynb_checkpoints/
 .vscode/
+checkpoints/

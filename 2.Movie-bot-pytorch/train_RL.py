@@ -75,7 +75,7 @@ def train_RL():
                                sos_id=mydata.data.word2id["<START>"])
     if opt.model_rl_path:
         seq2seq_rl.load_state_dict(torch.load(opt.model_rl_path, map_location="cpu"))
-        print("Pretrained model has been loaded.\n")
+        print("Pretrained RL model has been loaded.")
     seq2seq_rl = seq2seq_rl.to(opt.device)
 
     # 2. Normal model
@@ -84,7 +84,7 @@ def train_RL():
                                  sos_id=mydata.data.word2id["<START>"])
     if opt.model_path:
         seq2seq_normal.load_state_dict(torch.load(opt.model_path, map_location="cpu"))
-        print("Pretrained model has been loaded.\n")
+        print("Pretrained Normal model has been loaded.")
     seq2seq_normal = seq2seq_normal.to(opt.device)
 
 

@@ -7,57 +7,76 @@ from models import Agent
 from tqdm import trange
 from pandas import DataFrame
 ewma = lambda x, span=100: DataFrame({'x':np.asarray(x)}).x.ewm(span=span).mean().values
+checkpoint_path = 'checkpoints/model-1999.meta'
 
 
 def forward_run(is_new, agent=None, env_handler=None, game = 2):
     global_rewards = []
-
     if is_new:
         tf.reset_default_graph()
         sess = tf.InteractiveSession()
         env_handler = EnvHandler('SuperMarioBros2-v0', 1)
         agent = Agent("agent", env_handler.obs_shape, env_handler.n_actions)
+
+        if checkpoint_path:
+            saver = tf.train.import_meta_graph(checkpoint_path)
+            saver.restore(sess, tf.train.latest_checkpoint('./checkpoints'))
     
     for i in range(game):
 
         total_rewards = 0
-        done = 0
+        life = 2
         if is_new:
             sess.run(tf.global_variables_initializer())
 
-        while not done:
+        while True:
             action = agent.sample_actions(agent.step([env_handler.observation]))[0]
             env_handler.observation, reward, done, info = env_handler.env.step(action)
             total_rewards += reward
+            life = info["life"]
             
             env_handler.run()
             
-            if done:
+            if life == 1:
                 env_handler.observation = env_handler.env.reset()
+                break
         
         global_rewards.append(total_rewards)
+        print("Game {} reward: {:.3f}".format(i+1,total_rewards))
+    
+    return global_rewards
 
     # env_handler.render_rgb()
     # env_handler.render_frames(env_handler.observation)
     # env.close()
 
-    return global_rewards
-
 def train_agent(game = 10):
     env_handler = EnvHandler('SuperMarioBros2-v0', 10)
     
+    # Create Graph and agent
     tf.reset_default_graph()
     sess = tf.InteractiveSession()
-
     agent = Agent("agent", env_handler.obs_shape, env_handler.n_actions)
+    train_step, entropy = agent.train()
     sess.run(tf.global_variables_initializer())
+    
+    if checkpoint_path:
+        saver = tf.train.import_meta_graph(checkpoint_path)
+        saver.restore(sess, tf.train.latest_checkpoint('./checkpoints/'))
+    else:
+        saver = tf.train.Saver()
 
+    # Initialize parameters
     batch_states = env_handler.parallel_reset()
-
-    rewards_history = []
     entropy_history = []
+    rewards_history = []
 
-    for i in trange(100): 
+
+    # Create Figure
+    plt.figure(figsize=(8,4), dpi=80)
+    plt.ion()
+
+    for i in trange(2000): 
         batch_actions = agent.sample_actions(agent.step(batch_states))
         batch_next_states, batch_rewards, batch_done, _ = env_handler.parallel_step(batch_actions)
         feed_dict = {
@@ -69,32 +88,48 @@ def train_agent(game = 10):
         }
         batch_states = batch_next_states
 
-        _, ent_t = sess.run(agent.train(), feed_dict)
+        _, ent_t = sess.run([train_step, entropy], feed_dict)
         entropy_history.append(np.mean(ent_t))
 
-        if (i+1) % 5 == 0:
-            if (i+1) % 10 == 0:
+        if (i+1) % 10 == 0:
+            if (i+1) % 500 == 0:
                 rewards_history.append(np.mean(forward_run(False, agent, env_handler, 1)))
+                saver.save(sess, "checkpoints/model", global_step=i)
                 if rewards_history[-1] >= 50:
                     print("Your agent has earned the yellow belt: yah")
-            print("Rewards: ",rewards_history)
-            print("Current Entropy: ", entropy_history)
-            # plt.figure(figsize=[8,4])
-            # plt.subplot(1,2,1)
-            # plt.plot(rewards_history, label='rewards')
-            # plt.plot(ewma(np.array(rewards_history),span=10), marker='.', label='rewards ewma@10')
-            # plt.title("Session rewards"); plt.grid(); plt.legend()
+                    print("Rewards: ",rewards_history[-1])
             
-            # plt.subplot(1,2,2)
-            # plt.plot(entropy_history, label='entropy')
-            # plt.plot(ewma(np.array(entropy_history),span=1000), label='entropy ewma@1000')
-            # plt.title("Policy entropy"); plt.grid(); plt.legend()        
-            # plt.show()
+            # Visualization
+            plt.cla()
+
+            plt.subplot(1,2,1)
+            plt.title("Session rewards")
+            if rewards_history != []:
+                plt.grid(); plt.legend()
+                plt.plot(rewards_history, label='rewards')
+                plt.plot(ewma(np.array(rewards_history),span=10), marker='.', label='rewards ewma@10')
+            
+            plt.subplot(1,2,2)
+            plt.plot(entropy_history, label='entropy')
+            plt.plot(ewma(np.array(entropy_history),span=1000), label='entropy ewma@1000')
+            plt.title("Policy entropy"); plt.grid(); plt.legend()
+
+            plt.pause(0.1)     
+    
+    plt.ioff()
+            
 
 if __name__ == "__main__":
-    # game = 2
-    # global_rewards = forward_run(True)
-    # for i in range(game):
-    #     print("Game Rewards: ", global_rewards[i])
-    train_agent()
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-m", "--mode", help="help", type=str, dest="mode", default="play")
+    parser.add_argument("-n", "--number", help="number of games", type=int, dest="game", default=1)
+    args = parser.parse_args()
+    
+    if args.mode == "play":
+        global_rewards = forward_run(True, game=args.game)
+    elif args.mode == "train":
+        train_agent(game=args.game)
+    else:
+        raise("Please only insert play or train in mode!!")
 

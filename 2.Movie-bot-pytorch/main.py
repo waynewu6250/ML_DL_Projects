@@ -38,6 +38,17 @@ def train(**kwargs):
         seq2seq =  NewSeq2seqAttention(num_tokens=mydata.data.num_tokens,
                                        opt=opt,
                                        sos_id=mydata.data.word2id["<START>"])
+        if opt.model_path:
+            
+            pretrained_dict = torch.load(opt.model_path, map_location="cpu")
+            model_dict = seq2seq.state_dict()
+            
+            pretrained_dict = {k: v for k, v in pretrained_dict.items() if k in model_dict}
+            model_dict.update(pretrained_dict)
+            
+            seq2seq.load_state_dict(model_dict)
+            print("Transfer pretrained model to current model.\n")
+        
         if opt.model_attention_path:
             seq2seq.load_state_dict(torch.load(opt.model_attention_path, map_location="cpu"))
             print("Pretrained model has been loaded.\n")

@@ -5,7 +5,7 @@ class Config:
     # for english dataset
     data_path = "data/movie_lines.tsv"
     conversation_path = "data/movie_conversations.txt"
-    results_path = "data/data.bin"
+    results_path = "data/data_new.bin"
     prev_sent = 2
 
     # for chinese dataset
@@ -21,13 +21,12 @@ class Config:
     char_dim = 300
     latent_dim = 500
     mxlen= 20
-    model_path = "checkpoints/memory.pth"
+    model_path = "checkpoints/epoch-119.pth" #checkpoints/memory.pth"
     chinese_model_path = "checkpoints/memory_chinese.pth"
-    model_attention_path = None #"checkpoints/epoch-89.pth"
-    model_rl_path = None
+    model_attention_path = None #"checkpoints/memory.pth"
+    model_rl_path = "checkpoints/memory.pth"
 
     attn = False
-    rl = True
     chinese = False
 
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')

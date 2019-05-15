@@ -16,7 +16,7 @@ class Data:
         self.mxlen = 20
         self.REPLACE_BY_SPACE_RE = re.compile(r'[/(){}\[\]\|@,;]')
         self.BAD_SYMBOLS_RE = re.compile(r'[^0-9a-z #+_]')
-        self.word_count_threshold = 5
+        self.word_count_threshold = 20
 
         # dictionary
         """
@@ -217,7 +217,7 @@ class Data:
 
 if __name__ == '__main__':
     
-    data = Data("movie_lines.tsv", "movie_conversations.txt", "data.bin", 2, False)
+    data = Data("movie_lines.tsv", "movie_conversations.txt", "data_new.bin", 2, False)
     print(data.encoder_input_data[11])
     print(data.decoder_input_data[11])
     print(data.all_convs[11])

@@ -83,9 +83,6 @@ class Agent:
 
         critic_loss = tf.reduce_mean((state_values - tf.stop_gradient(target_state_values))**2 )
 
-        train_step = tf.train.AdamOptimizer(1e-4).minimize(actor_loss + critic_loss)
-        
-        sess = tf.get_default_session()
-        sess.run(tf.global_variables_initializer())
+        train_step = tf.train.AdamOptimizer(1e-3).minimize(actor_loss + critic_loss)
 
-        return [train_step, entropy]
+        return (train_step, entropy)
