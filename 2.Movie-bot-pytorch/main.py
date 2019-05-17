@@ -29,9 +29,9 @@ def train(**kwargs):
     
     # dataset
     if opt.chinese:
-        mydata = TrainData(opt.chinese_data_path, opt.conversation_path, opt.chinese_results_path, opt.prev_sent, True)
+        mydata = TrainData(opt.chinese_data_path, opt.conversation_path, opt.chinese_results_path, opt.chinese, opt.fb, opt.prev_sent, True)
     else:
-        mydata = TrainData(opt.data_path, opt.conversation_path, opt.results_path, opt.prev_sent, True)
+        mydata = TrainData(opt.data_path, opt.conversation_path, opt.results_path, opt.chinese, opt.fb, opt.prev_sent, True)
 
     # models
     if opt.attn:
@@ -137,10 +137,10 @@ def test(**kwargs):
         # Dataset
         if opt.chinese:
             data = list(convert(data, 't2s'))
-            mydata = TrainData(opt.chinese_data_path, opt.conversation_path, opt.chinese_results_path, opt.chinese, opt.prev_sent, True)
+            mydata = TrainData(opt.chinese_data_path, opt.conversation_path, opt.chinese_results_path, opt.chinese, opt.fb, opt.prev_sent, True)
         else:
             data = ' '.join(data.split(' '))
-            mydata = TrainData(opt.data_path, opt.conversation_path, opt.results_path, opt.chinese, opt.prev_sent, True)
+            mydata = TrainData(opt.data_path, opt.conversation_path, opt.results_path, opt.chinese, opt.fb, opt.prev_sent, True)
 
         # models
         if opt.attn:

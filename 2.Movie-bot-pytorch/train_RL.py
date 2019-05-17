@@ -58,7 +58,7 @@ def train_RL():
     ones_reward = torch.ones(opt.mxlen).to(opt.device)
     
     # dataset
-    mydata = TrainData(opt.data_path, opt.conversation_path, opt.results_path, chinese=False, prev_sent=opt.prev_sent)
+    mydata = TrainData(opt.data_path, opt.conversation_path, opt.results_path, chinese=False, fb=False, prev_sent=opt.prev_sent)
     
     # Ease of answering data
     dull_target_set = make_batch(mydata.data, dull_set, opt.mxlen)
@@ -132,7 +132,7 @@ def train_RL():
 
             save_path = "checkpoints/rl-epoch-%s.pth"%epoch
             if (epoch+1) % 10 == 0:
-                t.save(seq2seq_rl.state_dict(), save_path)
+                torch.save(seq2seq_rl.state_dict(), save_path)
 
 if __name__ == "__main__":
     train_RL()

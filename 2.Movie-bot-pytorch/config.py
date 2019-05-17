@@ -2,6 +2,11 @@ import torch
 
 class Config:
 
+    device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
+    attn = False
+    chinese = True
+    fb = True
+
     # for english dataset
     data_path = "data/movie_lines.tsv"
     conversation_path = "data/movie_conversations.txt"
@@ -9,8 +14,8 @@ class Config:
     prev_sent = 2
 
     # for chinese dataset
-    chinese_data_path = "data/new_data.conv"
-    chinese_results_path = "data/chinese_data.bin"
+    chinese_data_path = "data/only_messages.txt" #"data/new_data.conv"
+    chinese_results_path = "data/fb_data.bin" if fb else "data/chinese_data.bin"
 
     # for training
     epochs = 120
@@ -21,14 +26,9 @@ class Config:
     char_dim = 300
     latent_dim = 500
     mxlen= 20
-    model_path = "checkpoints/epoch-119.pth" #checkpoints/memory.pth"
-    chinese_model_path = "checkpoints/memory_chinese.pth"
-    model_attention_path = None #"checkpoints/memory.pth"
-    model_rl_path = "checkpoints/memory.pth"
-
-    attn = False
-    chinese = False
-
-    device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
+    model_path = "checkpoints/memory_new.pth"
+    chinese_model_path = "checkpoints/memory_fb.pth" if fb else "checkpoints/memory_chinese.pth"
+    model_attention_path = None #"checkpoints/memory_attention.pth"
+    model_rl_path = None #"checkpoints/memory_new.pth"
 
 opt = Config()

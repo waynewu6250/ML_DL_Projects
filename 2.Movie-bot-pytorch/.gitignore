@@ -10,3 +10,4 @@ checkpoints/*
 # Data
 *.conv
 *.bin
+dict.txt.big

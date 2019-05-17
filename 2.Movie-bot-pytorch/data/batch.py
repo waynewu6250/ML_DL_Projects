@@ -4,16 +4,18 @@ import numpy as np
 import re
 import pickle
 import h5py
-from data import Data, ChineseData
+from data import Data, ChineseData, FbData
 
 class TrainData:
     
-    def __init__(self, data_path, conversation_path, results_path, chinese, prev_sent=2, load=True):
+    def __init__(self, data_path, conversation_path, results_path, chinese, fb, prev_sent=2, load=True):
         if chinese:
             self.data = ChineseData(data_path, results_path, load)
+        elif fb:
+            self.data = FbData(data_path, results_path, load)
         else:
             self.data = Data(data_path, conversation_path, results_path, prev_sent, load)
-        self.chinese = chinese
+        self.chinese = chinese or fb
     
     def _mini_batches(self, batch_size):
         
