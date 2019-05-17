@@ -5,7 +5,7 @@ class Config:
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
     attn = False
     chinese = True
-    fb = True
+    fb = False
 
     # for english dataset
     data_path = "data/movie_lines.tsv"
