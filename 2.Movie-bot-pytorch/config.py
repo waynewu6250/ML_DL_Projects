@@ -10,7 +10,7 @@ class Config:
     # for english dataset
     data_path = "data/movie_lines.tsv"
     conversation_path = "data/movie_conversations.txt"
-    results_path = "data/data_new.bin"
+    results_path = "data/data.bin"
     prev_sent = 2
 
     # for chinese dataset
@@ -26,7 +26,7 @@ class Config:
     char_dim = 300
     latent_dim = 500
     mxlen= 20
-    model_path = "checkpoints/memory_new.pth"
+    model_path = "checkpoints/memory.pth"
     chinese_model_path = "checkpoints/memory_fb.pth" if fb else "checkpoints/memory_chinese.pth"
     model_attention_path = None #"checkpoints/memory_attention.pth"
     model_rl_path = None #"checkpoints/memory_new.pth"

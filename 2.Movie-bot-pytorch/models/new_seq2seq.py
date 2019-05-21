@@ -112,15 +112,10 @@ class NewSeq2seqAttention(NewSeq2seq):
         self.steps = self.time_steps if opt.chinese else 2*self.time_steps
         self.attn_layer1 = nn.Linear(self.latent_dim*2, 32)
         self.attn_layer2 = nn.Linear(32, 1)
-        self.combine = nn.Linear(self.latent_dim+self.char_dim, self.latent_dim)
-        self.dropout = nn.Dropout(dropout_rate)
+        self.combine = nn.Linear(self.latent_dim*2, self.latent_dim)
 
     # attention calc
     def attention_layer(self, decoder_input, decoder_hidden, encoder_outputs):
-        
-        # Manage decoder_input
-        embedded = self.embedding(decoder_input).view(1,1,-1)
-        embedded = self.dropout(embedded).view(1,-1,self.char_dim) #(1, batch_size, char_dim)
         
         #===========Attention=============#
         # 1. Repeat decoder_hidden time_step times
@@ -139,7 +134,7 @@ class NewSeq2seqAttention(NewSeq2seq):
         context_vector = context_vector.view(1,self.batch_size,-1)
 
         # 4. combine decoder input to get final output to feed into lstm
-        output = F.relu(self.combine(torch.cat((embedded[0], context_vector[0]),1)).unsqueeze(0))
+        output = self.combine(torch.cat((decoder_input, context_vector[0]),1)).unsqueeze(0)
         #===========Attention=============#
 
         return output
@@ -152,7 +147,8 @@ class NewSeq2seqAttention(NewSeq2seq):
         hidden2 = encoder_hidden2
         
         # Define initial input
-        decoder_input = Variable(torch.LongTensor([[self.sos_id]*self.batch_size])).to(self.device)
+        ground_truth = self.embedding(targets)
+        ground_truth_embedded = self.dense(ground_truth)
 
         # Initialize output container
         decoder_outputs = Variable(torch.zeros(self.time_steps,self.batch_size,self.num_tokens)).to(self.device)  # (time_steps, batch_size, vocab_size)
@@ -160,18 +156,12 @@ class NewSeq2seqAttention(NewSeq2seq):
         # Unfold the decoder RNN on the time dimension
         for t in range(self.time_steps):
             outputs1, hidden1 = self.lstm1(torch.zeros(1, self.batch_size, self.latent_dim).to(self.device), hidden1)
-            attention_embedded = self.attention_layer(decoder_input, hidden2, encoder_outputs)
+            attention_embedded = self.attention_layer(ground_truth_embedded[t], hidden2, encoder_outputs)
             outputs2, hidden2 = self.lstm2(torch.cat([attention_embedded,outputs1],-1),hidden2) # (1, batch_size, latent_dim)
             
             outputs2 = outputs2.squeeze(0)  # squeeze the time dimension (batch_size, latent_dim)
-            outputs2 = self.log_softmax(self.out(outputs2))  # (batch_size, vocab_size)
+            outputs2 = self.out(outputs2)  # (batch_size, vocab_size)
             decoder_outputs[t] = outputs2
-
-            # Cut at the end
-            if t == self.time_steps-1:
-                break
-            
-            decoder_input = targets[t+1].unsqueeze(0)
         
         return decoder_outputs, hidden1, hidden2
 
