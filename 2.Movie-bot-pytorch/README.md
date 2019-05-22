@@ -106,7 +106,7 @@ It will be stored as `epoch-x.pth`
 The trained model is also stored in checkpoints/ as `model_attention.pth`.
 
 ### 2. Reinforcement Learning mechanism
-The robot is also reinforced with policy gradient approach by setting up reward function to improve the outputs. To train the robot in this mode, please first go to [config.py](https://github.com/waynewu6250/ML_DL_Projects/blob/master/2.Movie-bot-pytorch/config.py)to set model_rl_path as `memory_new.pth` to load pretrained model. So you won't train for a really long time. Then the use following command:
+The robot is also reinforced with policy gradient approach by setting up reward function to improve the outputs. To train the robot in this mode, please first go to [config.py](https://github.com/waynewu6250/ML_DL_Projects/blob/master/2.Movie-bot-pytorch/config.py) to set model_rl_path as `memory_new.pth` to load pretrained model. So you won't train for a really long time. Then the use following command:
 >
     python train_RL.py
 
