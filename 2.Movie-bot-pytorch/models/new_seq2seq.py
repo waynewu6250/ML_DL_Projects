@@ -15,7 +15,6 @@ class NewSeq2seq(nn.Module):
         self.lstm2 = nn.LSTM(2*opt.latent_dim, opt.latent_dim)
         
         self.out = nn.Linear(opt.latent_dim, num_tokens)
-        self.log_softmax = nn.LogSoftmax(dim=1)  # work with NLLLoss = CrossEntropyLoss
         
         self.char_dim = opt.char_dim
         self.latent_dim = opt.latent_dim

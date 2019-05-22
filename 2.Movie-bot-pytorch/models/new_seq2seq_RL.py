@@ -20,10 +20,8 @@ class NewSeq2seqRL(NewSeq2seq):
         hidden2 = encoder_hidden2
         
         # Define initial input
-        decoder_input = Variable(torch.LongTensor([[self.sos_id]*self.batch_size])).to(self.device)
-        decoder_input_embedded = self.embedding(decoder_input)
-        decoder_input_embedded = self.dense(decoder_input_embedded)
-
+        ground_truth = self.embedding(targets)
+        ground_truth_embedded = self.dense(ground_truth)
 
         # Initialize output container
         decoder_outputs = Variable(torch.zeros(self.time_steps,self.batch_size,self.num_tokens))  # (time_steps, batch_size, vocab_size)
@@ -39,22 +37,16 @@ class NewSeq2seqRL(NewSeq2seq):
         # Unfold the decoder RNN on the time dimension
         for t in range(self.time_steps):
             outputs1, hidden1 = self.lstm1(torch.zeros(1, self.batch_size, self.latent_dim).to(self.device), hidden1)
-            outputs2, hidden2 = self.lstm2(torch.cat([decoder_input_embedded,outputs1],-1),hidden2) # (1, batch_size, latent_dim)
+            outputs2, hidden2 = self.lstm2(torch.cat([ground_truth_embedded[t],outputs1],-1),hidden2) # (1, batch_size, latent_dim)
             
             outputs2 = outputs2.squeeze(0)  # squeeze the time dimension (batch_size, latent_dim)
-            outputs2 = self.log_softmax(self.out(outputs2))  # (batch_size, vocab_size)
+            outputs2 = self.out(outputs2)  # (batch_size, vocab_size)
             decoder_outputs[t] = outputs2
 
             # Calculate the one-step Loss
             loss = self.criterion(outputs2, real_targets[t].long())
             pg_current_loss = loss * rewards[t]
             pg_loss = pg_loss + pg_current_loss
-
-            # Cut at the end
-            if t == self.time_steps-1:
-                break
-
-            decoder_input = targets[t+1].unsqueeze(0)
         
         return decoder_outputs, hidden1, hidden2, pg_loss / opt.mxlen
     
