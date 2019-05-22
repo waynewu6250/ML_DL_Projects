@@ -29,11 +29,23 @@ bash run.sh test english
 ```
 will start a trained chatbot called moviebot with basic conversational functions to interact with the user, please feed it with english.
 
+* To continue training it:
+```
+bash run.sh train english
+```
+will start training the english data based on the fed minibatches and core unit used. <br>
+
 2. **Chickbot**
 ```
 bash run.sh test chinese
 ```
 will start a trained chatbot called chickbot with basic conversational functions to interact with the user, please feed it with traditional chinese.
+
+* To continue training it:
+```
+bash run.sh train chinese
+```
+will start training the chinese data based on the fed minibatches and core unit used. <br>
 
 3. **yourFBbot**
 
@@ -41,7 +53,14 @@ First go to [config.py](https://github.com/waynewu6250/ML_DL_Projects/blob/maste
 ```
 bash run.sh test chinese
 ```
-will start a trained chatbbot called yourFBbot with similar tongues as you.
+will start a trained chatbot called yourFBbot with similar tongues as you.
+
+* To continue training it:
+```
+bash run.sh train chinese
+```
+will start training the chinese data based on the fed minibatches and core unit used. <br>
+
 
 -------------------------------------------------
 
@@ -75,22 +94,30 @@ python batch.py
 
 -------------------------------------------------
 
-## Training
-1. **Moviebot**
-```
-bash run.sh train english
-```
-will start training the english data based on the fed minibatches and core unit used. <br>
+## Advanced Features
+Here we could modify some model features to help improve the Moviebot (english) performance:
 
-2. **Chickbot**
-```
-bash run.sh train chinese
-```
-will start training the chinese data based on the fed minibatches and core unit used. <br>
+### 1. Attention mechanism
+The robot is reinforced with the attention mechanism. To train the robot in this mode, please use following command:
+>
+    python main.py train --attn=True --chinese=False --fb=False
 
-3. **YourFBbot**
-First go to config.py and change fb parameter to True. Then, run the following commands:
-```
-bash run.sh train chinese
-```
-will start training the chinese data based on the fed minibatches and core unit used. <br>
+It will be stored as `epoch-x.pth`
+The trained model is also stored in checkpoints/ as `model_attention.pth`.
+
+### 2. Reinforcement Learning mechanism
+The robot is also reinforced with policy gradient approach by setting up reward function to improve the outputs. To train the robot in this mode, please first go to [config.py](https://github.com/waynewu6250/ML_DL_Projects/blob/master/2.Movie-bot-pytorch/config.py)to set model_rl_path as `memory_new.pth` to load pretrained model. So you won't train for a really long time. Then the use following command:
+>
+    python train_RL.py
+
+It will be stored as `rl-epoch-x.pth`
+The trained model is also stored in checkpoints/ as `model_rl.pth`.
+
+### 3. Train in lower word frequency threshold
+Now we are using dictionary only for word that appears 20 times and more in the dataset. You can minimize it to 5 by changing the self.word_count_threshold parameter in [data/load.py](https://github.com/waynewu6250/ML_DL_Projects/blob/master/2.Movie-bot-pytorch/data/load.py).
+Then the use following command:
+>
+    bash run.sh train english
+
+It will be stored as `epoch-x.pth`
+The trained model is also stored in checkpoints/ as `memory.pth`.
