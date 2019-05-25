@@ -6,11 +6,11 @@
 # Machine learning and Deep learning related projects
 
 <div align="center">
+
 ## Ting-Wei Wu
 My side project gallery for collections and refinement. <br><br>
   
 <div align="left">
-（You can use [downgit](https://minhaskamal.github.io/DownGit/#/home) to clone any individual project for your interest. And follow the instructions in each README.md to use.）
 
 [1. StackBot on telegram](#1) <br>
 [2. Movie Bot with pytorch](#2) <br>
@@ -20,6 +20,8 @@ My side project gallery for collections and refinement. <br><br>
 [6. Deep Convolutional Generative Adversarial Networks for Naruto character generation](#6) <br>
 [7. Malaria Cell Prediction](#7) <br>
 [8. Twitter hashtags](#8) <br>
+
+（You can use [downgit](https://minhaskamal.github.io/DownGit/#/home) to clone any individual project for your interest. And follow the instructions in each README.md to use.）
 
 ---
 
