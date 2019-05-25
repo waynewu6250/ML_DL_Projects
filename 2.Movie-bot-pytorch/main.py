@@ -4,7 +4,7 @@ import torch.nn as nn
 from torch.autograd import Variable
 from torch.optim import Adam, RMSprop
 
-from models import NewSeq2seq, NewSeq2seqAttention
+from models import NewSeq2seq, NewSeq2seqAttention, NewSeq2seqRL
 from data import TrainData
 from config import opt
 
@@ -139,7 +139,16 @@ def test(**kwargs):
                                         sos_id=mydata.data.word2id["<START>"])
             if opt.model_attention_path:
                 seq2seq.load_state_dict(torch.load(opt.model_attention_path, map_location="cpu"))
-        else:
+
+        elif opt.rl:
+            seq2seq =  NewSeq2seqRL(num_tokens=mydata.data.num_tokens,
+                               opt=opt,
+                               sos_id=mydata.data.word2id["<START>"])
+            if opt.model_rl_path:
+                seq2seq.load_state_dict(torch.load(opt.model_rl_path, map_location="cpu"))
+            seq2seq = seq2seq.to(opt.device)
+
+        else: 
             seq2seq =  NewSeq2seq(num_tokens=mydata.data.num_tokens,
                               opt=opt,
                               sos_id=mydata.data.word2id["<START>"])
@@ -155,6 +164,9 @@ def test(**kwargs):
 
         # Predict
         encoder_data = mydata._test_batch(data, 2*opt.mxlen if not opt.chinese else opt.mxlen).to(device)
+        # encoder_data = torch.LongTensor([[  1,  30, 112,  10,   3,   2,   1, 645, 131,   7,  25,   7, 146, 584,
+        # 871, 207,  16,   3,   2,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+        #   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0]]).transpose(1,0)
         decoded_indices, decoder_hidden1, decoder_hidden2 = seq2seq.evaluation(encoder_data)
         
         toks_to_replace = {"i":"I","im":"I'm","id":"I'd","ill":"I'll","iv":"I'v","hes":"he's","shes":"she's",
@@ -163,6 +175,7 @@ def test(**kwargs):
 
         decoded_sequence = ""
         for idx in decoded_indices:
+            idx = idx.item() if opt.rl else idx
             sampled_tok = mydata.data.id2word[idx]
             if sampled_tok == "<START>":
                 continue

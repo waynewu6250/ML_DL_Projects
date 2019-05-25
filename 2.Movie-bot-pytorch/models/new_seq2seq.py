@@ -152,6 +152,7 @@ class NewSeq2seqAttention(NewSeq2seq):
         # Initialize output container
         decoder_outputs = Variable(torch.zeros(self.time_steps,self.batch_size,self.num_tokens)).to(self.device)  # (time_steps, batch_size, vocab_size)
         
+        # print(inputs[:,0])
         # Unfold the decoder RNN on the time dimension
         for t in range(self.time_steps):
             outputs1, hidden1 = self.lstm1(torch.zeros(1, self.batch_size, self.latent_dim).to(self.device), hidden1)
@@ -161,8 +162,53 @@ class NewSeq2seqAttention(NewSeq2seq):
             outputs2 = outputs2.squeeze(0)  # squeeze the time dimension (batch_size, latent_dim)
             outputs2 = self.out(outputs2)  # (batch_size, vocab_size)
             decoder_outputs[t] = outputs2
+            
+            # # Its own last output
+            # _, indices = torch.topk(decoder_outputs[t], 1)
+            # print(indices[0])
         
         return decoder_outputs, hidden1, hidden2
+
+    # For decoding state
+    def evaluation(self, inputs):
+        
+        # Encoder state
+        encoder_outputs, encoder_hidden1, encoder_hidden2 = self.encoder_forward(inputs)
+        hidden1 = encoder_hidden1
+        hidden2 = encoder_hidden2
+        
+        # Define initial input
+        decoder_input = Variable(torch.LongTensor([[self.sos_id]])).to(self.device)
+        decoder_input_embedded = self.embedding(decoder_input)
+        decoder_input_embedded = self.dense(decoder_input_embedded)
+        
+        # Initialize output container
+        decoder_outputs = Variable(torch.zeros(self.time_steps,1,self.num_tokens)).to(self.device)  # (time_steps, batch_size, vocab_size)
+        decoded_indices = []
+
+        # Unfold the decoder RNN on the time dimension
+        
+        for t in range(self.time_steps):
+            outputs1, hidden1 = self.lstm1(torch.zeros(1, 1, self.latent_dim).to(self.device), hidden1)
+            # attention_embedded = self.attention_layer(decoder_input_embedded.squeeze(0), hidden2, encoder_outputs)
+            outputs2, hidden2 = self.lstm2(torch.cat([decoder_input_embedded,outputs1],-1),hidden2)
+            outputs2 = self.out(outputs2)  # (batch_size, vocab_size)
+            decoder_outputs[t] = outputs2
+
+            # Its own last output
+            _, indices = torch.topk(decoder_outputs[t], 2)
+
+            # Change <UNK> into second highest probaility word
+            index = indices[0][0] if indices[0][0] != 3 and indices[0][0] != 0 else indices[0][1]
+            
+            decoder_input = index.view(1,-1)
+            decoder_input_embedded = self.embedding(decoder_input)
+            decoder_input_embedded = self.dense(decoder_input_embedded)
+            
+            # Store outputs
+            decoded_indices.append(index.item())
+        
+        return decoded_indices, hidden1, hidden2
 
 
 

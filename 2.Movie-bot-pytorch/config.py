@@ -4,7 +4,8 @@ class Config:
 
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
     attn = False
-    chinese = True
+    rl = False
+    chinese = False
     fb = False
 
     # for english dataset
@@ -26,9 +27,9 @@ class Config:
     char_dim = 300
     latent_dim = 500
     mxlen= 20
-    model_path = "checkpoints/memory_new.pth"
+    model_path = "checkpoints/memory_rl.pth" #checkpoints/memory.pth" "checkpoints/memory_new.pth"
     chinese_model_path = "checkpoints/memory_fb.pth" if fb else "checkpoints/memory_chinese.pth"
-    model_attention_path = None #"checkpoints/memory_attention.pth"
-    model_rl_path = None #"checkpoints/memory_new.pth"
+    model_attention_path = "checkpoints/memory_attention.pth"
+    model_rl_path = "checkpoints/memory_rl.pth"
 
 opt = Config()

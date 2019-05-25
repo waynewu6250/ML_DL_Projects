@@ -26,16 +26,16 @@ def make_batch(data, input_data, mxlen):
     batch_data = Variable(torch.LongTensor(batch_data)).transpose(0, 1).to(opt.device)
     return batch_data
 
-def count_rewards(dull_loss, forward_entropy, backward_entropy, reward_type='pg'):
+def count_rewards(dull_entropies, forward_entropies, backward_entropies, reward_type='pg'):
     if reward_type == 'normal':
         return torch.ones(opt.mxlen).to(opt.device)
     
     if reward_type == 'pg':
         total_loss = torch.zeros(opt.mxlen).to(opt.device)
         
-        total_loss[:] += (dull_loss+forward_entropy+backward_entropy)/3
-        print(total_loss)
-            
+        for t in range(opt.mxlen):
+            total_loss[t] = (dull_entropies[t]+forward_entropies[t]+backward_entropies[t])/3
+        
         total_loss = torch.sigmoid(total_loss) * 1.1
         
         return total_loss
@@ -98,6 +98,10 @@ def train_RL():
         mini_batches = mydata._mini_batches(opt.batch_size)
         
         for ii, (ib, tb) in enumerate(mini_batches):
+
+            # Skip the last batch to avoid error
+            if ib.size(1) != opt.batch_size:
+                continue
             
             ib = ib.to(opt.device)
             tb = tb.to(opt.device)
@@ -108,21 +112,23 @@ def train_RL():
             action_words, _, _ = seq2seq_rl.evaluation(ib)
 
             # Ease of answering data
-            dull_data = seq2seq_rl(action_words, dull_target_data, ones_reward)
+            dull_outputs, dull_loss, dull_entropies= seq2seq_rl(action_words, dull_target_data, ones_reward)
             
             # Semantic Coherence: Forward
-            forward_data = seq2seq_rl(ib, action_words, ones_reward)
+            forward_outputs, forward_loss, forward_entropies = seq2seq_rl(ib, action_words, ones_reward)
 
             # Semantic Coherence: Backward
-            backward_data = seq2seq_normal(action_words, ib[:opt.mxlen])
-            backward_targets = ib[:opt.mxlen].contiguous().view(-1)  # (time_steps*batch_size)
-            backward_outputs = backward_data[0].view(opt.batch_size * opt.mxlen, -1)  # S = (time_steps*batch_size) x V
-            backward_loss = criterion(backward_outputs, backward_targets.long())
+            backward_outputs, _, _ = seq2seq_normal(action_words, ib[:opt.mxlen])
+            backward_targets = ib[:opt.mxlen]  # (time_steps, batch_size)
+            backward_entropies = []
+            for t in range(opt.mxlen):
+                backward_loss = criterion(backward_outputs[t], backward_targets[t].long())
+                backward_entropies.append(backward_loss)
 
-            rewards = count_rewards(dull_data[3], forward_data[3], backward_loss)
+            rewards = count_rewards(dull_entropies, forward_entropies, backward_entropies)
 
             # Add rewards to train the data
-            decoder_outputs, decoder_hidden1, decoder_hidden2, pg_loss = seq2seq_rl(ib, tb, rewards)
+            decoder_outputs, pg_loss, entropies = seq2seq_rl(ib, tb, rewards)
             
             if ii % 1 == 0:
                 print("Current Loss:",pg_loss.data.item())
