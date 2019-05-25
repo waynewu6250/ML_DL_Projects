@@ -17,6 +17,8 @@ It is established based on the project [Movie-bot-keras](https://github.com/wayn
 (Please also refer to [StackBoxer Project](https://github.com/waynewu6250/StackBoxer) for full visualization of this project.) <br>
 (Thanks to the model and data references: [RL-Chatbot](https://github.com/pochih/RL-Chatbot) and [Dialogue-Corpus](https://github.com/candlewill/Dialog_Corpus))
 
+<br>
+
 
 <div align="left">
 
@@ -29,8 +31,15 @@ There are three modes for the robot: Moviebot, Chickbot (雞寶) and YourFBbot
 
 3. **YourFBbot**: A robot trained by my own fb messages, where you can download [Here](https://www.facebook.com/help/1701730696756992), which basically mimics how you chat with your friends.
 
+<br>
+
 
 # To USE
+
+First install required modules by typing the following commands in your terminal:
+>
+    pip install -r requirements.txt
+
 ## 1. **Moviebot**
 It will start a trained chatbot called moviebot with basic conversational functions to interact with the user, please feed it with english. <br>
 
@@ -87,7 +96,8 @@ To create a new data.bin to use. Then replace it in config.py.
 It will be stored as `epoch-x.pth`
 The trained model is also stored in checkpoints/ as `memory.pth`.
 
-### **4) Normal Mode with a different threshold**
+---
+### **4) Attention Mode**
 The robot is also reinforced with the attention mechanism. To use, please type in terminal:
 >
     bash run.sh test english attention
@@ -99,6 +109,8 @@ The robot is also reinforced with the attention mechanism. To use, please type i
 
 It will be stored as `epoch-x.pth`
 The trained model is also stored in checkpoints/ as `model_attention.pth`.
+
+<br>
 
 
 ## 2. **Chickbot**
@@ -114,7 +126,7 @@ bash run.sh train chinese
 will start training the chinese data based on the fed minibatches and core unit used. <br>
 
 
-
+<br>
 
 
 ## 3. **YourFBbot**
@@ -131,10 +143,9 @@ bash run.sh train chinese
 ```
 will start training the chinese data based on the fed minibatches and core unit used. <br>
 
+<br>
 
--------------------------------------------------
-
-## Data Preprocessing Reference
+# Data Preprocessing Reference
 
 Data are preprocessed directly with **python generator** to be made use at training stage
 
@@ -161,6 +172,8 @@ will load the data from `only_messages.txt` and print out the first set of train
 ```
 python batch.py
 ```
+
+<br>
 
 
 

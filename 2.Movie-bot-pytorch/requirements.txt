@@ -1,0 +1,7 @@
+git+https://github.com/pytorch/tnt.git@master
+torch
+torchvision
+visdom
+gensim==1.0.1
+numpy==1.16.2
+opencc-python-reimplemented==0.1.4
