@@ -2,6 +2,9 @@ git+https://github.com/pytorch/tnt.git@master
 torch
 torchvision
 visdom
-gensim==1.0.1
+gensim==3.4.0
 numpy==1.16.2
 opencc-python-reimplemented==0.1.4
+h5py==2.9.0
+jieba==0.39
+fire==0.1.3
