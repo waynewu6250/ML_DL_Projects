@@ -7,7 +7,7 @@ from models import Agent
 from tqdm import trange
 from pandas import DataFrame
 ewma = lambda x, span=100: DataFrame({'x':np.asarray(x)}).x.ewm(span=span).mean().values
-checkpoint_path = None #'checkpoints/model-19999.meta'
+checkpoint_path = 'checkpoints/model-599999.meta'
 
 
 def forward_run(is_new, agent=None, env_handler=None, game = 2, game_name = 'SuperMarioBros-v0'):
