@@ -1,6 +1,6 @@
 import tensorflow as tf
 import keras
-from keras.layers import Conv2D, Dense, Flatten, Input
+from keras.layers import Conv2D, Dense, Flatten, Input, LSTM, RepeatVector
 from keras.models import Model, Sequential
 import numpy as np
 
@@ -14,8 +14,10 @@ class Agent:
         self.nn = Sequential([Conv2D(32, (3, 3), strides=(2,2), activation='relu', input_shape=state_shape),
                               Conv2D(32, (3, 3), strides=(2,2), activation='relu'),
                               Conv2D(32, (3, 3), strides=(2,2), activation='relu'),
+                              Conv2D(32, (3, 3), strides=(2,2), activation='relu'),
                               Flatten(),
-                              Dense(128, activation='relu')])
+                              RepeatVector(1),
+                              LSTM(512)])
         
         with tf.variable_scope(name, reuse=reuse):
             
@@ -58,7 +60,7 @@ class Agent:
         return np.array([np.random.choice(len(p), p=p) for p in policy])
     
     def train(self):
-        # logits[n_envs, n_actions] and state_values[n_envs, n_actions]
+        # logits[n_envs, n_actions] and state_values[n_envs, n_states]
         logits, state_values = self.symbolic_step(self.states_ph)
         next_logits, next_state_values = self.symbolic_step(self.next_states_ph)
         next_state_values = next_state_values * (1 - self.is_done_ph)
@@ -71,10 +73,9 @@ class Agent:
         logp_actions = tf.reduce_sum(logprobs * tf.one_hot(self.actions_ph, self.n_actions), axis=-1) # [n_envs,]
         
         # compute advantage using rewards_ph, state_values and next_state_values
-        gamma = 0.99
+        gamma = 0.9
         advantage = (self.rewards_ph+gamma*next_state_values)-state_values
         entropy = -tf.reduce_sum(probs*logprobs,axis=1)
-
 
         actor_loss =  - tf.reduce_mean(logp_actions * tf.stop_gradient(advantage)) - 0.001 * tf.reduce_mean(entropy)
 
@@ -83,6 +84,6 @@ class Agent:
 
         critic_loss = tf.reduce_mean((state_values - tf.stop_gradient(target_state_values))**2 )
 
-        train_step = tf.train.AdamOptimizer(1e-3).minimize(actor_loss + critic_loss)
+        train_step = tf.train.AdamOptimizer(1e-4).minimize(actor_loss + critic_loss)
 
         return (train_step, entropy)

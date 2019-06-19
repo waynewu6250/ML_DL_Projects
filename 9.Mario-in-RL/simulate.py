@@ -2,32 +2,20 @@ import time
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
-from utils import EnvHandler
-from models import Agent
 from tqdm import trange
 from pandas import DataFrame
-ewma = lambda x, span=100: DataFrame({'x':np.asarray(x)}).x.ewm(span=span).mean().values
-checkpoint_path = 'checkpoints/model-599999.meta'
 
+from utils import EnvHandler
+from models import Agent
+from config import opt
 
-def forward_run(is_new, agent=None, env_handler=None, game = 2, game_name = 'SuperMarioBros-v0'):
-    global_rewards = []
-    if is_new:
-        tf.reset_default_graph()
-        sess = tf.InteractiveSession()
-        env_handler = EnvHandler(game_name, 1)
-        agent = Agent("agent", env_handler.obs_shape, env_handler.n_actions)
-
-        if checkpoint_path:
-            saver = tf.train.import_meta_graph(checkpoint_path)
-            saver.restore(sess, tf.train.latest_checkpoint('./checkpoints'))
+def evaluate(agent=None, env_handler=None, game=2):
     
+    global_rewards = []
     for i in range(game):
 
         total_rewards = 0
         life = 2
-        if is_new:
-            sess.run(tf.global_variables_initializer())
 
         env_handler.observation = env_handler.env.reset()
 
@@ -41,7 +29,7 @@ def forward_run(is_new, agent=None, env_handler=None, game = 2, game_name = 'Sup
             
             env_handler.run()
 
-            if life == 1 or time == 300 or done:
+            if life == 1 or done or time == 300:
                 env_handler.observation = env_handler.env.reset()
                 break
         
@@ -49,6 +37,22 @@ def forward_run(is_new, agent=None, env_handler=None, game = 2, game_name = 'Sup
         print("Game {} reward: {:.3f}".format(i+1,total_rewards))
     
     return global_rewards
+
+
+def forward_run(game_name = 'SuperMarioBros-v0'):
+    
+    tf.reset_default_graph()
+    sess = tf.InteractiveSession()
+    env_handler = EnvHandler(game_name, 1)
+    agent = Agent("agent", env_handler.obs_shape, env_handler.n_actions)
+
+    sess.run(tf.global_variables_initializer())
+
+    saver = tf.train.Saver()
+    if opt.path:
+        saver.restore(sess, opt.path) 
+
+    return evaluate(agent, env_handler, 2)
 
     # env_handler.render_rgb()
     # env_handler.render_frames(env_handler.observation)
@@ -63,12 +67,10 @@ def train_agent(game = 10, game_name = 'SuperMarioBros-v0'):
     agent = Agent("agent", env_handler.obs_shape, env_handler.n_actions)
     train_step, entropy = agent.train()
     sess.run(tf.global_variables_initializer())
-    
-    if checkpoint_path:
-        saver = tf.train.import_meta_graph(checkpoint_path)
-        saver.restore(sess, tf.train.latest_checkpoint('./checkpoints/'))
-    else:
-        saver = tf.train.Saver()
+
+    saver = tf.train.Saver()
+    if opt.path:
+        saver.restore(sess, opt.path)       
 
     # Initialize parameters
     batch_states = env_handler.parallel_reset()
@@ -79,6 +81,7 @@ def train_agent(game = 10, game_name = 'SuperMarioBros-v0'):
     # Create Figure
     plt.figure(figsize=(8,4), dpi=80)
     plt.ion()
+    ewma = lambda x, span=100: DataFrame({'x':np.asarray(x)}).x.ewm(span=span).mean().values
 
     for i in trange(20000): 
         batch_actions = agent.sample_actions(agent.step(batch_states))
@@ -97,8 +100,8 @@ def train_agent(game = 10, game_name = 'SuperMarioBros-v0'):
 
         if (i+1) % 10 == 0:
             if (i+1) % 500 == 0:
-                rewards_history.append(np.mean(forward_run(False, agent, env_handler, 1, game_name)))
-                saver.save(sess, "checkpoints/model", global_step=i)
+                rewards_history.append(np.mean(evaluate(agent, env_handler, 1)))
+                saver.save(sess, "checkpoints/model.ckpt", global_step=i)
                 if rewards_history[-1] >= 15:
                     print("Your agent has earned the yellow belt: yah")
                     print("Rewards: ",rewards_history[-1])
@@ -131,7 +134,7 @@ if __name__ == "__main__":
     game_name = "SuperMarioBros-v0"
 
     if args.mode == "play":
-        global_rewards = forward_run(True, game=args.game, game_name=game_name)
+        global_rewards = forward_run(game_name=game_name)
     elif args.mode == "train":
         train_agent(game=args.game, game_name=game_name)
     else:

@@ -3,7 +3,7 @@ import gym
 from gym.core import Wrapper
 from gym.spaces.box import Box
 import gym_super_mario_bros
-from gym_super_mario_bros.actions import COMPLEX_MOVEMENT
+from gym_super_mario_bros.actions import COMPLEX_MOVEMENT, SIMPLE_MOVEMENT
 from nes_py.wrappers import BinarySpaceToDiscreteSpaceEnv
 
 from scipy.misc import imresize
@@ -22,10 +22,9 @@ class EnvHandler:
     def make_env(self, game):
         #All levels, starting at 1-1. With frameskip 4.
         env = gym_super_mario_bros.make(game)
-        env = BinarySpaceToDiscreteSpaceEnv(env, COMPLEX_MOVEMENT)
-        env = EnvWrapper(env, height=42, width=42,
+        env = BinarySpaceToDiscreteSpaceEnv(env, SIMPLE_MOVEMENT)
+        env = EnvWrapper(env, height=84, width=84,
                             crop = lambda img: img[60:-30, 5:],
-                            dim_order = 'tensorflow',
                             color=False, n_frames=4,
                             reward_scale = 0.01)
         observation = env.reset()
@@ -69,32 +68,43 @@ class EnvHandler:
 
 # To wrap env into right height and width environment
 class EnvWrapper(Wrapper):
-    def __init__(self, env, height=42, width=42, color=False, crop=lambda img: img, 
-                 n_frames=4, dim_order='theano', reward_scale=1,):
+    def __init__(self, env, height=84, width=84, color=False, crop=lambda img: img, 
+                 n_frames=4, reward_scale=0.1,):
         """A gym wrapper that reshapes, crops and scales image into the desired shapes"""
         super(EnvWrapper, self).__init__(env)
-        assert dim_order in ('theano', 'tensorflow')
         self.img_size = (height, width)
         self.crop=crop
         self.color=color
-        self.dim_order = dim_order
+
         self.reward_scale = reward_scale
+        self.curr_score = 0.
         
         n_channels = (3 * n_frames) if color else n_frames
-        obs_shape = [n_channels,height,width] if dim_order == 'theano' else [height,width,n_channels]
-        self.observation_space = Box(0.0, 1.0, obs_shape)
+        obs_shape = [height,width,n_channels]
+        self.observation_space = Box(0.0, 255.0, obs_shape)
         self.framebuffer = np.zeros(obs_shape, 'float32')
     
     def reset(self):
         """resets breakout, returns initial frames"""
         self.framebuffer = np.zeros_like(self.framebuffer)
         self.update_buffer(self.env.reset())
+        self.curr_score = 0
         return self.framebuffer
     
     def step(self,action):
         """plays breakout for 1 step, returns frame buffer"""
         new_img, reward, done, info = self.env.step(action)
         self.update_buffer(new_img)
+
+        # Reward handling
+        reward += (info["score"] - self.curr_score) / 40.
+        self.curr_score = info["score"]
+        if done:
+            if info["flag_get"]:
+                reward += 50
+            else:
+                reward -= 50
+        
         return self.framebuffer, reward * self.reward_scale, done, info
     
     ### image processing ###
@@ -102,12 +112,8 @@ class EnvWrapper(Wrapper):
     def update_buffer(self,img):
         img = self.preproc_image(img)
         offset = 3 if self.color else 1
-        if self.dim_order == 'theano':
-            axis = 0
-            cropped_framebuffer = self.framebuffer[:-offset]
-        else:
-            axis = -1
-            cropped_framebuffer = self.framebuffer[:,:,:-offset]
+        axis = -1
+        cropped_framebuffer = self.framebuffer[:,:,:-offset]
         self.framebuffer = np.concatenate([img, cropped_framebuffer], axis = axis)
 
     def preproc_image(self, img):
@@ -116,7 +122,5 @@ class EnvWrapper(Wrapper):
         img = imresize(img, self.img_size)
         if not self.color:
             img = img.mean(-1, keepdims=True)
-        if self.dim_order == 'theano':
-            img = img.transpose([2,0,1]) # [h, w, c] to [c, h, w]
         img = img.astype('float32') / 255.
         return img
