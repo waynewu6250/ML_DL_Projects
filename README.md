@@ -67,7 +67,7 @@ There are two different implementation for the applications: pytorch self-realiz
 
 It will caption the given image and return a descriptive sentence that depicts the graph.
 
-<img src="4.Image-captioning/test_imgs/exp1.jpg"  height="220" width="330">
+<img src="4.Image-captioning/test_imgs/exp1.jpg"  height="220" width="330"> <br>
 a logo sign outside of the headquarters
 
 
