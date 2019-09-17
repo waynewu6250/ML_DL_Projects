@@ -29,7 +29,7 @@ def evaluate(agent=None, env_handler=None, game=2):
             
             env_handler.run()
 
-            if life == 1 or done or time == 300:
+            if life == 1 or done or time == 100:
                 env_handler.observation = env_handler.env.reset()
                 break
         
@@ -59,7 +59,7 @@ def forward_run(game_name = 'SuperMarioBros-v0'):
     # env.close()
 
 def train_agent(game = 10, game_name = 'SuperMarioBros-v0'):
-    env_handler = EnvHandler(game_name, 10)
+    env_handler = EnvHandler(game_name, game)
     
     # Create Graph and agent
     tf.reset_default_graph()
@@ -83,7 +83,7 @@ def train_agent(game = 10, game_name = 'SuperMarioBros-v0'):
     plt.ion()
     ewma = lambda x, span=100: DataFrame({'x':np.asarray(x)}).x.ewm(span=span).mean().values
 
-    for i in trange(20000): 
+    for i in trange(opt.num_global_steps): 
         batch_actions = agent.sample_actions(agent.step(batch_states))
         batch_next_states, batch_rewards, batch_done, _ = env_handler.parallel_step(batch_actions)
         feed_dict = {
@@ -131,7 +131,7 @@ if __name__ == "__main__":
     parser.add_argument("-n", "--number", help="number of games", type=int, dest="game", default=1)
     args = parser.parse_args()
     
-    game_name = "SuperMarioBros-v0"
+    game_name = "SuperMarioBros-1-1-v0"
 
     if args.mode == "play":
         global_rewards = forward_run(game_name=game_name)
@@ -139,4 +139,3 @@ if __name__ == "__main__":
         train_agent(game=args.game, game_name=game_name)
     else:
         raise("Please only insert play or train in mode!!")
-

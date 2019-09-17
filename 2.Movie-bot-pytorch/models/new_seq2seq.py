@@ -152,7 +152,6 @@ class NewSeq2seqAttention(NewSeq2seq):
         # Initialize output container
         decoder_outputs = Variable(torch.zeros(self.time_steps,self.batch_size,self.num_tokens)).to(self.device)  # (time_steps, batch_size, vocab_size)
         
-        # print(inputs[:,0])
         # Unfold the decoder RNN on the time dimension
         for t in range(self.time_steps):
             outputs1, hidden1 = self.lstm1(torch.zeros(1, self.batch_size, self.latent_dim).to(self.device), hidden1)
@@ -162,10 +161,6 @@ class NewSeq2seqAttention(NewSeq2seq):
             outputs2 = outputs2.squeeze(0)  # squeeze the time dimension (batch_size, latent_dim)
             outputs2 = self.out(outputs2)  # (batch_size, vocab_size)
             decoder_outputs[t] = outputs2
-            
-            # # Its own last output
-            # _, indices = torch.topk(decoder_outputs[t], 1)
-            # print(indices[0])
         
         return decoder_outputs, hidden1, hidden2
 
@@ -190,8 +185,8 @@ class NewSeq2seqAttention(NewSeq2seq):
         
         for t in range(self.time_steps):
             outputs1, hidden1 = self.lstm1(torch.zeros(1, 1, self.latent_dim).to(self.device), hidden1)
-            # attention_embedded = self.attention_layer(decoder_input_embedded.squeeze(0), hidden2, encoder_outputs)
-            outputs2, hidden2 = self.lstm2(torch.cat([decoder_input_embedded,outputs1],-1),hidden2)
+            attention_embedded = self.attention_layer(decoder_input_embedded.squeeze(0), hidden2, encoder_outputs)
+            outputs2, hidden2 = self.lstm2(torch.cat([attention_embedded,outputs1],-1),hidden2)
             outputs2 = self.out(outputs2)  # (batch_size, vocab_size)
             decoder_outputs[t] = outputs2
 

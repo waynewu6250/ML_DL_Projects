@@ -3,6 +3,7 @@ import keras
 from keras.layers import Conv2D, Dense, Flatten, Input, LSTM, RepeatVector
 from keras.models import Model, Sequential
 import numpy as np
+from config import opt
 
 class Agent:
     def __init__(self, name, state_shape, n_actions, reuse=False):
@@ -73,17 +74,16 @@ class Agent:
         logp_actions = tf.reduce_sum(logprobs * tf.one_hot(self.actions_ph, self.n_actions), axis=-1) # [n_envs,]
         
         # compute advantage using rewards_ph, state_values and next_state_values
-        gamma = 0.9
-        advantage = (self.rewards_ph+gamma*next_state_values)-state_values
+        advantage = (self.rewards_ph+opt.gamma*next_state_values)-state_values
         entropy = -tf.reduce_sum(probs*logprobs,axis=1)
 
-        actor_loss =  - tf.reduce_mean(logp_actions * tf.stop_gradient(advantage)) - 0.001 * tf.reduce_mean(entropy)
+        actor_loss =  - tf.reduce_mean(logp_actions * tf.stop_gradient(advantage)) - opt.beta * tf.reduce_mean(entropy)
 
         # compute target state values using temporal difference formula. Use rewards_ph and next_state_values
-        target_state_values = self.rewards_ph + gamma*next_state_values
+        target_state_values = self.rewards_ph + opt.gamma*next_state_values
 
-        critic_loss = tf.reduce_mean((state_values - tf.stop_gradient(target_state_values))**2 )
+        critic_loss = tf.reduce_mean((state_values - tf.stop_gradient(target_state_values))**2)
 
-        train_step = tf.train.AdamOptimizer(1e-4).minimize(actor_loss + critic_loss)
+        train_step = tf.train.AdamOptimizer(opt.lr).minimize(actor_loss + critic_loss)
 
         return (train_step, entropy)

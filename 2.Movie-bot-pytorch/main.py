@@ -75,6 +75,16 @@ def train(**kwargs):
             
             optimizer.zero_grad()
             decoder_outputs, decoder_hidden1, decoder_hidden2 = seq2seq(ib, tb)
+
+            # Its own last output
+            a = []
+            b = []
+            for t in range(opt.mxlen):
+                _, indices = torch.topk(decoder_outputs[t][0], 1)
+                a.append(mydata.data.id2word[ib[t][0].item()])
+                b.append(mydata.data.id2word[indices[0].item()])
+            print(a)
+            print(b)
             
             # Reshape the outputs
             b = decoder_outputs.size(1)
@@ -196,6 +206,7 @@ def test(**kwargs):
 if __name__ == "__main__":
     import fire
     fire.Fire()
+    
 
 
 
