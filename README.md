@@ -20,6 +20,7 @@ My side project gallery for collections and refinement. <br><br>
 [6. Deep Convolutional Generative Adversarial Networks for Naruto character generation](#6) <br>
 [7. Malaria Cell Prediction](#7) <br>
 [8. Twitter hashtags](#8) <br>
+9. Mario-in-RL (To be updated)
 
 （You can use [downgit](https://minhaskamal.github.io/DownGit/#/home) to clone any individual project for your interest. And follow the instructions in each README.md to use.）
 
