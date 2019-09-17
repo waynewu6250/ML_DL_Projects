@@ -110,9 +110,9 @@ This is a pyspark project that will analyze the most frequent hashtags used by i
 ---
 
 <a name="9"></a>
-### [9. Mario RL](https://github.com/waynewu6250/ML_DL_Projects/blob/master/8.Twitter-hashtags#part_8)
+### [9. Mario in RL](https://github.com/waynewu6250/ML_DL_Projects/tree/master/9.Mario-in-RL)
 This is a reinforcement learing project that will play mario games from gym api interface.
 
-<img src="8.Twitter-hashtags/hashtag.png"  height="220" width="330">
+<img src="9.Mario-in-RL/hashtag.png"  height="220" width="330">
 
 
