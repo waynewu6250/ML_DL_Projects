@@ -20,6 +20,7 @@ My side project gallery for collections and refinement. <br><br>
 [6. Deep Convolutional Generative Adversarial Networks for Naruto character generation](#6) <br>
 [7. Malaria Cell Prediction](#7) <br>
 [8. Twitter hashtags](#8) <br>
+[9. Mario-in-RL (To be updated)](#9) <br>
 
 （You can use [downgit](https://minhaskamal.github.io/DownGit/#/home) to clone any individual project for your interest. And follow the instructions in each README.md to use.）
 
@@ -67,7 +68,7 @@ There are two different implementation for the applications: pytorch self-realiz
 
 It will caption the given image and return a descriptive sentence that depicts the graph.
 
-<img src="4.Image-captioning/test_imgs/exp1.jpg"  height="220" width="330">
+<img src="4.Image-captioning/test_imgs/exp1.jpg"  height="220" width="330"> <br>
 a logo sign outside of the headquarters
 
 
@@ -105,5 +106,13 @@ This is a deep learning project with CNN Resnet models from pytorch. Image data 
 This is a pyspark project that will analyze the most frequent hashtags used by individual users.   
 
 <img src="8.Twitter-hashtags/hashtag.png"  height="220" width="330">
+
+---
+
+<a name="9"></a>
+### [9. Mario in RL](https://github.com/waynewu6250/ML_DL_Projects/tree/master/9.Mario-in-RL)
+This is a reinforcement learing project that will play mario games from gym api interface.
+
+<img src="9.Mario-in-RL/hashtag.png"  height="220" width="330">
 
 
