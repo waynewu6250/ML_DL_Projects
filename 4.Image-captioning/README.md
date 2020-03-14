@@ -109,7 +109,7 @@ football player celebrates scoring his team 's second goal during the match
 football player celebrates scoring his team 's fourth goal during the match
 ```
 
-## 2. Final Project realizaiton in tensorflow
+## 2. Final Project realization in tensorflow
 Please refers to `image_captioning.ipynb` to see the mechanisms and results. It is the final project of coursera course: advanced machine learning specialization-Introduction to Deep Learning.   
 It can be also referred to the following respositories: <br>
 ```
