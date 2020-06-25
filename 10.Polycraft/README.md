@@ -3,4 +3,4 @@
 This is a RL project with DQN model to train an agent to perform tasks in Polycraft environment. <br>
 The main objective is to pick up an item in the room and drop it again in the right place.
 
-To be updated...
+(To be updated...)
